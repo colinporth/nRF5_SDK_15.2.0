@@ -37,6 +37,7 @@
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/nrfx_uart.o"
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/nrfx_uarte.o"
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/bsp.o"
+"Output/ble_app_beacon_pca10040_s132 Release/Obj/sx1509b.o"
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/main.o"
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/SEGGER_RTT.o"
 "Output/ble_app_beacon_pca10040_s132 Release/Obj/SEGGER_RTT_Syscalls_SES.o"

@@ -87,6 +87,9 @@
     </folder>
     <folder Name="Board Support">
       <file file_name="../../../../../../components/libraries/bsp/bsp.c" />
+      <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b.c" />
+      <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b.h" />
+      <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b_internal.h" />
     </folder>
     <folder Name="Application">
       <file file_name="../../../main.c" />

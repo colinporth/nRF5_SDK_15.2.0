@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2017 - 2018, Nordic Semiconductor ASA
  *
@@ -37,12 +38,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+//}}}
 #ifndef SX1509B_INTERNAL_H
 #define SX1509B_INTERNAL_H
 
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
 /**
  * @brief Device and IO banks registers.
@@ -215,8 +219,7 @@ typedef enum
 /**
  * @brief Structure containing expander instance.
  */
-typedef struct
-{
+typedef struct {
     nrf_twi_sensor_t * p_sensor_data;
     uint8_t sensor_addr;
     uint8_t start_addr;
@@ -224,9 +227,9 @@ typedef struct
     uint8_t high_input[2];
 } sx1509b_instance_t;
 
-
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
+//}}}
 #endif // SX1509B_INTERNAL_H
