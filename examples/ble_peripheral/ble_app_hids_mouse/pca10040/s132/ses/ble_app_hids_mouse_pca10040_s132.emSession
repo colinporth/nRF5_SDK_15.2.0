@@ -18,7 +18,9 @@
   <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;Board Support"/>
   <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;None"/>
   <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;nRF_Drivers"/>
+  <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;nRF_Segger_RTT"/>
   <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;nRF_SoftDevice"/>
+  <ProjectSessionItem path="ble_app_hids_mouse_pca10040_s132;ble_app_hids_mouse_pca10040_s132;UTF8/UTF16 converter"/>
  </Project>
  <Register1/>
  <Register2/>

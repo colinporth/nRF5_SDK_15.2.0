@@ -190,8 +190,7 @@ static ble_uuid_t        m_adv_uuids[] =                      /**< Universally u
   static ble_advdata_manuf_data_t m_sp_manuf_advdata =        /**< Advertising data structure for Microsoft Swift Pair feature. */
   {
       .company_identifier = MICROSOFT_VENDOR_ID,
-      .data               =
-      {
+      .data = {
           .size   = sizeof(m_sp_payload),
           .p_data = &m_sp_payload[0]
       }
@@ -199,10 +198,8 @@ static ble_uuid_t        m_adv_uuids[] =                      /**< Universally u
   //}}}
   static uint8_t m_sp_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];  /**< Advertising data buffer. */
   //{{{
-  static ble_gap_adv_data_t m_sp_advdata_buf =                /**< Advertising data buffer descriptor. */
-  {
-      .adv_data =
-      {
+  static ble_gap_adv_data_t m_sp_advdata_buf = {               /**< Advertising data buffer descriptor. */
+      .adv_data = {
           .p_data = m_sp_enc_advdata,
           .len    = sizeof(m_sp_enc_advdata)
       }

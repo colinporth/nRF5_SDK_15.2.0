@@ -77,6 +77,8 @@
     </folder>
     <folder Name="Board Definition">
       <file file_name="../../../../../../components/boards/boards.c" />
+      <file file_name="../../../../../../components/boards/boards.h" />
+      <file file_name="../../../../../../components/boards/pca20020.h" />
     </folder>
     <folder Name="nRF_Drivers">
       <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" />
