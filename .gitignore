@@ -13,9 +13,7 @@
 *.bin
 *.hex
 *.map
+*.elf
 
 *.~*
-
-sdk_components
-nano-pb
-segger_rtt
+*.asm
