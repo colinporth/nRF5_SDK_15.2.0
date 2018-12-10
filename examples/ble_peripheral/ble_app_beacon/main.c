@@ -73,9 +73,9 @@
 
 #define DEAD_BEEF              0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-#if defined(USE_UICR_FOR_MAJ_MIN_VALUES)
-  #define MAJ_VAL_OFFSET_IN_BEACON_INFO   18   /**< Position of the MSB of the Major Value in m_beacon_info array. */
-  #define UICR_ADDRESS  0x10001080 /**< Address of the UICR register used by this example. The major and minor versions to be encoded into the advertising data will be picked up from this location. */
+#if defined (USE_UICR_FOR_MAJ_MIN_VALUES)
+  #define MAJ_VAL_OFFSET_IN_BEACON_INFO   18  /**< Position of the MSB of the Major Value in m_beacon_info array. */
+  #define UICR_ADDRESS  0x10001080            /**< Address of the UICR register, major minor versions encoded in advertising data */
 #endif
 
 static ble_gap_adv_params_t m_adv_params;                     /**< Parameters to be passed to the stack when starting advertising. */
@@ -254,12 +254,9 @@ int main(void) {
 
   ble_stack_init();
   advertising_init();
-
-  // Start execution.
   NRF_LOG_INFO ("Beacon example started.");
   advertising_start();
 
-  // Enter main loop.
   for (;; )
     if (NRF_LOG_PROCESS() == false)
       nrf_pwr_mgmt_run();

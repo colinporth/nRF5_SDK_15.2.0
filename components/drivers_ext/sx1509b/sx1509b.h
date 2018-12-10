@@ -49,29 +49,30 @@ extern "C" {
 #endif
 //}}}
 
-#define SX1509B_BASE_ADDRESS_FIRST      0x3Eu
-#define SX1509B_BASE_ADDRESS_SECOND     0x3Fu
-#define SX1509B_BASE_ADDRESS_THIRD      0x70u
-#define SX1509B_BASE_ADDRESS_FOURTH     0x71u
+#define SX1509B_BASE_ADDRESS_FIRST   0x3Eu
+#define SX1509B_BASE_ADDRESS_SECOND  0x3Fu
+#define SX1509B_BASE_ADDRESS_THIRD   0x70u
+#define SX1509B_BASE_ADDRESS_FOURTH  0x71u
 
 typedef enum { SX1509B_LED_DRIVER_T_ON, SX1509B_LED_DRIVER_I_ON, SX1509B_LED_DRIVER_OFF,
-               SX1509B_LED_DRIVER_T_RISE, SX1509B_LED_DRIVER_T_FALL } sx1509b_led_driver_set_t;
-typedef enum { SX1509B_PIN_DIR_OUTPUT, SX1509B_PIN_DIR_INPUT } sx1509b_pin_dir_t;
+               SX1509B_LED_DRIVER_T_RISE, SX1509B_LED_DRIVER_T_FALL 
+               } sx1509b_led_driver_set_t;
+typedef enum {  SX1509B_PIN_DIR_OUTPUT, SX1509B_PIN_DIR_INPUT } sx1509b_pin_dir_t;
 typedef enum { SX1509B_PIN_CLR, SX1509B_PIN_SET } sx1509b_pin_set_t;
 typedef enum { SX1509B_PIN_NOPULL, SX1509B_PIN_PULLDOWN, SX1509B_PIN_PULLUP } sx1509b_pin_pull_t;
 typedef enum { SX1509B_PIN_NOSENSE, SX1509B_PIN_SENSE_RISING, SX1509B_PIN_SENSE_FALLING, SX1509B_PIN_SENSE_BOTH } sx1509b_pin_sense_t;
 typedef enum { SX1509B_PORT_WRITE, SX1509B_PORT_CLEAR, SX1509B_PORT_SET } sx1509b_port_op_t;
 typedef enum { SX1509B_LEVEL_OFF, SX1509B_LEVEL_A_TO_B, SX1509B_LEVEL_B_TO_A } sx1509b_level_shift_t;
 typedef enum { SX1509B_DEBOUNCE_0_5MS, SX1509B_DEBOUNCE_1MS, SX1509B_DEBOUNCE_2MS, SX1509B_DEBOUNCE_4MS,
-               SX1509B_DEBOUNCE_8MS, SX1509B_DEBOUNCE_16MS, SX1509B_DEBOUNCE_32MS, SX1509B_DEBOUNCE_64MS } sx1509b_debounce_t;
-
+               SX1509B_DEBOUNCE_8MS, SX1509B_DEBOUNCE_16MS, SX1509B_DEBOUNCE_32MS, SX1509B_DEBOUNCE_64MS 
+               } sx1509b_debounce_t;
 typedef enum { SX1509B_CLOCK_DISABLED, SX1509B_CLOCK_EXTERNAL, SX1509B_CLOCK_INTERNAL } sx1509b_clock_t;
 typedef enum { SX1509B_KEY_TIME_SLEEP_OFF, SX1509B_KEY_TIME_SLEEP_128MS, SX1509B_KEY_TIME_SLEEP_256MS, SX1509B_KEY_TIME_SLEEP_512MS,
                SX1509B_KEY_TIME_SLEEP_1S, SX1509B_KEY_TIME_SLEEP_2S, SX1509B_KEY_TIME_SLEEP_4S, SX1509B_KEY_TIME_SLEEP_8S
-             } sx1509b_key_sleep_t;
+               } sx1509b_key_sleep_t;
 typedef enum { SX1509B_KEY_TIME_SCAN_1MS, SX1509B_KEY_TIME_SCAN_2MS, SX1509B_KEY_TIME_SCAN_4MS, SX1509B_KEY_TIME_SCAN_8MS,
                SX1509B_KEY_TIME_SCAN_16MS, SX1509B_KEY_TIME_SCAN_32MS, SX1509B_KEY_TIME_SCAN_64MS, SX1509B_KEY_TIME_SCAN_128MS
-             } sx1509b_key_scan_t;
+               } sx1509b_key_scan_t;
 
 //{{{
 /**
@@ -80,7 +81,7 @@ typedef enum { SX1509B_KEY_TIME_SCAN_1MS, SX1509B_KEY_TIME_SCAN_2MS, SX1509B_KEY
  * @param[in] sx1509b_inst_name Name of the instance to be created.
  * @param[in] instance_count    Number of connected expanders.
  */
-#define SX1509B_INSTANCES_DEF_START(sx1509b_inst_name, instance_count)\
+#define SX1509B_INSTANCES_DEF_START (sx1509b_inst_name, instance_count)\
     static sx1509b_instance_t sx1509b_inst_name[instance_count]
 //}}}
 
@@ -101,7 +102,7 @@ void sx1509b_init(sx1509b_instance_t * p_instances, uint8_t count);
  * @retval other                            Return error code from nrf_twi_sensor
  *                                          @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_add_instance(nrf_twi_sensor_t * p_twi_sensor, uint8_t sensor_address);
+ret_code_t sx1509b_add_instance (nrf_twi_sensor_t * p_twi_sensor, uint8_t sensor_address);
 //}}}
 //{{{
 /**
@@ -112,7 +113,7 @@ ret_code_t sx1509b_add_instance(nrf_twi_sensor_t * p_twi_sensor, uint8_t sensor_
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_cfg_write(uint8_t instance_num);
+ret_code_t sx1509b_cfg_write (uint8_t instance_num);
 //}}}
 //{{{
 /**
@@ -123,7 +124,7 @@ ret_code_t sx1509b_cfg_write(uint8_t instance_num);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_cfg_read(uint8_t instance_num);
+ret_code_t sx1509b_cfg_read (uint8_t instance_num);
 //}}}
 //{{{
 /**
@@ -137,7 +138,7 @@ ret_code_t sx1509b_cfg_read(uint8_t instance_num);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_clock_set(uint8_t         instance_num,
+ret_code_t sx1509b_clock_set (uint8_t instance_num,
                              sx1509b_clock_t source,
                              bool            oscio_set,
                              uint8_t         oscio_freq);
@@ -157,7 +158,7 @@ ret_code_t sx1509b_clock_set(uint8_t         instance_num,
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_misc_set(uint8_t            instance_num,
+ret_code_t sx1509b_misc_set (uint8_t nstance_num,
                             bool               nreset_func,
                             sx1509b_debounce_t debounce_time,
                             bool               autoclear_nint);
@@ -171,7 +172,7 @@ ret_code_t sx1509b_misc_set(uint8_t            instance_num,
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_sw_reset(uint8_t instance_num);
+ret_code_t sx1509b_sw_reset (uint8_t instance_num);
 //}}}
 //{{{
 /**
@@ -184,7 +185,7 @@ ret_code_t sx1509b_sw_reset(uint8_t instance_num);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_pin_cfg_reg_set(sx1509b_registers_t reg, uint32_t pin, uint8_t set);
+ret_code_t sx1509b_pin_cfg_reg_set (sx1509b_registers_t reg, uint32_t pin, uint8_t set);
 //}}}
 //{{{
 /**
@@ -196,7 +197,7 @@ ret_code_t sx1509b_pin_cfg_reg_set(sx1509b_registers_t reg, uint32_t pin, uint8_
  * @retval 0xFF  Returned if there is no pin with given number.
  * @return other Pin setting value at given register.
  */
-uint8_t sx1509b_pin_cfg_reg_get(sx1509b_registers_t reg, uint32_t pin);
+uint8_t sx1509b_pin_cfg_reg_get (sx1509b_registers_t reg, uint32_t pin);
 //}}}
 //{{{
 /**
@@ -210,7 +211,7 @@ uint8_t sx1509b_pin_cfg_reg_get(sx1509b_registers_t reg, uint32_t pin);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no port with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_port_cfg_reg_set(sx1509b_registers_t reg,
+ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
                                     uint32_t            port,
                                     uint8_t             mask,
                                     sx1509b_port_op_t   flag);
@@ -224,7 +225,7 @@ ret_code_t sx1509b_port_cfg_reg_set(sx1509b_registers_t reg,
  *
  * @retval Register value.
  */
-uint8_t sx1509b_port_cfg_reg_get(sx1509b_registers_t reg, uint32_t port);
+uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port);
 //}}}
 //{{{
 /**
@@ -234,7 +235,7 @@ uint8_t sx1509b_port_cfg_reg_get(sx1509b_registers_t reg, uint32_t port);
  *
  * @return Return error code from nrf_twi_sensor @ref nrf_twi_sensor_reg_read
  */
-ret_code_t sx1509b_pin_data_update(nrf_twi_sensor_reg_cb_t user_cb);
+ret_code_t sx1509b_pin_data_update (nrf_twi_sensor_reg_cb_t user_cb);
 //}}}
 //{{{
 /**
@@ -244,7 +245,7 @@ ret_code_t sx1509b_pin_data_update(nrf_twi_sensor_reg_cb_t user_cb);
  *
  * @return Return error code from nrf_twi_sensor @ref nrf_twi_sensor_reg_read
  */
-ret_code_t sx1509b_pin_latch_update(nrf_twi_sensor_reg_cb_t user_cb);
+ret_code_t sx1509b_pin_latch_update (nrf_twi_sensor_reg_cb_t user_cb);
 //}}}
 
 //{{{
@@ -258,7 +259,7 @@ ret_code_t sx1509b_pin_latch_update(nrf_twi_sensor_reg_cb_t user_cb);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_long_slew(uint32_t pin_number, bool set);
+__STATIC_INLINE ret_code_t sx1509b_pin_long_slew (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -271,7 +272,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_long_slew(uint32_t pin_number, bool set);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_low_drive(uint32_t pin_number, bool set);
+__STATIC_INLINE ret_code_t sx1509b_pin_low_drive (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -284,7 +285,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_low_drive(uint32_t pin_number, bool set);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_open_drain(uint32_t pin_number, bool set);
+__STATIC_INLINE ret_code_t sx1509b_pin_open_drain (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -297,7 +298,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_open_drain(uint32_t pin_number, bool set)
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_polarity(uint32_t pin_number, bool set);
+__STATIC_INLINE ret_code_t sx1509b_pin_polarity (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -310,7 +311,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_polarity(uint32_t pin_number, bool set);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_debounce(uint32_t pin_number, bool set);
+__STATIC_INLINE ret_code_t sx1509b_pin_debounce (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -324,7 +325,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_debounce(uint32_t pin_number, bool set);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_pin_high_input(uint32_t pin_number, bool set);
+ret_code_t sx1509b_pin_high_input (uint32_t pin_number, bool set);
 //}}}
 
 //{{{
@@ -336,8 +337,7 @@ ret_code_t sx1509b_pin_high_input(uint32_t pin_number, bool set);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_level_shifter(uint32_t              pin_number,
-                                                     sx1509b_level_shift_t set);
+__STATIC_INLINE ret_code_t sx1509b_pin_level_shifter (uint32_t pin_number, sx1509b_level_shift_t set);
 //}}}
 //{{{
 /**
@@ -349,9 +349,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_level_shifter(uint32_t              pin_n
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_long_slew(uint8_t           port_num,
-                                                  uint8_t           out_mask,
-                                                  sx1509b_port_op_t flag);
+__STATIC_INLINE ret_code_t sx1509b_port_long_slew (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 //{{{
 /**
@@ -363,9 +361,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_long_slew(uint8_t           port_num,
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_low_drive(uint8_t           port_num,
-                                                  uint8_t           out_mask,
-                                                  sx1509b_port_op_t flag);
+__STATIC_INLINE ret_code_t sx1509b_port_low_drive (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 //{{{
 /**
@@ -377,9 +373,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_low_drive(uint8_t           port_num,
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_open_drain(uint8_t           port_num,
-                                                   uint8_t           out_mask,
-                                                   sx1509b_port_op_t flag);
+__STATIC_INLINE ret_code_t sx1509b_port_open_drain (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 //{{{
 /**
@@ -391,9 +385,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_open_drain(uint8_t           port_num,
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_polarity(uint8_t           port_num,
-                                                 uint8_t           out_mask,
-                                                 sx1509b_port_op_t flag);
+__STATIC_INLINE ret_code_t sx1509b_port_polarity (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 //{{{
 /**
@@ -405,9 +397,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_polarity(uint8_t           port_num,
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_debounce(uint8_t           port_num,
-                                                 uint8_t           out_mask,
-                                                 sx1509b_port_op_t flag);
+__STATIC_INLINE ret_code_t sx1509b_port_debounce (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 //{{{
 /**
@@ -420,7 +410,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_debounce(uint8_t           port_num,
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_port_high_input(uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
 //}}}
 
 //{{{
@@ -433,7 +423,7 @@ ret_code_t sx1509b_port_high_input(uint8_t port_num, uint8_t out_mask, sx1509b_p
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_pull_up(uint8_t           port_num,
+__STATIC_INLINE ret_code_t sx1509b_port_pull_up (uint8_t port_num,
                                                 uint8_t           out_mask,
                                                 sx1509b_port_op_t flag);
 //}}}
@@ -447,7 +437,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_pull_up(uint8_t           port_num,
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_pull_down(uint8_t           port_num,
+__STATIC_INLINE ret_code_t sx1509b_port_pull_down (uint8_t port_num,
                                                   uint8_t           out_mask,
                                                   sx1509b_port_op_t flag);
 //}}}
@@ -462,7 +452,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_pull_down(uint8_t           port_num,
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_cfg_output(uint32_t pin_number);
+__STATIC_INLINE ret_code_t sx1509b_pin_cfg_output (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -476,7 +466,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_cfg_output(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_cfg_input(uint32_t pin_number, sx1509b_pin_pull_t pull_config);
+ret_code_t sx1509b_pin_cfg_input (uint32_t pin_number, sx1509b_pin_pull_t pull_config);
 //}}}
 
 //{{{
@@ -487,7 +477,7 @@ ret_code_t sx1509b_pin_cfg_input(uint32_t pin_number, sx1509b_pin_pull_t pull_co
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_cfg_default(uint32_t pin_number);
+ret_code_t sx1509b_pin_cfg_default (uint32_t pin_number);
 //}}}
 
 //{{{
@@ -498,7 +488,7 @@ ret_code_t sx1509b_pin_cfg_default(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_cfg_watcher(uint32_t pin_number); // non
+__STATIC_INLINE ret_code_t sx1509b_pin_cfg_watcher (uint32_t pin_number); // non
 //}}}
 //{{{
 /**
@@ -508,7 +498,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_cfg_watcher(uint32_t pin_number); // non
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_cfg_input_disconnect(uint32_t pin_number);
+__STATIC_INLINE ret_code_t sx1509b_pin_cfg_input_disconnect (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -521,9 +511,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_cfg_input_disconnect(uint32_t pin_number)
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_cfg_sense_input(uint32_t            pin_number,
-                                       sx1509b_pin_pull_t  pull_config,
-                                       sx1509b_pin_sense_t sense_config);
+ret_code_t sx1509b_pin_cfg_sense_input (uint32_t pin_number, sx1509b_pin_pull_t  pull_config, sx1509b_pin_sense_t sense_config);
 //}}}
 //{{{
 /**
@@ -534,7 +522,7 @@ ret_code_t sx1509b_pin_cfg_sense_input(uint32_t            pin_number,
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_cfg_sense_set(uint32_t pin_number, sx1509b_pin_sense_t sense_config);
+ret_code_t sx1509b_pin_cfg_sense_set (uint32_t pin_number, sx1509b_pin_sense_t sense_config);
 //}}}
 //{{{
 /**
@@ -545,7 +533,7 @@ ret_code_t sx1509b_pin_cfg_sense_set(uint32_t pin_number, sx1509b_pin_sense_t se
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_dir_set(uint32_t pin_number, sx1509b_pin_dir_t direction);
+ret_code_t sx1509b_pin_dir_set (uint32_t pin_number, sx1509b_pin_dir_t direction);
 //}}}
 
 //{{{
@@ -558,7 +546,7 @@ ret_code_t sx1509b_pin_dir_set(uint32_t pin_number, sx1509b_pin_dir_t direction)
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_set(uint32_t pin_number);
+__STATIC_INLINE ret_code_t sx1509b_pin_set (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -571,7 +559,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_set(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_clear(uint32_t pin_number);
+__STATIC_INLINE ret_code_t sx1509b_pin_clear (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -584,7 +572,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_clear(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_toggle(uint32_t pin_number);
+__STATIC_INLINE ret_code_t sx1509b_pin_toggle (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -601,7 +589,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_toggle(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_pin_write(uint32_t pin_number,  sx1509b_pin_set_t value);
+__STATIC_INLINE ret_code_t sx1509b_pin_write (uint32_t pin_number,  sx1509b_pin_set_t value);
 //}}}
 //{{{
 /**
@@ -616,7 +604,7 @@ __STATIC_INLINE ret_code_t sx1509b_pin_write(uint32_t pin_number,  sx1509b_pin_s
  *
  * @return 0 if the pin input level is low. Positive value if the pin is high.
  */
-__STATIC_INLINE uint32_t sx1509b_pin_read(uint32_t pin_number);
+__STATIC_INLINE uint32_t sx1509b_pin_read (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -626,7 +614,7 @@ __STATIC_INLINE uint32_t sx1509b_pin_read(uint32_t pin_number);
  *
  * @return 0 if the pin output level is low. Positive value if pin output is high.
  */
-__STATIC_INLINE uint32_t sx1509b_pin_out_read(uint32_t pin_number);
+__STATIC_INLINE uint32_t sx1509b_pin_out_read (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -636,7 +624,7 @@ __STATIC_INLINE uint32_t sx1509b_pin_out_read(uint32_t pin_number);
  *
  * @retval Sense configuration.
  */
-__STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get(uint32_t pin_number);
+__STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -644,7 +632,7 @@ __STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get(uint32_t pin_number);
  *
  * @retval Port number.
  */
-__STATIC_INLINE uint8_t sx1509b_pin_port_decode(uint32_t pin_number);
+__STATIC_INLINE uint8_t sx1509b_pin_port_decode (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -655,7 +643,7 @@ __STATIC_INLINE uint8_t sx1509b_pin_port_decode(uint32_t pin_number);
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_dir_output_set(uint8_t port_num, uint8_t out_mask);
+__STATIC_INLINE ret_code_t sx1509b_port_dir_output_set (uint8_t port_num, uint8_t out_mask);
 //}}}
 //{{{
 /**
@@ -666,7 +654,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_dir_output_set(uint8_t port_num, uint8_t
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_dir_input_set(uint8_t port_num, uint8_t in_mask);
+__STATIC_INLINE ret_code_t sx1509b_port_dir_input_set (uint8_t port_num, uint8_t in_mask);
 //}}}
 //{{{
 /**
@@ -678,7 +666,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_dir_input_set(uint8_t port_num, uint8_t 
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_dir_write(uint8_t port_num, uint8_t dir_mask);
+__STATIC_INLINE ret_code_t sx1509b_port_dir_write (uint8_t port_num, uint8_t dir_mask);
 //}}}
 //{{{
 /**
@@ -691,7 +679,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_dir_write(uint8_t port_num, uint8_t dir_
  * @retval Pin configuration of the current direction settings.
  *         Bit set means that the given pin is configured as output.
  */
-__STATIC_INLINE uint8_t sx1509b_port_dir_read(uint8_t port_num);
+__STATIC_INLINE uint8_t sx1509b_port_dir_read (uint8_t port_num);
 //}}}
 //{{{
 /**
@@ -703,7 +691,7 @@ __STATIC_INLINE uint8_t sx1509b_port_dir_read(uint8_t port_num);
  *
  * @retval Port input values.
  */
-__STATIC_INLINE uint8_t sx1509b_port_in_read(uint8_t port_num);
+__STATIC_INLINE uint8_t sx1509b_port_in_read( uint8_t port_num);
 //}}}
 //{{{
 /**
@@ -715,7 +703,7 @@ __STATIC_INLINE uint8_t sx1509b_port_in_read(uint8_t port_num);
  *
  * @retval Port output values.
  */
-__STATIC_INLINE uint8_t sx1509b_port_out_read(uint8_t port_num);
+__STATIC_INLINE uint8_t sx1509b_port_out_read (uint8_t port_num);
 //}}}
 //{{{
 /**
@@ -726,7 +714,7 @@ __STATIC_INLINE uint8_t sx1509b_port_out_read(uint8_t port_num);
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_out_write(uint8_t port_num, uint8_t value);
+__STATIC_INLINE ret_code_t sx1509b_port_out_write (uint8_t port_num, uint8_t value);
 //}}}
 //{{{
 /**
@@ -737,7 +725,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_out_write(uint8_t port_num, uint8_t valu
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_out_set(uint8_t port_num, uint8_t set_mask);
+__STATIC_INLINE ret_code_t sx1509b_port_out_set (uint8_t port_num, uint8_t set_mask);
 //}}}
 //{{{
 /**
@@ -748,7 +736,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_out_set(uint8_t port_num, uint8_t set_ma
  *
  * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
  */
-__STATIC_INLINE ret_code_t sx1509b_port_out_clear(uint8_t port_num, uint8_t clr_mask);
+__STATIC_INLINE ret_code_t sx1509b_port_out_clear (uint8_t port_num, uint8_t clr_mask);
 //}}}
 //{{{
 /**
@@ -764,7 +752,7 @@ __STATIC_INLINE ret_code_t sx1509b_port_out_clear(uint8_t port_num, uint8_t clr_
  * @retval NRF_ERROR_INVALID_LENGTH If trying to read more ports than available.
  * @retval NRF_SUCCESS              If operation was successful.
  */
-ret_code_t sx1509b_ports_read(uint8_t start_port, uint32_t length, uint8_t * p_masks);
+ret_code_t sx1509b_ports_read (uint8_t start_port, uint32_t length, uint8_t * p_masks);
 //}}}
 //{{{
 /**
@@ -780,7 +768,7 @@ ret_code_t sx1509b_ports_read(uint8_t start_port, uint32_t length, uint8_t * p_m
  * @retval NRF_ERROR_INVALID_LENGTH If trying to read more ports than available.
  * @retval NRF_SUCCESS              If operation was successful.
  */
-ret_code_t sx1509b_latches_read(uint8_t start_port, uint32_t length, uint8_t * p_masks);
+ret_code_t sx1509b_latches_read (uint8_t start_port, uint32_t length, uint8_t * p_masks);
 
 //}}}
 
@@ -797,7 +785,7 @@ ret_code_t sx1509b_latches_read(uint8_t start_port, uint32_t length, uint8_t * p
  * @retval 1    Returned if latch is set.
  * @retval other Return from @ref sx1509b_pin_cfg_reg_get
  */
-__STATIC_INLINE uint32_t sx1509b_pin_latch_get(uint32_t pin_number);
+__STATIC_INLINE uint32_t sx1509b_pin_latch_get (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -807,7 +795,7 @@ __STATIC_INLINE uint32_t sx1509b_pin_latch_get(uint32_t pin_number);
  *
  * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
  */
-ret_code_t sx1509b_pin_latch_clear(uint32_t pin_number);
+ret_code_t sx1509b_pin_latch_clear (uint32_t pin_number);
 //}}}
 
 //{{{
@@ -830,7 +818,7 @@ ret_code_t sx1509b_pin_latch_clear(uint32_t pin_number);
  * @retval NRF_ERROR_INVALID_PARAM Returned if given instance isn't present.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_driver_enable(uint8_t instance_num, bool clock_internal, uint8_t frequency);
+ret_code_t sx1509b_led_driver_enable (uint8_t instance_num, bool clock_internal, uint8_t frequency);
 //}}}
 //{{{
 /**
@@ -844,7 +832,7 @@ ret_code_t sx1509b_led_driver_enable(uint8_t instance_num, bool clock_internal, 
  * @retval NRF_ERROR_INVALID_PARAM Returned if given port isn't present.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_mode(uint8_t port_num, bool mode);
+ret_code_t sx1509b_led_mode (uint8_t port_num, bool mode);
 //}}}
 //{{{
 /**
@@ -859,7 +847,7 @@ ret_code_t sx1509b_led_mode(uint8_t port_num, bool mode);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_pin_time(uint32_t pin_number,
+ret_code_t sx1509b_led_pin_time (uint32_t pin_number,
                                 uint8_t  on_time,
                                 uint8_t  on_intensity,
                                 uint8_t  off_time,
@@ -877,7 +865,7 @@ ret_code_t sx1509b_led_pin_time(uint32_t pin_number,
  *                                 or there is no pin with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_pin_fade(uint32_t pin_number, uint8_t fade_in, uint8_t fade_out);
+ret_code_t sx1509b_led_pin_fade (uint32_t pin_number, uint8_t fade_in, uint8_t fade_out);
 //}}}
 //{{{
 /**
@@ -888,7 +876,7 @@ ret_code_t sx1509b_led_pin_fade(uint32_t pin_number, uint8_t fade_in, uint8_t fa
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_pin_enable(uint32_t pin_number);
+ret_code_t sx1509b_led_pin_enable (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -899,7 +887,7 @@ ret_code_t sx1509b_led_pin_enable(uint32_t pin_number);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_led_pin_disable(uint32_t pin_number);
+ret_code_t sx1509b_led_pin_disable (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -909,7 +897,7 @@ ret_code_t sx1509b_led_pin_disable(uint32_t pin_number);
  *
  * @retval Time on led driver register of selected pin
  */
-uint8_t sx1509b_led_driver_get_reg(uint32_t pin_number);
+uint8_t sx1509b_led_driver_get_reg (uint32_t pin_number);
 //}}}
 
 //{{{
@@ -928,7 +916,7 @@ uint8_t sx1509b_led_driver_get_reg(uint32_t pin_number);
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_key_engine_enable(uint8_t             instance_num,
+ret_code_t sx1509b_key_engine_enable (uint8_t instance_num,
                                      uint8_t             rows,
                                      uint8_t             columns,
                                      sx1509b_key_sleep_t sleep_time,
@@ -945,7 +933,7 @@ ret_code_t sx1509b_key_engine_enable(uint8_t             instance_num,
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_key_data_update(uint8_t instance_num, nrf_twi_sensor_reg_cb_t user_cb);
+ret_code_t sx1509b_key_data_update (uint8_t instance_num, nrf_twi_sensor_reg_cb_t user_cb);
 //}}}
 //{{{
 /**
@@ -957,7 +945,7 @@ ret_code_t sx1509b_key_data_update(uint8_t instance_num, nrf_twi_sensor_reg_cb_t
  * @retval 0xFF                    If no key was pressed.
  * @retval 0 - 7                   Column number.
  */
-uint8_t sx1509b_key_column_get(uint8_t instance_num);
+uint8_t sx1509b_key_column_get (uint8_t instance_num);
 //}}}
 //{{{
 /**
@@ -969,48 +957,48 @@ uint8_t sx1509b_key_column_get(uint8_t instance_num);
  * @retval 0xFF                    If no key was pressed.
  * @retval 0 - 7                   Row number.
  */
-uint8_t sx1509b_key_row_get(uint8_t instance_num);
+uint8_t sx1509b_key_row_get (uint8_t instance_num);
 //}}}
 
 #ifndef SUPPRESS_INLINE_IMPLEMENTATION
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_long_slew(uint32_t pin_number, bool set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_long_slew (uint32_t pin_number, bool set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_LONG_SLEW_B, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_low_drive(uint32_t pin_number, bool set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_low_drive (uint32_t pin_number, bool set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_LOW_DRIVE_B, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_open_drain(uint32_t pin_number, bool set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_open_drain (uint32_t pin_number, bool set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_OPEN_DRAIN_B, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_polarity(uint32_t pin_number, bool set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_polarity (uint32_t pin_number, bool set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_POLARITY_B, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_debounce(uint32_t pin_number, bool set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_debounce (uint32_t pin_number, bool set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_DEBOUNCE_EN_B, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_level_shifter(uint32_t pin_number, sx1509b_level_shift_t set)
+  __STATIC_INLINE ret_code_t sx1509b_pin_level_shifter (uint32_t pin_number, sx1509b_level_shift_t set)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_LEVEL_SHIFTER_1, pin_number, set);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_long_slew(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_long_slew (uint8_t port_num,
                                                     uint8_t           out_mask,
                                                     sx1509b_port_op_t flag)
   {
@@ -1018,7 +1006,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_low_drive(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_low_drive (uint8_t port_num,
                                                     uint8_t           out_mask,
                                                     sx1509b_port_op_t flag)
   {
@@ -1026,7 +1014,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_open_drain(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_open_drain (uint8_t port_num,
                                                      uint8_t           out_mask,
                                                      sx1509b_port_op_t flag)
   {
@@ -1034,7 +1022,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_polarity(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_polarity (uint8_t port_num,
                                                    uint8_t           out_mask,
                                                    sx1509b_port_op_t flag)
   {
@@ -1042,7 +1030,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_debounce(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_debounce (uint8_t port_num,
                                                    uint8_t           out_mask,
                                                    sx1509b_port_op_t flag)
   {
@@ -1050,7 +1038,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_pull_up(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_pull_up (uint8_t port_num,
                                                   uint8_t           out_mask,
                                                   sx1509b_port_op_t flag)
   {
@@ -1058,7 +1046,7 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_pull_down(uint8_t           port_num,
+  __STATIC_INLINE ret_code_t sx1509b_port_pull_down (uint8_t port_num,
                                                     uint8_t           out_mask,
                                                     sx1509b_port_op_t flag)
   {
@@ -1066,37 +1054,37 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_output(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_output (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_DIR_B, pin_number, SX1509B_PIN_DIR_OUTPUT);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_watcher(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_watcher (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_input(pin_number, SX1509B_PIN_NOPULL);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_input_disconnect(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_cfg_input_disconnect (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_INPUT_DISABLE_B, pin_number, 1);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_set(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_set (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_DATA_B, pin_number, SX1509B_PIN_SET);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_clear(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_clear (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_DATA_B, pin_number, SX1509B_PIN_CLR);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_toggle(uint32_t pin_number)
+  __STATIC_INLINE ret_code_t sx1509b_pin_toggle (uint32_t pin_number)
   {
       uint8_t val = sx1509b_pin_cfg_reg_get(SX1509B_REG_DATA_B, pin_number);
       val = !val;
@@ -1104,98 +1092,99 @@ uint8_t sx1509b_key_row_get(uint8_t instance_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_pin_write(uint32_t pin_number, sx1509b_pin_set_t value)
+  __STATIC_INLINE ret_code_t sx1509b_pin_write (uint32_t pin_number, sx1509b_pin_set_t value)
   {
       value = (value >= 1) ? 1 : 0;
       return sx1509b_pin_cfg_reg_set(SX1509B_REG_DATA_B, pin_number, value);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint32_t sx1509b_pin_read(uint32_t pin_number)
+  __STATIC_INLINE uint32_t sx1509b_pin_read (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_get(SX1509B_REG_DATA_B, pin_number);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint32_t sx1509b_pin_out_read(uint32_t pin_number)
+  __STATIC_INLINE uint32_t sx1509b_pin_out_read (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_get(SX1509B_REG_DATA_B, pin_number);
   }
   //}}}
   //{{{
-  __STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get(uint32_t pin_number)
+  __STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_get(SX1509B_REG_SENSE_H_B, pin_number);
   }
   //}}}
+
   //{{{
-  __STATIC_INLINE uint8_t sx1509b_pin_port_decode(uint32_t pin_number)
+  __STATIC_INLINE uint8_t sx1509b_pin_port_decode (uint32_t pin_number)
   {
       return pin_number / SX1509B_INNER_NEXT_BANK;
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_dir_output_set(uint8_t port_num, uint8_t out_mask)
+  __STATIC_INLINE ret_code_t sx1509b_port_dir_output_set (uint8_t port_num, uint8_t out_mask)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DIR_B, port_num, out_mask, SX1509B_PORT_CLEAR);
   }
   //}}}
   //{{{
 
-  __STATIC_INLINE ret_code_t sx1509b_port_dir_input_set(uint8_t port_num, uint8_t in_mask)
+  __STATIC_INLINE ret_code_t sx1509b_port_dir_input_set (uint8_t port_num, uint8_t in_mask)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DIR_B, port_num, in_mask, SX1509B_PORT_SET);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_dir_write(uint8_t port_num, uint8_t dir_mask)
+  __STATIC_INLINE ret_code_t sx1509b_port_dir_write (uint8_t port_num, uint8_t dir_mask)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DIR_B, port_num, ~dir_mask, SX1509B_PORT_WRITE);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint8_t sx1509b_port_dir_read(uint8_t port_num)
+  __STATIC_INLINE uint8_t sx1509b_port_dir_read (uint8_t port_num)
   {
       return ~sx1509b_port_cfg_reg_get(SX1509B_REG_DIR_B, port_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint8_t sx1509b_port_in_read(uint8_t port_num)
+  __STATIC_INLINE uint8_t sx1509b_port_in_read (uint8_t port_num)
   {
       return sx1509b_port_cfg_reg_get(SX1509B_REG_DATA_B, port_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint8_t sx1509b_port_out_read(uint8_t port_num)
+  __STATIC_INLINE uint8_t sx1509b_port_out_read (uint8_t port_num)
   {
       return sx1509b_port_cfg_reg_get(SX1509B_REG_DATA_B, port_num);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_out_write(uint8_t port_num, uint8_t value)
+  __STATIC_INLINE ret_code_t sx1509b_port_out_write (uint8_t port_num, uint8_t value)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DATA_B, port_num, value, SX1509B_PORT_WRITE);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_out_set(uint8_t port_num, uint8_t set_mask)
+  __STATIC_INLINE ret_code_t sx1509b_port_out_set( uint8_t port_num, uint8_t set_mask)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DATA_B, port_num, set_mask, SX1509B_PORT_SET);
   }
   //}}}
   //{{{
-  __STATIC_INLINE ret_code_t sx1509b_port_out_clear(uint8_t port_num, uint8_t clr_mask)
+  __STATIC_INLINE ret_code_t sx1509b_port_out_clear( uint8_t port_num, uint8_t clr_mask)
   {
       return sx1509b_port_cfg_reg_set(SX1509B_REG_DATA_B, port_num, clr_mask, SX1509B_PORT_CLEAR);
   }
   //}}}
   //{{{
-  __STATIC_INLINE uint32_t sx1509b_pin_latch_get(uint32_t pin_number)
+  __STATIC_INLINE uint32_t sx1509b_pin_latch_get (uint32_t pin_number)
   {
       return sx1509b_pin_cfg_reg_get(SX1509B_REG_INT_SRC_B, pin_number);
   }
   //}}}
-#endif 
+#endif
 
 //{{{
 #ifdef __cplusplus

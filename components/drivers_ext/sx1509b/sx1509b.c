@@ -41,17 +41,11 @@
 //}}}
 #include "sx1509b.h"
 
-static sx1509b_instance_t * m_p_instances;
-static uint8_t m_max_instance_count;
 static uint8_t m_inst_count;
+static uint8_t m_max_instance_count;
+static sx1509b_instance_t * m_p_instances;
 
-//{{{
-#define RETURN_IF_ERR(_err) \
-    if (_err != NRF_SUCCESS)\
-    {                       \
-        return _err;        \
-    }
-//}}}
+#define RETURN_IF_ERR(_err) if (_err != NRF_SUCCESS) return _err;
 
 //{{{
 void sx1509b_init (sx1509b_instance_t* p_instances, uint8_t count) {
@@ -64,192 +58,128 @@ void sx1509b_init (sx1509b_instance_t* p_instances, uint8_t count) {
 //}}}
 
 //{{{
-static void sx1509b_default_cfg_set(uint8_t instance_num)
-{
-    m_p_instances[instance_num].start_addr  = 0x00;
-    for (uint8_t i = SX1509B_REG_INPUT_DISABLE_B; i < SX1509B_REG_DIR_B; i++)
-    {
-        m_p_instances[instance_num].registers[i] = 0;
-    }
-    for (uint8_t i = SX1509B_REG_DIR_B; i < SX1509B_REG_SENSE_H_B; i++)
-    {
-        m_p_instances[instance_num].registers[i] = 0xFF;
-    }
-    for (uint8_t i = SX1509B_REG_SENSE_H_B; i < SX1509B_REG_KEY_DATA_1; i++)
-    {
-        m_p_instances[instance_num].registers[i] = 0;
-    }
-    m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_1] = 0xFF;
-    m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_2] = 0xFF;
-    m_p_instances[instance_num].registers[SX1509B_REG_MISC]       = 0x01;
-    m_p_instances[instance_num].high_input[0] = 0;
-    m_p_instances[instance_num].high_input[1] = 0;
+static void sx1509b_default_cfg_set (uint8_t instance_num) {
 
-}
+  m_p_instances[instance_num].start_addr  = 0x00;
+
+  for (uint8_t i = SX1509B_REG_INPUT_DISABLE_B; i < SX1509B_REG_DIR_B; i++)
+      m_p_instances[instance_num].registers[i] = 0;
+  for (uint8_t i = SX1509B_REG_DIR_B; i < SX1509B_REG_SENSE_H_B; i++)
+      m_p_instances[instance_num].registers[i] = 0xFF;
+  for (uint8_t i = SX1509B_REG_SENSE_H_B; i < SX1509B_REG_KEY_DATA_1; i++)
+      m_p_instances[instance_num].registers[i] = 0;
+
+  m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_1] = 0xFF;
+  m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_2] = 0xFF;
+  m_p_instances[instance_num].registers[SX1509B_REG_MISC]       = 0x01;
+
+  m_p_instances[instance_num].high_input[0] = 0;
+  m_p_instances[instance_num].high_input[1] = 0;
+  }
 //}}}
 //{{{
-ret_code_t sx1509b_add_instance(nrf_twi_sensor_t* p_twi_sensor,
-                                uint8_t            sensor_address)
-{
-    ASSERT(p_twi_sensor != NULL);
-    if (m_p_instances == NULL)
-    {
-        return NRF_ERROR_MODULE_NOT_INITIALIZED;
-    }
-    if (m_inst_count >= m_max_instance_count)
-    {
-        return NRF_ERROR_STORAGE_FULL;
-    }
-    m_p_instances[m_inst_count].p_sensor_data = p_twi_sensor;
-    m_p_instances[m_inst_count].sensor_addr = sensor_address;
-    sx1509b_default_cfg_set(m_inst_count);
-    m_inst_count++;
-    ret_code_t err_code = sx1509b_cfg_write(m_inst_count - 1);
+ret_code_t sx1509b_add_instance (nrf_twi_sensor_t* p_twi_sensor, uint8_t sensor_address) {
 
-    return err_code;
-}
+  ASSERT(p_twi_sensor != NULL);
+  if (m_p_instances == NULL)
+      return NRF_ERROR_MODULE_NOT_INITIALIZED;
+  if (m_inst_count >= m_max_instance_count)
+      return NRF_ERROR_STORAGE_FULL;
+
+  m_p_instances[m_inst_count].p_sensor_data = p_twi_sensor;
+  m_p_instances[m_inst_count].sensor_addr = sensor_address;
+  sx1509b_default_cfg_set(m_inst_count);
+  m_inst_count++;
+
+  ret_code_t err_code = sx1509b_cfg_write(m_inst_count - 1);
+  return err_code;
+  }
 //}}}
 
 //{{{
-ret_code_t sx1509b_cfg_write(uint8_t instance_num)
-{
-    if (instance_num >= m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-    ret_code_t err = nrf_twi_sensor_reg_write(m_p_instances[instance_num].p_sensor_data,
-                                              m_p_instances[instance_num].sensor_addr,
-                                              SX1509B_REG_HIGH_INPUT_B,
-                                              m_p_instances[instance_num].high_input,
-                                              2);
-    RETURN_IF_ERR(err);
-    return nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                                m_p_instances[instance_num].sensor_addr,
-                                &m_p_instances[instance_num].start_addr,
-                                SX1509B_REG_COUNT + 1,
-                                false);
-}
+ret_code_t sx1509b_cfg_write (uint8_t instance_num) {
+
+  if (instance_num >= m_inst_count)
+    return NRF_ERROR_INVALID_PARAM;
+  ret_code_t err = nrf_twi_sensor_reg_write (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                                             SX1509B_REG_HIGH_INPUT_B, m_p_instances[instance_num].high_input, 2);
+  RETURN_IF_ERR(err);
+  return nrf_twi_sensor_write (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                               &m_p_instances[instance_num].start_addr, SX1509B_REG_COUNT + 1, false);
+  }
 //}}}
 //{{{
-ret_code_t sx1509b_cfg_read(uint8_t instance_num)
-{
-    if (instance_num >= m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-    ret_code_t err = nrf_twi_sensor_reg_read(m_p_instances[instance_num].p_sensor_data,
-                                             m_p_instances[instance_num].sensor_addr,
-                                             SX1509B_REG_HIGH_INPUT_B,
-                                             NULL,
-                                             m_p_instances[instance_num].high_input,
-                                             2);
-    RETURN_IF_ERR(err);
-    return nrf_twi_sensor_reg_read(m_p_instances[instance_num].p_sensor_data,
-                                   m_p_instances[instance_num].sensor_addr,
-                                   m_p_instances[instance_num].start_addr,
-                                   NULL,
-                                   m_p_instances[instance_num].registers,
-                                   SX1509B_REG_COUNT);
-}
+ret_code_t sx1509b_cfg_read (uint8_t instance_num) {
+
+  if (instance_num >= m_inst_count)
+    return NRF_ERROR_INVALID_PARAM;
+  ret_code_t err = nrf_twi_sensor_reg_read (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                                            SX1509B_REG_HIGH_INPUT_B, NULL, m_p_instances[instance_num].high_input, 2);
+  RETURN_IF_ERR(err);
+  return nrf_twi_sensor_reg_read (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                                  m_p_instances[instance_num].start_addr,
+                                  NULL, m_p_instances[instance_num].registers, SX1509B_REG_COUNT);
+  }
 //}}}
 
 //{{{
-ret_code_t sx1509b_clock_set(uint8_t instance_num, sx1509b_clock_t source, bool oscio_set, uint8_t oscio_freq)
-{
-    if (instance_num >= m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-    uint8_t * p_reg_val = &m_p_instances[instance_num].registers[SX1509B_REG_CLOCK];
+ret_code_t sx1509b_clock_set (uint8_t instance_num, sx1509b_clock_t source, bool oscio_set, uint8_t oscio_freq) {
 
-    NRF_TWI_SENSOR_REG_SET(*p_reg_val, SX1509B_OSC_SRC_MASK, SX1509B_OSC_SRC_POS, source);
-    NRF_TWI_SENSOR_REG_SET(*p_reg_val, SX1509B_OSCIO_PIN_MASK, SX1509B_OSCIO_PIN_POS, oscio_set);
-    NRF_TWI_SENSOR_REG_SET(*p_reg_val,
-                           SX1509B_OSCOUT_FREQ_MASK,
-                           SX1509B_OSCOUT_FREQ_POS,
-                           oscio_freq);
+  if (instance_num >= m_inst_count)
+    return NRF_ERROR_INVALID_PARAM;
+  uint8_t * p_reg_val = &m_p_instances[instance_num].registers[SX1509B_REG_CLOCK];
 
-    uint8_t send_msg[] = {
-        SX1509B_REG_CLOCK,
-        *p_reg_val
-    };
-    return nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                                m_p_instances[instance_num].sensor_addr,
-                                send_msg,
-                                ARRAY_SIZE(send_msg),
-                                true);
-}
+  NRF_TWI_SENSOR_REG_SET (*p_reg_val, SX1509B_OSC_SRC_MASK, SX1509B_OSC_SRC_POS, source);
+  NRF_TWI_SENSOR_REG_SET (*p_reg_val, SX1509B_OSCIO_PIN_MASK, SX1509B_OSCIO_PIN_POS, oscio_set);
+  NRF_TWI_SENSOR_REG_SET (*p_reg_val, SX1509B_OSCOUT_FREQ_MASK, SX1509B_OSCOUT_FREQ_POS, oscio_freq);
+
+  uint8_t send_msg[] = { SX1509B_REG_CLOCK, *p_reg_val };
+  return nrf_twi_sensor_write (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                               send_msg, ARRAY_SIZE(send_msg), true);
+  }
 //}}}
 //{{{
-ret_code_t sx1509b_misc_set(uint8_t instance_num,
-                            bool nreset_func,
-                            sx1509b_debounce_t debounce_time,
-                            bool autoclear_nint)
-{
-    if (instance_num >= m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-    uint8_t * p_reg_val = &m_p_instances[instance_num].registers[SX1509B_REG_MISC];
+ret_code_t sx1509b_misc_set (uint8_t instance_num, bool nreset_func, sx1509b_debounce_t debounce_time, bool autoclear_nint) {
 
-    NRF_TWI_SENSOR_REG_SET(*p_reg_val, SX1509B_NRESET_PIN_MASK, SX1509B_NRESET_PIN_POS, nreset_func);
-    NRF_TWI_SENSOR_REG_SET(*p_reg_val,
-                           SX1509B_AUTO_CLEAR_NINT_MASK,
-                           SX1509B_AUTO_CLEAR_NINT_POS,
-                           autoclear_nint);
-    uint8_t send_msg[] = {
-        SX1509B_REG_MISC,
-        *p_reg_val
-    };
-    ret_code_t err = nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                                          m_p_instances[instance_num].sensor_addr,
-                                          send_msg,
-                                          ARRAY_SIZE(send_msg),
-                                          true);
-    RETURN_IF_ERR(err);
-    m_p_instances[instance_num].registers[SX1509B_REG_DEBOUNCE_CONFIG] = debounce_time;
-    send_msg[0] = SX1509B_REG_DEBOUNCE_CONFIG;
-    send_msg[1] = debounce_time;
+  if (instance_num >= m_inst_count)
+    return NRF_ERROR_INVALID_PARAM;
+  uint8_t * p_reg_val = &m_p_instances[instance_num].registers[SX1509B_REG_MISC];
 
-    return nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                                m_p_instances[instance_num].sensor_addr,
-                                send_msg,
-                                ARRAY_SIZE(send_msg),
-                                true);
+  NRF_TWI_SENSOR_REG_SET (*p_reg_val, SX1509B_NRESET_PIN_MASK, SX1509B_NRESET_PIN_POS, nreset_func);
+  NRF_TWI_SENSOR_REG_SET (*p_reg_val, SX1509B_AUTO_CLEAR_NINT_MASK, SX1509B_AUTO_CLEAR_NINT_POS, autoclear_nint);
+  uint8_t send_msg[] = { SX1509B_REG_MISC, *p_reg_val };
+  ret_code_t err = nrf_twi_sensor_write (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                                         send_msg, ARRAY_SIZE(send_msg), true);
+  RETURN_IF_ERR(err);
 
-}
+  m_p_instances[instance_num].registers[SX1509B_REG_DEBOUNCE_CONFIG] = debounce_time;
+  send_msg[0] = SX1509B_REG_DEBOUNCE_CONFIG;
+  send_msg[1] = debounce_time;
+
+  return nrf_twi_sensor_write (m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                               send_msg, ARRAY_SIZE(send_msg), true);
+  }
 //}}}
 //{{{
-ret_code_t sx1509b_sw_reset(uint8_t instance_num)
-{
-    if (instance_num >= m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-    uint8_t send_msg[] = {
-        SX1509B_REG_SW_RESET,
-        SX1509B_INNER_RESET_BYTE1
-    };
-    ret_code_t err = nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                                          m_p_instances[instance_num].sensor_addr,
-                                          send_msg,
-                                          ARRAY_SIZE(send_msg),
-                                          true);
-    RETURN_IF_ERR(err);
-    send_msg[1] = SX1509B_INNER_RESET_BYTE2;
-    err = nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data,
-                               m_p_instances[instance_num].sensor_addr,
-                               send_msg,
-                               ARRAY_SIZE(send_msg),
-                               true);
-    RETURN_IF_ERR(err);
-    sx1509b_default_cfg_set(instance_num);
-    return err;
-}
+ret_code_t sx1509b_sw_reset (uint8_t instance_num) {
+
+  if (instance_num >= m_inst_count)
+    return NRF_ERROR_INVALID_PARAM;
+  uint8_t send_msg[] = { SX1509B_REG_SW_RESET, SX1509B_INNER_RESET_BYTE1 };
+  ret_code_t err = nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                                        send_msg, ARRAY_SIZE(send_msg), true);
+  RETURN_IF_ERR(err);
+  send_msg[1] = SX1509B_INNER_RESET_BYTE2;
+  err = nrf_twi_sensor_write(m_p_instances[instance_num].p_sensor_data, m_p_instances[instance_num].sensor_addr,
+                             send_msg, ARRAY_SIZE(send_msg), true);
+  RETURN_IF_ERR(err);
+  sx1509b_default_cfg_set(instance_num);
+  return err;
+  }
 //}}}
 
 //{{{
-ret_code_t sx1509b_pin_cfg_reg_set(sx1509b_registers_t reg, uint32_t pin, uint8_t set)
+ret_code_t sx1509b_pin_cfg_reg_set (sx1509b_registers_t reg, uint32_t pin, uint8_t set)
 {
     if (pin >= SX1509B_INNER_PIN_COUNT * m_inst_count)
     {
@@ -304,7 +234,7 @@ ret_code_t sx1509b_pin_cfg_reg_set(sx1509b_registers_t reg, uint32_t pin, uint8_
 }
 //}}}
 //{{{
-uint8_t sx1509b_pin_cfg_reg_get(sx1509b_registers_t reg, uint32_t pin)
+uint8_t sx1509b_pin_cfg_reg_get (sx1509b_registers_t reg, uint32_t pin)
 {
     if (pin >= SX1509B_INNER_PIN_COUNT * m_inst_count)
     {
@@ -340,7 +270,7 @@ uint8_t sx1509b_pin_cfg_reg_get(sx1509b_registers_t reg, uint32_t pin)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_port_cfg_reg_set(sx1509b_registers_t reg,
+ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
                                     uint32_t            port,
                                     uint8_t             mask,
                                     sx1509b_port_op_t   flag)
@@ -378,7 +308,7 @@ ret_code_t sx1509b_port_cfg_reg_set(sx1509b_registers_t reg,
 }
 //}}}
 //{{{
-uint8_t sx1509b_port_cfg_reg_get(sx1509b_registers_t reg, uint32_t port)
+uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port)
 {
     if (port >= SX1509B_INNER_PORT_COUNT * m_inst_count)
     {
@@ -392,7 +322,7 @@ uint8_t sx1509b_port_cfg_reg_get(sx1509b_registers_t reg, uint32_t port)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_data_update(nrf_twi_sensor_reg_cb_t user_cb)
+ret_code_t sx1509b_pin_data_update (nrf_twi_sensor_reg_cb_t user_cb)
 {
     ret_code_t err_code;
     for (uint8_t i = 0; i < m_inst_count - 1; i++)
@@ -414,7 +344,7 @@ ret_code_t sx1509b_pin_data_update(nrf_twi_sensor_reg_cb_t user_cb)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_latch_update(nrf_twi_sensor_reg_cb_t user_cb)
+ret_code_t sx1509b_pin_latch_update (nrf_twi_sensor_reg_cb_t user_cb)
 {
     ret_code_t err_code;
     for (uint8_t i = 0; i < m_inst_count - 1; i++) // -1 so last read triggers callback
@@ -436,7 +366,7 @@ ret_code_t sx1509b_pin_latch_update(nrf_twi_sensor_reg_cb_t user_cb)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_high_input(uint32_t pin_number, bool set)
+ret_code_t sx1509b_pin_high_input (uint32_t pin_number, bool set)
 {
     if (pin_number >= SX1509B_INNER_PIN_COUNT * m_inst_count)
     {
@@ -471,7 +401,7 @@ ret_code_t sx1509b_pin_high_input(uint32_t pin_number, bool set)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_port_high_input(uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag)
+ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag)
 {
     if (port_num >= SX1509B_INNER_PORT_COUNT * m_inst_count)
     {
@@ -511,7 +441,7 @@ ret_code_t sx1509b_port_high_input(uint8_t port_num, uint8_t out_mask, sx1509b_p
 //}}}
 
 //{{{
-ret_code_t sx1509b_pin_cfg_input(uint32_t pin_number, sx1509b_pin_pull_t pull_config)
+ret_code_t sx1509b_pin_cfg_input (uint32_t pin_number, sx1509b_pin_pull_t pull_config)
 {
     ret_code_t err_code = sx1509b_pin_cfg_reg_set(SX1509B_REG_DIR_B, pin_number, SX1509B_PIN_DIR_INPUT);
     RETURN_IF_ERR(err_code);
@@ -539,7 +469,7 @@ ret_code_t sx1509b_pin_cfg_input(uint32_t pin_number, sx1509b_pin_pull_t pull_co
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_cfg_default(uint32_t pin_number)
+ret_code_t sx1509b_pin_cfg_default (uint32_t pin_number)
 {
     if (pin_number >= SX1509B_INNER_PIN_COUNT * m_inst_count)
     {
@@ -591,7 +521,7 @@ ret_code_t sx1509b_pin_cfg_default(uint32_t pin_number)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_cfg_sense_input(uint32_t pin_number,
+ret_code_t sx1509b_pin_cfg_sense_input (uint32_t pin_number,
                                        sx1509b_pin_pull_t  pull_config,
                                        sx1509b_pin_sense_t sense_config)
 {
@@ -601,7 +531,7 @@ ret_code_t sx1509b_pin_cfg_sense_input(uint32_t pin_number,
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_cfg_sense_set(uint32_t pin_number, sx1509b_pin_sense_t sense_config)
+ret_code_t sx1509b_pin_cfg_sense_set (uint32_t pin_number, sx1509b_pin_sense_t sense_config)
 {
     ret_code_t err;
     if (sense_config == SX1509B_PIN_NOSENSE)
@@ -618,7 +548,7 @@ ret_code_t sx1509b_pin_cfg_sense_set(uint32_t pin_number, sx1509b_pin_sense_t se
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_dir_set(uint32_t pin_number, sx1509b_pin_dir_t direction)
+ret_code_t sx1509b_pin_dir_set (uint32_t pin_number, sx1509b_pin_dir_t direction)
 {
     if (direction == SX1509B_PIN_DIR_INPUT)
     {
@@ -631,7 +561,7 @@ ret_code_t sx1509b_pin_dir_set(uint32_t pin_number, sx1509b_pin_dir_t direction)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_ports_read(uint8_t start_port, uint32_t length, uint8_t * p_masks)
+ret_code_t sx1509b_ports_read (uint8_t start_port, uint32_t length, uint8_t * p_masks)
 {
     if (start_port + length > SX1509B_INNER_PORT_COUNT * m_inst_count)
     {
@@ -646,7 +576,7 @@ ret_code_t sx1509b_ports_read(uint8_t start_port, uint32_t length, uint8_t * p_m
 }
 //}}}
 //{{{
-ret_code_t sx1509b_latches_read(uint8_t start_port, uint32_t length, uint8_t * p_masks)
+ret_code_t sx1509b_latches_read (uint8_t start_port, uint32_t length, uint8_t * p_masks)
 {
     if (start_port + length > SX1509B_INNER_PORT_COUNT * m_inst_count)
     {
@@ -661,7 +591,7 @@ ret_code_t sx1509b_latches_read(uint8_t start_port, uint32_t length, uint8_t * p
 }
 //}}}
 //{{{
-ret_code_t sx1509b_pin_latch_clear(uint32_t pin_number)
+ret_code_t sx1509b_pin_latch_clear (uint32_t pin_number)
 {
     ret_code_t err_code = sx1509b_pin_cfg_reg_set(SX1509B_REG_INT_SRC_B, pin_number, 1);
     RETURN_IF_ERR(err_code);
