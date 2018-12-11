@@ -13,12 +13,8 @@
  <Project>
   <ProjectSessionItem path="blinky_pca10040_s132"/>
   <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132"/>
-  <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;nRF\components\boards"/>
-  <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;nRF\components\drivers_ext\sx1509b"/>
-  <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;nRF_components_Libraries"/>
   <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;nRF_components_libraries_Log"/>
   <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;nRF_components_libraries_Log;inc"/>
-  <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;startup"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -43,8 +39,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="64" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="43" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="217" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.c" selected="1" top="205" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="48" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_uart.h" selected="0" top="33" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="50" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log_backend_uart.h" selected="1" top="50" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="blinky_pca10040_s132" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

@@ -39,6 +39,18 @@
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_default_backends.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_str_formatter.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/libraries/log/nrf_log.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_flash.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_interface.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_rtt.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_uart.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_ctrl.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_default_backends.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_instance.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_str_formatter.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_types.h" />
+      </folder>
     </folder>
     <folder Name="nRF_Libraries">
       <file file_name="../../../../../../components/libraries/button/app_button.c" />
@@ -68,12 +80,9 @@
       <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
       <file file_name="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.12/source/thumb_crt0.s" />
     </folder>
-    <folder Name="Board Definition">
-      <file file_name="../../../../../../components/boards/boards.c" />
+    <folder Name="nrf\components\drivers_ext\sx1509b">
       <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b.c" />
       <folder Name="inc">
-        <file file_name="../../../../../../components/boards/pca20020.h" />
-        <file file_name="../../../../../../components/boards/boards.h" />
         <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b.h" />
         <file file_name="../../../../../../components/drivers_ext/sx1509b/sx1509b_internal.h" />
       </folder>
@@ -99,10 +108,6 @@
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_twim.h" />
       </folder>
     </folder>
-    <folder Name="Application">
-      <file file_name="../../../main.c" />
-      <file file_name="../config/sdk_config.h" />
-    </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT_Syscalls_SES.c" />
@@ -126,6 +131,13 @@
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_ble.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_soc.c" />
+    </folder>
+    <file file_name="../../../main.c" />
+    <file file_name="../config/sdk_config.h" />
+    <folder Name="nrf\components\board">
+      <file file_name="../../../../../../components/boards/boards.c" />
+      <file file_name="../../../../../../components/boards/pca20020.h" />
+      <file file_name="../../../../../../components/boards/boards.h" />
     </folder>
   </project>
   <configuration
