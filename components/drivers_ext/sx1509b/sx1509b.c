@@ -50,7 +50,8 @@ static sx1509b_instance_t * m_p_instances;
 //{{{
 void sx1509b_init (sx1509b_instance_t* p_instances, uint8_t count) {
 
-  ASSERT(p_instances != NULL);
+  ASSERT (p_instances != NULL);
+
   m_p_instances = p_instances;
   m_max_instance_count = count;
   m_inst_count = 0;
@@ -63,11 +64,11 @@ static void sx1509b_default_cfg_set (uint8_t instance_num) {
   m_p_instances[instance_num].start_addr  = 0x00;
 
   for (uint8_t i = SX1509B_REG_INPUT_DISABLE_B; i < SX1509B_REG_DIR_B; i++)
-      m_p_instances[instance_num].registers[i] = 0;
+    m_p_instances[instance_num].registers[i] = 0;
   for (uint8_t i = SX1509B_REG_DIR_B; i < SX1509B_REG_SENSE_H_B; i++)
-      m_p_instances[instance_num].registers[i] = 0xFF;
+    m_p_instances[instance_num].registers[i] = 0xFF;
   for (uint8_t i = SX1509B_REG_SENSE_H_B; i < SX1509B_REG_KEY_DATA_1; i++)
-      m_p_instances[instance_num].registers[i] = 0;
+    m_p_instances[instance_num].registers[i] = 0;
 
   m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_1] = 0xFF;
   m_p_instances[instance_num].registers[SX1509B_REG_KEY_DATA_2] = 0xFF;
@@ -80,18 +81,19 @@ static void sx1509b_default_cfg_set (uint8_t instance_num) {
 //{{{
 ret_code_t sx1509b_add_instance (nrf_twi_sensor_t* p_twi_sensor, uint8_t sensor_address) {
 
-  ASSERT(p_twi_sensor != NULL);
+  ASSERT (p_twi_sensor != NULL);
+
   if (m_p_instances == NULL)
-      return NRF_ERROR_MODULE_NOT_INITIALIZED;
+    return NRF_ERROR_MODULE_NOT_INITIALIZED;
   if (m_inst_count >= m_max_instance_count)
-      return NRF_ERROR_STORAGE_FULL;
+    return NRF_ERROR_STORAGE_FULL;
 
   m_p_instances[m_inst_count].p_sensor_data = p_twi_sensor;
   m_p_instances[m_inst_count].sensor_addr = sensor_address;
-  sx1509b_default_cfg_set(m_inst_count);
+  sx1509b_default_cfg_set (m_inst_count);
   m_inst_count++;
 
-  ret_code_t err_code = sx1509b_cfg_write(m_inst_count - 1);
+  ret_code_t err_code = sx1509b_cfg_write (m_inst_count - 1);
   return err_code;
   }
 //}}}

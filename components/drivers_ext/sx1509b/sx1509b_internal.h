@@ -179,7 +179,7 @@ typedef enum {
 #define SX1509B_REG_TEST_2              0x7F
 
 typedef struct {
-  nrf_twi_sensor_t * p_sensor_data;
+  nrf_twi_sensor_t* p_sensor_data;
   uint8_t sensor_addr;
   uint8_t start_addr;
   uint8_t registers[SX1509B_REG_COUNT];

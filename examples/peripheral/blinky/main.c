@@ -1,3 +1,4 @@
+// main.c
 //{{{
 /**
  * Copyright (c) 2014 - 2018, Nordic Semiconductor ASA
@@ -46,10 +47,8 @@
 #include "boards.h"
 
 int main() {
-  /* Configure board. */
   bsp_board_init (BSP_INIT_LEDS);
 
-  /* Toggle LEDs. */
   while (true) {
     for (int i = 0; i < LEDS_NUMBER; i++) {
       bsp_board_led_invert(i);

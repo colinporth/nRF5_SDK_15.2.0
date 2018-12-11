@@ -35,6 +35,22 @@
     <folder Name="nRF_components_libraries_Log">
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_str_formatter.c" />
+      <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_rtt.c" />
+      <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_serial.c" />
+      <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_uart.c" />
+      <file file_name="../../../../../../components/libraries/log/src/nrf_log_default_backends.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/libraries/log/nrf_log.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_flash.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_interface.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_rtt.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_uart.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_ctrl.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_default_backends.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_instance.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_str_formatter.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_types.h" />
+      </folder>
     </folder>
     <folder Name="nRF_components_Boards">
       <file file_name="../../../../../../components/boards/boards.c" />
@@ -65,10 +81,6 @@
       </folder>
       <file file_name="../../../../../../components/libraries/twi_mngr/nrf_twi_mngr.c" />
     </folder>
-    <folder Name="Application">
-      <file file_name="../../../main.c" />
-      <file file_name="../config/sdk_config.h" />
-    </folder>
     <folder Name="Startup">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
@@ -91,6 +103,8 @@
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_uarte.h" />
       </folder>
     </folder>
+    <file file_name="../../../main.c" />
+    <file file_name="../config/sdk_config.h" />
   </project>
   <configuration
     Name="Release"

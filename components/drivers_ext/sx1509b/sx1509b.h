@@ -55,7 +55,7 @@ extern "C" {
 #define SX1509B_BASE_ADDRESS_FOURTH  0x71u
 
 typedef enum { SX1509B_LED_DRIVER_T_ON, SX1509B_LED_DRIVER_I_ON, SX1509B_LED_DRIVER_OFF,
-               SX1509B_LED_DRIVER_T_RISE, SX1509B_LED_DRIVER_T_FALL 
+               SX1509B_LED_DRIVER_T_RISE, SX1509B_LED_DRIVER_T_FALL
                } sx1509b_led_driver_set_t;
 typedef enum {  SX1509B_PIN_DIR_OUTPUT, SX1509B_PIN_DIR_INPUT } sx1509b_pin_dir_t;
 typedef enum { SX1509B_PIN_CLR, SX1509B_PIN_SET } sx1509b_pin_set_t;
@@ -64,7 +64,7 @@ typedef enum { SX1509B_PIN_NOSENSE, SX1509B_PIN_SENSE_RISING, SX1509B_PIN_SENSE_
 typedef enum { SX1509B_PORT_WRITE, SX1509B_PORT_CLEAR, SX1509B_PORT_SET } sx1509b_port_op_t;
 typedef enum { SX1509B_LEVEL_OFF, SX1509B_LEVEL_A_TO_B, SX1509B_LEVEL_B_TO_A } sx1509b_level_shift_t;
 typedef enum { SX1509B_DEBOUNCE_0_5MS, SX1509B_DEBOUNCE_1MS, SX1509B_DEBOUNCE_2MS, SX1509B_DEBOUNCE_4MS,
-               SX1509B_DEBOUNCE_8MS, SX1509B_DEBOUNCE_16MS, SX1509B_DEBOUNCE_32MS, SX1509B_DEBOUNCE_64MS 
+               SX1509B_DEBOUNCE_8MS, SX1509B_DEBOUNCE_16MS, SX1509B_DEBOUNCE_32MS, SX1509B_DEBOUNCE_64MS
                } sx1509b_debounce_t;
 typedef enum { SX1509B_CLOCK_DISABLED, SX1509B_CLOCK_EXTERNAL, SX1509B_CLOCK_INTERNAL } sx1509b_clock_t;
 typedef enum { SX1509B_KEY_TIME_SLEEP_OFF, SX1509B_KEY_TIME_SLEEP_128MS, SX1509B_KEY_TIME_SLEEP_256MS, SX1509B_KEY_TIME_SLEEP_512MS,
@@ -90,13 +90,10 @@ void sx1509b_init(sx1509b_instance_t * p_instances, uint8_t count);
 //{{{
 /**
  * @brief Function adding expander instance.
- *
  * @note Should be called for every connected expander.
  *       Order of calls define order of pins and ports.
- *
  * @param[in] p_twi_sensor   Pointer to common sensor instance. @ref NRF_TWI_SENSOR_DEF
  * @param[in] sensor_address Address of expander on I2C bus.
- *
  * @retval NRF_ERROR_MODULE_NOT_INITIALIZED Returned if expander module wasn't initialised
  * @retval NRF_ERROR_STORAGE_FULL           Returned if trying to add more instances than defined.
  * @retval other                            Return error code from nrf_twi_sensor
@@ -107,9 +104,7 @@ ret_code_t sx1509b_add_instance (nrf_twi_sensor_t * p_twi_sensor, uint8_t sensor
 //{{{
 /**
  * @brief Function for writing current configuration to expander.
- *
  * @param[in] instance_num Number of expander, order is the same as sx1509b_add_instance calls.
- *
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
@@ -118,8 +113,6 @@ ret_code_t sx1509b_cfg_write (uint8_t instance_num);
 //{{{
 /**
  * @brief Function for reading current configuration of expander.
- *
- * @param[in] instance_num Number of expander, order is the same as sx1509b_add_instance calls.
  *
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no expander with given number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
