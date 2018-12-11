@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2017 - 2018, Nordic Semiconductor ASA
  *
@@ -37,9 +38,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-
-
+//}}}
 #ifndef SDK_CONFIG_H
 #define SDK_CONFIG_H
 // <<< Use Configuration Wizard in Context Menu >>>\n
