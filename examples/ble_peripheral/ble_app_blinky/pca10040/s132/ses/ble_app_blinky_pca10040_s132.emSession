@@ -13,6 +13,7 @@
  <Project>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132"/>
+  <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;Application"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF_BLE"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF_Drivers"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF_Log"/>
@@ -45,12 +46,13 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="102" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="86" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="14" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="73" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/nrf_ble_qwr/nrf_ble_qwr.h" selected="0" top="59" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="12016" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="0" top="12002" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="7" y="7407" useTextEdit="1" useBinaryEdit="0" left="0" path="../config/sdk_config.h" selected="1" top="7374" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="63" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/softdevice/common/nrf_sdh_ble.c" selected="0" top="40" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="267" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/common/ble_conn_state.c" selected="0" top="244" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="569" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/common/ble_conn_params.c" selected="0" top="546" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/nrf_ble_qwr/nrf_ble_qwr.c" selected="0" top="3" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" selected="1" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="23" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="41" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/src/nrf_log_default_backends.c" selected="0" top="36" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_blinky_pca10040_s132" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

@@ -46,7 +46,22 @@
 #include "nrf_delay.h"
 #include "boards.h"
 
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
+
+//{{{
+static void log_init() {
+
+  ret_code_t err_code = NRF_LOG_INIT(NULL);
+  APP_ERROR_CHECK(err_code);
+  NRF_LOG_DEFAULT_BACKENDS_INIT();
+  }
+//}}}
+
 int main() {
+
+  log_init();
   bsp_board_init (BSP_INIT_LEDS);
 
   while (true) {
