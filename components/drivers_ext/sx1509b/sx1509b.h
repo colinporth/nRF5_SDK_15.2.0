@@ -74,18 +74,9 @@ typedef enum { SX1509B_KEY_TIME_SCAN_1MS, SX1509B_KEY_TIME_SCAN_2MS, SX1509B_KEY
                SX1509B_KEY_TIME_SCAN_16MS, SX1509B_KEY_TIME_SCAN_32MS, SX1509B_KEY_TIME_SCAN_64MS, SX1509B_KEY_TIME_SCAN_128MS
                } sx1509b_key_scan_t;
 
-//{{{
-/**
- * @brief Macro that defines expander module.
- *
- * @param[in] sx1509b_inst_name Name of the instance to be created.
- * @param[in] instance_count    Number of connected expanders.
- */
-#define SX1509B_INSTANCES_DEF_START (sx1509b_inst_name, instance_count)\
-    static sx1509b_instance_t sx1509b_inst_name[instance_count]
-//}}}
+#define SX1509B_INSTANCES_DEF_START (sx1509b_inst_name, instance_count) static sx1509b_instance_t sx1509b_inst_name[instance_count]
 
-void sx1509b_init(sx1509b_instance_t * p_instances, uint8_t count);
+void sx1509b_init (sx1509b_instance_t* p_instances, uint8_t count);
 
 //{{{
 /**
@@ -99,7 +90,7 @@ void sx1509b_init(sx1509b_instance_t * p_instances, uint8_t count);
  * @retval other                            Return error code from nrf_twi_sensor
  *                                          @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_add_instance (nrf_twi_sensor_t * p_twi_sensor, uint8_t sensor_address);
+ret_code_t sx1509b_add_instance (nrf_twi_sensor_t* p_twi_sensor, uint8_t sensor_address);
 //}}}
 //{{{
 /**

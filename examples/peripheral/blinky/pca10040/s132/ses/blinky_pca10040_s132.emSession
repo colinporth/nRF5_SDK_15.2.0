@@ -13,6 +13,7 @@
  <Project>
   <ProjectSessionItem path="blinky_pca10040_s132"/>
   <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132"/>
+  <ProjectSessionItem path="blinky_pca10040_s132;blinky_pca10040_s132;startup"/>
  </Project>
  <Register1/>
  <Register2/>

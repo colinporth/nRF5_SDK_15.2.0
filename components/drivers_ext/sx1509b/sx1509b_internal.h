@@ -165,12 +165,12 @@ typedef enum {
 #define SX1509B_COL_NUM_MASK            (7 << SX1509B_COL_NUM_POS)
 
 // Led driver off register Bitmasks for OFF_TIME.
-#define SX1509B_OFF_TIME_POS          3
-#define SX1509B_OFF_TIME_MASK         (0x1F << SX1509B_OFF_TIME_POS)
+#define SX1509B_OFF_TIME_POS            3
+#define SX1509B_OFF_TIME_MASK           (0x1F << SX1509B_OFF_TIME_POS)
 
 // Led driver off register Bitmasks for off intensity.
-#define SX1509B_OFF_INTENSITY_POS     0
-#define SX1509B_OFF_INTENSITY_MASK    (7 << SX1509B_OFF_INTENSITY_POS)
+#define SX1509B_OFF_INTENSITY_POS       0
+#define SX1509B_OFF_INTENSITY_MASK      (7 << SX1509B_OFF_INTENSITY_POS)
 
 #define SX1509B_REG_HIGH_INPUT_B        0x69
 #define SX1509B_REG_HIGH_INPUT_A        0x6A

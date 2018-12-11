@@ -81,7 +81,7 @@
       </folder>
       <file file_name="../../../../../../components/libraries/twi_mngr/nrf_twi_mngr.c" />
     </folder>
-    <folder Name="Startup">
+    <folder Name="startup">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
