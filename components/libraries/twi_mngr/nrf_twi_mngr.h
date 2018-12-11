@@ -1,3 +1,4 @@
+//{{{  copyright
 /**
  * Copyright (c) 2015 - 2018, Nordic Semiconductor ASA
  *
@@ -37,28 +38,19 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef NRF_TWI_MNGR_H__
-#define NRF_TWI_MNGR_H__
-
+//}}}
+#pragma once
+//{{{  includes
 #include <stdint.h>
 #include "nrf_drv_twi.h"
 #include "sdk_errors.h"
 #include "nrf_queue.h"
-
+//}}}
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @defgroup nrf_twi_mngr TWI transaction manager
- * @{
- * @ingroup app_common
- *
- * @brief Module for scheduling TWI transactions.
- */
-
-//If TWIM is present buffers can only be in RAM
-/*lint -save -e491*/
+//}}}
 
 /**
  * @brief Macro checking if buffers should be stored in RAM.
@@ -69,7 +61,6 @@ extern "C" {
 
 /**
  * @brief Modifier used in array declaration for TWI Manager.
- *
  * @note  For TWI peripheral array can be const, for TWIM array has to be located in RAM.
  */
 #if NRF_TWI_MNGR_BUFFERS_IN_RAM
@@ -82,7 +73,6 @@ extern "C" {
 /**
  * @brief Flag indicating that a given transfer should not be ended
  *        with a stop condition.
- *
  * Use this flag when a stop condition is undesirable between two transfers,
  * for example, when the first transfer is a write that sets an address in the slave
  * device and the second one is a read that fetches certain data using this
@@ -92,6 +82,7 @@ extern "C" {
  */
 #define NRF_TWI_MNGR_NO_STOP     0x01
 
+//{{{
 /**
  * @brief Macro for creating a write transfer.
  *
@@ -102,7 +93,9 @@ extern "C" {
  */
 #define NRF_TWI_MNGR_WRITE(address, p_data, length, flags) \
     NRF_TWI_MNGR_TRANSFER(NRF_TWI_MNGR_WRITE_OP(address), p_data, length, flags)
+//}}}
 
+//{{{
 /**
  * @brief Macro for creating a read transfer.
  *
@@ -113,7 +106,9 @@ extern "C" {
  */
 #define NRF_TWI_MNGR_READ(address, p_data, length, flags) \
     NRF_TWI_MNGR_TRANSFER(NRF_TWI_MNGR_READ_OP(address), p_data, length, flags)
+//}}}
 
+//{{{
 /**
  * @brief Helper macro, should not be used directly.
  */
@@ -124,23 +119,32 @@ extern "C" {
     .operation = _operation,           \
     .flags     = _flags                \
 }
+//}}}
+//{{{
 /**
  * @brief Helper macro, should not be used directly.
  */
 #define NRF_TWI_MNGR_WRITE_OP(address)      (((address) << 1) | 0)
+//}}}
+//{{{
 /**
  * @brief Helper macro, should not be used directly.
  */
 #define NRF_TWI_MNGR_READ_OP(address)       (((address) << 1) | 1)
+//}}}
+//{{{
 /**
  * @brief Helper macro, should not be used directly.
  */
 #define NRF_TWI_MNGR_IS_READ_OP(operation)  ((operation) & 1)
+//}}}
+//{{{
 /**
  * @brief Helper macro, should not be used directly.
  */
 #define NRF_TWI_MNGR_OP_ADDRESS(operation)  ((operation) >> 1)
-
+//}}}
+//{{{
 /**
  * @brief TWI transaction callback prototype.
  *
@@ -150,7 +154,9 @@ extern "C" {
  *                        descriptor.
  */
 typedef void (* nrf_twi_mngr_callback_t)(ret_code_t result, void * p_user_data);
+//}}}
 
+//{{{
 /**
  * @brief TWI transfer descriptor.
  */
@@ -159,59 +165,55 @@ typedef struct {
     uint8_t   length;     ///< Number of bytes to transfer.
     uint8_t   operation;  ///< Device address combined with transfer direction.
     uint8_t   flags;      ///< Transfer flags (see @ref NRF_TWI_MNGR_NO_STOP).
-} nrf_twi_mngr_transfer_t;
-
+  } nrf_twi_mngr_transfer_t;
+//}}}
+//{{{
 /**
  * @brief TWI transaction descriptor.
  */
 typedef struct {
     nrf_twi_mngr_callback_t         callback;
     ///< User-specified function to be called after the transaction is finished.
-
     void *                          p_user_data;
     ///< Pointer to user data to be passed to the callback.
-
     nrf_twi_mngr_transfer_t const * p_transfers;
     ///< Pointer to the array of transfers that make up the transaction.
-
     uint8_t                         number_of_transfers;
     ///< Number of transfers that make up the transaction.
-
     nrf_drv_twi_config_t const *    p_required_twi_cfg;
     ///< Pointer to instance hardware configuration.
-} nrf_twi_mngr_transaction_t;
-
+  } nrf_twi_mngr_transaction_t;
+//}}}
+//{{{
 /**
  * @brief TWI instance control block.
  */
 typedef struct {
     nrf_twi_mngr_transaction_t const * volatile p_current_transaction;
     ///< Currently realized transaction.
-
     nrf_drv_twi_config_t default_configuration;
     ///< Default hardware configuration.
-
     nrf_drv_twi_config_t const * p_current_configuration;
     ///< Pointer to current hardware configuration.
-
     uint8_t volatile current_transfer_idx;
     ///< Index of currently performed transfer (within current transaction).
-} nrf_twi_mngr_cb_t;
-
+  } nrf_twi_mngr_cb_t;
+//}}}
+//{{{
 /**
  * @brief TWI transaction manager instance.
  */
 typedef struct {
     nrf_twi_mngr_cb_t * p_nrf_twi_mngr_cb;
     ///< Control block of instance.
-
     nrf_queue_t const * p_queue;
     ///< Transaction queue.
-
     nrf_drv_twi_t twi;
     ///< Pointer to TWI master driver instance.
-} nrf_twi_mngr_t;
+  } nrf_twi_mngr_t;
+//}}}
 
+//{{{
 /**
  * @brief Macro that simplifies defining a TWI transaction manager
  *        instance.
@@ -242,7 +244,9 @@ typedef struct {
         .p_queue                    = &_nrf_twi_mngr_name##_queue,                              \
         .twi                        = NRF_DRV_TWI_INSTANCE(_twi_idx)                            \
     }
+//}}}
 
+//{{{
 /**
  * @brief Function for initializing a TWI transaction manager instance.
  *
@@ -255,14 +259,16 @@ typedef struct {
  */
 ret_code_t nrf_twi_mngr_init(nrf_twi_mngr_t const *          p_nrf_twi_mngr,
                              nrf_drv_twi_config_t const *    p_default_twi_config);
-
+//}}}
+//{{{
 /**
  * @brief Function for uninitializing a TWI transaction manager instance.
  *
  * @param[in] p_nrf_twi_mngr Pointer to the instance to be uninitialized.
  */
 void nrf_twi_mngr_uninit(nrf_twi_mngr_t const * p_nrf_twi_mngr);
-
+//}}}
+//{{{
 /**
  * @brief Function for scheduling a TWI transaction.
  *
@@ -287,7 +293,8 @@ void nrf_twi_mngr_uninit(nrf_twi_mngr_t const * p_nrf_twi_mngr);
  */
 ret_code_t nrf_twi_mngr_schedule(nrf_twi_mngr_t const *             p_nrf_twi_mngr,
                                  nrf_twi_mngr_transaction_t const * p_transaction);
-
+//}}}
+//{{{
 /**
  * @brief Function for scheduling a transaction and waiting until it is finished.
  *
@@ -312,7 +319,8 @@ ret_code_t nrf_twi_mngr_perform(nrf_twi_mngr_t const *          p_nrf_twi_mngr,
                                 nrf_twi_mngr_transfer_t const * p_transfers,
                                 uint8_t                         number_of_transfers,
                                 void                            (* user_function)(void));
-
+//}}}
+//{{{
 /**
  * @brief Function for getting the current state of a TWI transaction manager
  *        instance.
@@ -330,13 +338,10 @@ __STATIC_INLINE bool nrf_twi_mngr_is_idle(nrf_twi_mngr_t const * p_nrf_twi_mngr)
     return (p_nrf_twi_mngr->p_nrf_twi_mngr_cb->p_current_transaction == NULL);
 }
 #endif //SUPPRESS_INLINE_IMPLEMENTATION
-/**
- *@}
- **/
+//}}}
 
-
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
-#endif // NRF_TWI_MNGR_H__
+//}}}

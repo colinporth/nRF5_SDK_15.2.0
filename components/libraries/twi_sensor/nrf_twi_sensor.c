@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2017 - 2018, Nordic Semiconductor ASA
  *
@@ -37,27 +38,34 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+//}}}
+
 #include "nrf_twi_sensor.h"
 #include <string.h>
 
 #define NRF_LOG_MODULE_NAME twi_sensor
+
 #if NRF_TWI_SENSOR_CONFIG_LOG_ENABLED
-    #define NRF_LOG_LEVEL       NRF_TWI_SENSOR_CONFIG_LOG_LEVEL
-    #define NRF_LOG_INFO_COLOR  NRF_TWI_SENSOR_CONFIG_INFO_COLOR
-    #define NRF_LOG_DEBUG_COLOR NRF_TWI_SENSOR_CONFIG_DEBUG_COLOR
+  #define NRF_LOG_LEVEL       NRF_TWI_SENSOR_CONFIG_LOG_LEVEL
+  #define NRF_LOG_INFO_COLOR  NRF_TWI_SENSOR_CONFIG_INFO_COLOR
+  #define NRF_LOG_DEBUG_COLOR NRF_TWI_SENSOR_CONFIG_DEBUG_COLOR
 #else
-    #define NRF_LOG_LEVEL       0
-#endif // NRF_TWI_SENSOR_CONFIG_LOG_ENABLED
+  #define NRF_LOG_LEVEL       0
+#endif
+
 #include "nrf_log.h"
+
 NRF_LOG_MODULE_REGISTER();
 
-
-ret_code_t nrf_twi_sensor_init(nrf_twi_sensor_t * p_twi_sensor)
+//{{{
+ret_code_t nrf_twi_sensor_init (nrf_twi_sensor_t* p_twi_sensor)
 {
     return nrf_balloc_init(p_twi_sensor->p_pool);
 }
+//}}}
 
-static void sensor_read_reg_cb(ret_code_t result, void * p_user_data)
+//{{{
+static void sensor_read_reg_cb (ret_code_t result, void* p_user_data)
 {
     nrf_twi_sensor_read_cmd_t * p_cmd = &((nrf_twi_sensor_cmd_t *) p_user_data)->read;
     NRF_LOG_INFO("Read cb reg addr: 0x%02X, result %d", p_cmd->reg_address, result);
@@ -70,8 +78,9 @@ static void sensor_read_reg_cb(ret_code_t result, void * p_user_data)
     }
     nrf_balloc_free(p_cmd->p_instance->p_pool, p_user_data);
 }
-
-ret_code_t nrf_twi_sensor_reg_read(nrf_twi_sensor_t const * p_instance,
+//}}}
+//{{{
+ret_code_t nrf_twi_sensor_reg_read (nrf_twi_sensor_t const* p_instance,
                                    uint8_t                  sensor_addr,
                                    uint8_t                  reg_address,
                                    nrf_twi_sensor_reg_cb_t  user_cb,
@@ -125,15 +134,18 @@ ret_code_t nrf_twi_sensor_reg_read(nrf_twi_sensor_t const * p_instance,
     }
     return err_code;
 }
+//}}}
 
-static void sensor_write_reg_cb(ret_code_t result, void * p_user_data)
+//{{{
+static void sensor_write_reg_cb (ret_code_t result, void* p_user_data)
 {
     nrf_twi_sensor_write_cmd_t * p_cmd = &((nrf_twi_sensor_cmd_t *) p_user_data)->write;
     NRF_LOG_INFO("Write cb reg addr: 0x%02X, result %d", p_cmd->send_msg[0], result);
     nrf_balloc_free(p_cmd->p_instance->p_pool, p_user_data);
 }
-
-ret_code_t nrf_twi_sensor_write(nrf_twi_sensor_t const * p_instance,
+//}}}
+//{{{
+ret_code_t nrf_twi_sensor_write (nrf_twi_sensor_t const* p_instance,
                                 uint8_t            sensor_addr,
                                 uint8_t const *    p_data,
                                 uint8_t            length,
@@ -193,8 +205,9 @@ ret_code_t nrf_twi_sensor_write(nrf_twi_sensor_t const * p_instance,
     }
     return err_code;
 }
-
-ret_code_t nrf_twi_sensor_reg_write(nrf_twi_sensor_t const * p_instance,
+//}}}
+//{{{
+ret_code_t nrf_twi_sensor_reg_write (nrf_twi_sensor_t const* p_instance,
                                     uint8_t                  sensor_addr,
                                     uint8_t                  reg_address,
                                     uint8_t *                p_data,
@@ -218,3 +231,4 @@ ret_code_t nrf_twi_sensor_reg_write(nrf_twi_sensor_t const * p_instance,
     memcpy(&buf[1], p_data, length);
     return nrf_twi_sensor_write(p_instance, sensor_addr, buf, length + 1, true);
 }
+//}}}

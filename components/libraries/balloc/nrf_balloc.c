@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2016 - 2018, Nordic Semiconductor ASA
  *
@@ -37,6 +38,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+//}}}
 #include "sdk_common.h"
  #if NRF_MODULE_ENABLED(NRF_BALLOC)
 
@@ -44,14 +46,13 @@
 #include "nrf_balloc.h"
 #include "app_util_platform.h"
 
-
 #if NRF_BALLOC_CONFIG_LOG_ENABLED
-    #define NRF_LOG_LEVEL             NRF_BALLOC_CONFIG_LOG_LEVEL
-    #define NRF_LOG_INITIAL_LEVEL     NRF_BALLOC_CONFIG_INITIAL_LOG_LEVEL
-    #define NRF_LOG_INFO_COLOR        NRF_BALLOC_CONFIG_INFO_COLOR
-    #define NRF_LOG_DEBUG_COLOR       NRF_BALLOC_CONFIG_DEBUG_COLOR
+  #define NRF_LOG_LEVEL             NRF_BALLOC_CONFIG_LOG_LEVEL
+  #define NRF_LOG_INITIAL_LEVEL     NRF_BALLOC_CONFIG_INITIAL_LOG_LEVEL
+  #define NRF_LOG_INFO_COLOR        NRF_BALLOC_CONFIG_INFO_COLOR
+  #define NRF_LOG_DEBUG_COLOR       NRF_BALLOC_CONFIG_DEBUG_COLOR
 #else
-    #define NRF_LOG_LEVEL       0
+  #define NRF_LOG_LEVEL       0
 #endif // NRF_BALLOC_CONFIG_LOG_ENABLED
 #include "nrf_log.h"
 
@@ -60,166 +61,169 @@
 #define FREE_MEM_FILL       0xBAADBAAD      /**< Magic number used to mark free memory.*/
 
 #if NRF_BALLOC_CONFIG_DEBUG_ENABLED
-#define POOL_ID(_p_pool) _p_pool->p_name
-#define POOL_MARKER     "%s"
+  #define POOL_ID(_p_pool) _p_pool->p_name
+  #define POOL_MARKER     "%s"
 #else
-#define POOL_ID(_p_pool) _p_pool
-#define POOL_MARKER     "0x%08X"
+  #define POOL_ID(_p_pool) _p_pool
+  #define POOL_MARKER     "0x%08X"
 #endif
 
 NRF_SECTION_DEF(nrf_balloc, nrf_balloc_t);
 
 #if NRF_BALLOC_CLI_CMDS
-#include "nrf_cli.h"
+  #include "nrf_cli.h"
+  //{{{
+  static void nrf_balloc_status(nrf_cli_t const * p_cli, size_t argc, char **argv)
+  {
+      UNUSED_PARAMETER(argv);
 
-static void nrf_balloc_status(nrf_cli_t const * p_cli, size_t argc, char **argv)
-{
-    UNUSED_PARAMETER(argv);
+      if (nrf_cli_help_requested(p_cli))
+      {
+          nrf_cli_help_print(p_cli, NULL, 0);
+          return;
+      }
 
-    if (nrf_cli_help_requested(p_cli))
-    {
-        nrf_cli_help_print(p_cli, NULL, 0);
-        return;
-    }
+      if (argc > 1)
+      {
+          nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Bad argument count");
+          return;
+      }
 
-    if (argc > 1)
-    {
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Bad argument count");
-        return;
-    }
+      uint32_t num_of_instances = NRF_SECTION_ITEM_COUNT(nrf_balloc, nrf_balloc_t);
+      uint32_t i;
 
-    uint32_t num_of_instances = NRF_SECTION_ITEM_COUNT(nrf_balloc, nrf_balloc_t);
-    uint32_t i;
+      for (i = 0; i < num_of_instances; i++)
+      {
+          const nrf_balloc_t * p_instance = NRF_SECTION_ITEM_GET(nrf_balloc, nrf_balloc_t, i);
 
-    for (i = 0; i < num_of_instances; i++)
-    {
-        const nrf_balloc_t * p_instance = NRF_SECTION_ITEM_GET(nrf_balloc, nrf_balloc_t, i);
+          uint32_t element_size = NRF_BALLOC_ELEMENT_SIZE(p_instance);
+          uint32_t dbg_addon  = p_instance->block_size - element_size;
+          uint32_t pool_size  = p_instance->p_stack_limit - p_instance->p_stack_base;
+          uint32_t max_util   = nrf_balloc_max_utilization_get(p_instance);
+          uint32_t util       = nrf_balloc_utilization_get(p_instance);
+          const char * p_name = p_instance->p_name;
+          nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL,
+                          "%s\r\n\t- Element size:\t%d + %d bytes of debug information\r\n"
+                          "\t- Usage:\t%u%% (%u out of %u elements)\r\n"
+                          "\t- Maximum:\t%u%% (%u out of %u elements)\r\n\r\n",
+                          p_name, element_size, dbg_addon,
+                          100ul * util/pool_size, util,pool_size,
+                          100ul * max_util/pool_size, max_util,pool_size);
 
-        uint32_t element_size = NRF_BALLOC_ELEMENT_SIZE(p_instance);
-        uint32_t dbg_addon  = p_instance->block_size - element_size;
-        uint32_t pool_size  = p_instance->p_stack_limit - p_instance->p_stack_base;
-        uint32_t max_util   = nrf_balloc_max_utilization_get(p_instance);
-        uint32_t util       = nrf_balloc_utilization_get(p_instance);
-        const char * p_name = p_instance->p_name;
-        nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL,
-                        "%s\r\n\t- Element size:\t%d + %d bytes of debug information\r\n"
-                        "\t- Usage:\t%u%% (%u out of %u elements)\r\n"
-                        "\t- Maximum:\t%u%% (%u out of %u elements)\r\n\r\n",
-                        p_name, element_size, dbg_addon,
-                        100ul * util/pool_size, util,pool_size,
-                        100ul * max_util/pool_size, max_util,pool_size);
-
-    }
-}
-// Register "balloc" command and its subcommands in CLI.
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(nrf_balloc_commands)
-{
-     NRF_CLI_CMD(status, NULL, "Print status of balloc instances.", nrf_balloc_status),
-     NRF_CLI_SUBCMD_SET_END
-};
-
-NRF_CLI_CMD_REGISTER(balloc, &nrf_balloc_commands, "Commands for BALLOC management", nrf_balloc_status);
+      }
+  }
+  //}}}
+  //{{{
+  // Register "balloc" command and its subcommands in CLI.
+  NRF_CLI_CREATE_STATIC_SUBCMD_SET(nrf_balloc_commands)
+  {
+       NRF_CLI_CMD(status, NULL, "Print status of balloc instances.", nrf_balloc_status),
+       NRF_CLI_SUBCMD_SET_END
+  };
+  //}}}
+  NRF_CLI_CMD_REGISTER(balloc, &nrf_balloc_commands, "Commands for BALLOC management", nrf_balloc_status);
 #endif //NRF_BALLOC_CLI_CMDS
 
 #if NRF_BALLOC_CONFIG_DEBUG_ENABLED
-/**@brief  Validate block memory, prepare block guards, and calculate pointer to the element.
- *
- * @param[in]   p_pool  Pointer to the memory pool.
- * @param[in]   p_head  Pointer to the beginning of the block.
- *
- * @return      Pointer to the element.
- */
-__STATIC_INLINE void * nrf_balloc_block_unwrap(nrf_balloc_t const * p_pool, void * p_head)
-{
-    ASSERT((p_pool != NULL) && ((p_pool->block_size % sizeof(uint32_t)) == 0));
-    ASSERT((p_head != NULL) && (((uint32_t)(p_head) % sizeof(uint32_t)) == 0));
+  //{{{
+  /**@brief  Validate block memory, prepare block guards, and calculate pointer to the element.
+   * @param[in]   p_pool  Pointer to the memory pool.
+   * @param[in]   p_head  Pointer to the beginning of the block.
+   * @return      Pointer to the element.
+  */
+  __STATIC_INLINE void * nrf_balloc_block_unwrap(nrf_balloc_t const * p_pool, void * p_head)
+  {
+      ASSERT((p_pool != NULL) && ((p_pool->block_size % sizeof(uint32_t)) == 0));
+      ASSERT((p_head != NULL) && (((uint32_t)(p_head) % sizeof(uint32_t)) == 0));
 
-    uint32_t head_words  = NRF_BALLOC_DEBUG_HEAD_GUARD_WORDS_GET(p_pool->debug_flags);
-    uint32_t tail_words  = NRF_BALLOC_DEBUG_TAIL_GUARD_WORDS_GET(p_pool->debug_flags);
+      uint32_t head_words  = NRF_BALLOC_DEBUG_HEAD_GUARD_WORDS_GET(p_pool->debug_flags);
+      uint32_t tail_words  = NRF_BALLOC_DEBUG_TAIL_GUARD_WORDS_GET(p_pool->debug_flags);
 
-    uint32_t * p_tail    = (uint32_t *)((size_t)(p_head) + p_pool->block_size);
-    uint32_t * p_element = (uint32_t *)p_head + head_words;
+      uint32_t * p_tail    = (uint32_t *)((size_t)(p_head) + p_pool->block_size);
+      uint32_t * p_element = (uint32_t *)p_head + head_words;
 
-    if (NRF_BALLOC_DEBUG_DATA_TRASHING_CHECK_GET(p_pool->debug_flags))
-    {
-        for (uint32_t * ptr = p_head; ptr < p_tail; ptr++)
-        {
-            if (*ptr != FREE_MEM_FILL)
-            {
-                NRF_LOG_INST_ERROR(p_pool->p_log,
-                                   "Detected free memory corruption at 0x%08X (0x%08X != 0x%08X)",
-                                   ptr, *ptr, FREE_MEM_FILL);
-                APP_ERROR_CHECK_BOOL(false);
-            }
-        }
-    }
+      if (NRF_BALLOC_DEBUG_DATA_TRASHING_CHECK_GET(p_pool->debug_flags))
+      {
+          for (uint32_t * ptr = p_head; ptr < p_tail; ptr++)
+          {
+              if (*ptr != FREE_MEM_FILL)
+              {
+                  NRF_LOG_INST_ERROR(p_pool->p_log,
+                                     "Detected free memory corruption at 0x%08X (0x%08X != 0x%08X)",
+                                     ptr, *ptr, FREE_MEM_FILL);
+                  APP_ERROR_CHECK_BOOL(false);
+              }
+          }
+      }
 
-    for (uint32_t * ptr = p_head; ptr < p_element; ptr++)
-    {
-        *ptr = HEAD_GUARD_FILL;
-    }
+      for (uint32_t * ptr = p_head; ptr < p_element; ptr++)
+      {
+          *ptr = HEAD_GUARD_FILL;
+      }
 
-    for (uint32_t * ptr = ( p_tail - tail_words); ptr < p_tail; ptr++)
-    {
-        *ptr = TAIL_GUARD_FILL;
-    }
+      for (uint32_t * ptr = ( p_tail - tail_words); ptr < p_tail; ptr++)
+      {
+          *ptr = TAIL_GUARD_FILL;
+      }
 
-    return p_element;
-}
+      return p_element;
+  }
+  //}}}
+  //{{{
+  /**@brief  Calculate pointer to the block, validate block guards, and mark block memory as free.
+   *
+   * @param[in]   p_pool      Pointer to the memory pool.
+   * @param[in]   p_element   Pointer to the element.
+   *
+   * @return      Pointer to the beginning of the block.
+   */
+  __STATIC_INLINE void * nrf_balloc_element_wrap(nrf_balloc_t const * p_pool, void * p_element)
+  {
+      ASSERT((p_pool    != NULL) && ((p_pool->block_size % sizeof(uint32_t))    == 0));
+      ASSERT((p_element != NULL) && (((uint32_t)(p_element) % sizeof(uint32_t)) == 0));
 
-/**@brief  Calculate pointer to the block, validate block guards, and mark block memory as free.
- *
- * @param[in]   p_pool      Pointer to the memory pool.
- * @param[in]   p_element   Pointer to the element.
- *
- * @return      Pointer to the beginning of the block.
- */
-__STATIC_INLINE void * nrf_balloc_element_wrap(nrf_balloc_t const * p_pool, void * p_element)
-{
-    ASSERT((p_pool    != NULL) && ((p_pool->block_size % sizeof(uint32_t))    == 0));
-    ASSERT((p_element != NULL) && (((uint32_t)(p_element) % sizeof(uint32_t)) == 0));
+      uint32_t head_words  = NRF_BALLOC_DEBUG_HEAD_GUARD_WORDS_GET(p_pool->debug_flags);
+      uint32_t tail_words  = NRF_BALLOC_DEBUG_TAIL_GUARD_WORDS_GET(p_pool->debug_flags);
 
-    uint32_t head_words  = NRF_BALLOC_DEBUG_HEAD_GUARD_WORDS_GET(p_pool->debug_flags);
-    uint32_t tail_words  = NRF_BALLOC_DEBUG_TAIL_GUARD_WORDS_GET(p_pool->debug_flags);
+      uint32_t * p_head   = (uint32_t *)p_element - head_words;
+      uint32_t * p_tail   = (uint32_t *)((size_t)(p_head) + p_pool->block_size);
 
-    uint32_t * p_head   = (uint32_t *)p_element - head_words;
-    uint32_t * p_tail   = (uint32_t *)((size_t)(p_head) + p_pool->block_size);
+      for (uint32_t * ptr = p_head; ptr < (uint32_t *)p_element; ptr++)
+      {
+          if (*ptr != HEAD_GUARD_FILL)
+          {
+              NRF_LOG_INST_ERROR(p_pool->p_log,
+                                 "Detected Head Guard corruption at 0x%08X (0x%08X != 0x%08X)",
+                                 ptr, *ptr, HEAD_GUARD_FILL);
+              APP_ERROR_CHECK_BOOL(false);
+          }
+      }
 
-    for (uint32_t * ptr = p_head; ptr < (uint32_t *)p_element; ptr++)
-    {
-        if (*ptr != HEAD_GUARD_FILL)
-        {
-            NRF_LOG_INST_ERROR(p_pool->p_log,
-                               "Detected Head Guard corruption at 0x%08X (0x%08X != 0x%08X)",
-                               ptr, *ptr, HEAD_GUARD_FILL);
-            APP_ERROR_CHECK_BOOL(false);
-        }
-    }
+      for (uint32_t * ptr = ( p_tail - tail_words); ptr < p_tail; ptr++)
+      {
+          if (*ptr != TAIL_GUARD_FILL)
+          {
+              NRF_LOG_INST_ERROR(p_pool->p_log,
+                                 "Detected Tail Guard corruption at 0x%08X (0x%08X != 0x%08X)",
+                                 ptr, *ptr, TAIL_GUARD_FILL);
+              APP_ERROR_CHECK_BOOL(false);
+          }
+      }
 
-    for (uint32_t * ptr = ( p_tail - tail_words); ptr < p_tail; ptr++)
-    {
-        if (*ptr != TAIL_GUARD_FILL)
-        {
-            NRF_LOG_INST_ERROR(p_pool->p_log,
-                               "Detected Tail Guard corruption at 0x%08X (0x%08X != 0x%08X)",
-                               ptr, *ptr, TAIL_GUARD_FILL);
-            APP_ERROR_CHECK_BOOL(false);
-        }
-    }
+      if (NRF_BALLOC_DEBUG_DATA_TRASHING_CHECK_GET(p_pool->debug_flags))
+      {
+          for (uint32_t * ptr = p_head; ptr < p_tail; ptr++)
+          {
+              *ptr = FREE_MEM_FILL;
+          }
+      }
 
-    if (NRF_BALLOC_DEBUG_DATA_TRASHING_CHECK_GET(p_pool->debug_flags))
-    {
-        for (uint32_t * ptr = p_head; ptr < p_tail; ptr++)
-        {
-            *ptr = FREE_MEM_FILL;
-        }
-    }
-
-    return p_head;
-}
-
+      return p_head;
+  }
+  //}}}
 #endif // NRF_BALLOC_CONFIG_DEBUG_ENABLED
 
+//{{{
 /**@brief  Convert block index to a pointer.
  *
  * @param[in]   p_pool      Pointer to the memory pool.
@@ -232,7 +236,8 @@ static void * nrf_balloc_idx2block(nrf_balloc_t const * p_pool, uint8_t idx)
     ASSERT(p_pool != NULL);
     return (uint8_t *)(p_pool->p_memory_begin) + ((size_t)(idx) * p_pool->block_size);
 }
-
+//}}}
+//{{{
 /**@brief  Convert block pointer to index.
  *
  * @param[in]   p_pool      Pointer to the memory pool.
@@ -245,7 +250,9 @@ static uint8_t nrf_balloc_block2idx(nrf_balloc_t const * p_pool, void const * p_
     ASSERT(p_pool != NULL);
     return ((size_t)(p_block) - (size_t)(p_pool->p_memory_begin)) / p_pool->block_size;
 }
+//}}}
 
+//{{{
 ret_code_t nrf_balloc_init(nrf_balloc_t const * p_pool)
 {
     uint8_t pool_size;
@@ -286,7 +293,9 @@ ret_code_t nrf_balloc_init(nrf_balloc_t const * p_pool)
 
     return NRF_SUCCESS;
 }
+//}}}
 
+//{{{
 void * nrf_balloc_alloc(nrf_balloc_t const * p_pool)
 {
     ASSERT(p_pool != NULL);
@@ -321,7 +330,8 @@ void * nrf_balloc_alloc(nrf_balloc_t const * p_pool)
 
     return p_block;
 }
-
+//}}}
+//{{{
 void nrf_balloc_free(nrf_balloc_t const * p_pool, void * p_element)
 {
     ASSERT(p_pool != NULL);
@@ -395,5 +405,6 @@ void nrf_balloc_free(nrf_balloc_t const * p_pool, void * p_element)
 
     CRITICAL_REGION_EXIT();
 }
+//}}}
 
 #endif // NRF_MODULE_ENABLED(NRF_BALLOC)

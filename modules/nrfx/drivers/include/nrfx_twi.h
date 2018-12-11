@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2015 - 2018, Nordic Semiconductor ASA
  *
@@ -37,16 +38,17 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-#ifndef NRFX_TWI_H__
-#define NRFX_TWI_H__
+//}}}
+#pragma once
 
 #include <nrfx.h>
 #include <hal/nrf_twi.h>
 
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
 /**
  * @defgroup nrfx_twi TWI driver
@@ -361,8 +363,8 @@ void nrfx_twi_1_irq_handler(void);
 
 /** @} */
 
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
-#endif // NRFX_TWI_H__
+//}}}

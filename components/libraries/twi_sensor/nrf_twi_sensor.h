@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2017 - 2018, Nordic Semiconductor ASA
  *
@@ -37,27 +38,20 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
-/**@file
- *
- * @defgroup nrf_twi_sensor TWI Sensor module.
- * @{
- * @ingroup app_common
- */
-
+//}}}
 #ifndef NRF_TWI_SENSOR_H
 #define NRF_TWI_SENSOR_H
 
 #include "nrf_twi_mngr.h"
 #include "nrf_balloc.h"
-
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
 /**
  * @brief Internal write operation buffer length.
- *
  * Defines how many bytes can be stored internally.
  * 16 bytes were selected so that nrf_twi_sensor_write_cmd_t size
  * matches nrf_twi_sensor_read_cmd_t size.
@@ -66,13 +60,12 @@ extern "C" {
 
 /**
  * @brief Register read callback prototype.
- *
  * @param[in] result            Return error code from TWI manager and underlying drivers.
  * @param[in] p_register_data   Pointer to register value.
  */
 typedef void (* nrf_twi_sensor_reg_cb_t)(ret_code_t result, void * p_register_data);
 
-
+//{{{
 /**
  * @brief Structure holding sensor instance
  */
@@ -83,7 +76,8 @@ typedef struct
 
 
 } nrf_twi_sensor_t;
-
+//}}}
+//{{{
 /**
  * @brief Struct describing sensor read command.
  *
@@ -97,7 +91,8 @@ typedef struct
     nrf_twi_sensor_reg_cb_t     user_cb;
     nrf_twi_sensor_t const *    p_instance;
 } nrf_twi_sensor_read_cmd_t;
-
+//}}}
+//{{{
 /**
  * @brief Struct describing sensor write command.
  *
@@ -110,7 +105,8 @@ typedef struct
     nrf_twi_mngr_transaction_t  transaction;
     nrf_twi_sensor_t const *    p_instance;
 } nrf_twi_sensor_write_cmd_t;
-
+//}}}
+//{{{
 /**
  * @brief Union for sensor commands. Needed in buffer definition.
  *
@@ -121,8 +117,9 @@ typedef union
     nrf_twi_sensor_read_cmd_t  read;
     nrf_twi_sensor_write_cmd_t write;
 } nrf_twi_sensor_cmd_t;
+//}}}
 
-
+//{{{
 /**
  * @brief Macro creating common twi sensor instance.
  *
@@ -143,7 +140,8 @@ typedef union
         .p_twi_mngr = p_nrf_twi_mngr,                                                            \
         .p_pool     = &CONCAT_2(twi_sensor_name,_pool)                                           \
     }
-
+//}}}
+//{{{
 /**
  * @brief Macro for defining TWI manager read transfer.
  *
@@ -152,7 +150,8 @@ typedef union
 #define NRF_TWI_SENSOR_READ(p_reg_addr, p_buffer, byte_cnt) \
     NRF_TWI_MNGR_WRITE(0x00, p_reg_addr, 1,        NRF_TWI_MNGR_NO_STOP), \
     NRF_TWI_MNGR_READ (0x00, p_buffer,   byte_cnt, 0)
-
+//}}}
+//{{{
 /**
  * @brief Macro for defining TWI manager write transfer.
  *
@@ -160,8 +159,8 @@ typedef union
  */
 #define NRF_TWI_SENSOR_WRITE(p_buffer, byte_cnt) \
     NRF_TWI_MNGR_WRITE(0x00, p_buffer, byte_cnt, 0)
-
-
+//}}}
+//{{{
 /**
  * @brief Macro for assigning sensor address to transfers.
  *
@@ -182,7 +181,8 @@ typedef union
             transfers[i].operation = NRF_TWI_MNGR_READ_OP(_sensor_addr);                    \
         }                                                                                   \
     }
-
+//}}}
+//{{{
 /**
  * @brief Macro for setting parameters in sensor register.
  *
@@ -194,8 +194,8 @@ typedef union
 #define NRF_TWI_SENSOR_REG_SET(_register, _msk, _pos, _val)   \
     _register &= ~(_msk);                                  \
     _register |= ((_msk) & ((_val) << (_pos)))
-
-
+//}}}
+//{{{
 /**
  * @brief Macro for getting parameters from sensor register.
  *
@@ -209,7 +209,9 @@ typedef union
  */
 #define NRF_TWI_SENSOR_REG_VAL_GET(_register, _msk, _pos) \
     (((_register) & (_msk)) >> (_pos))
+//}}}
 
+//{{{
 /**
  * @brief Function for initialization of sensor common instance.
  *
@@ -219,7 +221,9 @@ typedef union
  * @return Error code from nrf_balloc @ref nrf_balloc_init
  */
 ret_code_t nrf_twi_sensor_init(nrf_twi_sensor_t * p_twi_sensor);
+//}}}
 
+//{{{
 /**
  * @brief Function for reading sensor register.
  *
@@ -240,7 +244,9 @@ ret_code_t nrf_twi_sensor_reg_read(nrf_twi_sensor_t const * p_instance,
                                    nrf_twi_sensor_reg_cb_t  user_cb,
                                    uint8_t *                p_data,
                                    uint8_t                  length);
+//}}}
 
+//{{{
 /**
  * @brief Function for writing to sensor.
  *
@@ -264,7 +270,8 @@ ret_code_t nrf_twi_sensor_write(nrf_twi_sensor_t const * p_instance,
                                 uint8_t const *          p_data,
                                 uint8_t                  length,
                                 bool                     copy_flag);
-                                
+//}}}
+//{{{
 /**
  * @brief Function for writing to sensor register.
  *
@@ -289,7 +296,9 @@ ret_code_t nrf_twi_sensor_reg_write(nrf_twi_sensor_t const * p_instance,
                                     uint8_t                  reg_address,
                                     uint8_t *                p_data,
                                     uint8_t                  length);
+//}}}
 
+//{{{
 /**
  * @brief Function for getting maximum utilization of sensor buffer.
  *
@@ -304,11 +313,11 @@ __STATIC_INLINE uint8_t nrf_twi_sensor_max_util_get(nrf_twi_sensor_t const * p_t
     return nrf_balloc_max_utilization_get(p_twi_sensor->p_pool);
 }
 #endif //SUPPRESS_INLINE_IMPLEMENTATION
+//}}}
 
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
-#endif // NRF_SENSOR_COMMON_H
-
-/** @} */
+//}}}
+#endif

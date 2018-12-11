@@ -1,3 +1,4 @@
+//{{{
 /**
  * Copyright (c) 2016 - 2018, Nordic Semiconductor ASA
  *
@@ -44,13 +45,15 @@
   * @brief This module handles block memory allocator features.
   */
 
-
+//}}}
 #ifndef NRF_BALLOC_H__
 #define NRF_BALLOC_H__
 
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
 #include "sdk_errors.h"
 #include "sdk_config.h"
@@ -343,9 +346,10 @@ __STATIC_INLINE uint8_t nrf_balloc_utilization_get(nrf_balloc_t const * p_pool)
 }
 #endif //SUPPRESS_INLINE_IMPLEMENTATION
 
+//{{{
 #ifdef __cplusplus
 }
 #endif
+//}}}
 
 #endif // NRF_BALLOC_H__
-/** @} */
