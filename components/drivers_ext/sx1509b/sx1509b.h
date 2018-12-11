@@ -158,6 +158,7 @@ ret_code_t sx1509b_misc_set (uint8_t nstance_num,
  */
 ret_code_t sx1509b_sw_reset (uint8_t instance_num);
 //}}}
+
 //{{{
 /**
  * @brief Function for setting register configuration of a single pin.
@@ -182,34 +183,6 @@ ret_code_t sx1509b_pin_cfg_reg_set (sx1509b_registers_t reg, uint32_t pin, uint8
  * @return other Pin setting value at given register.
  */
 uint8_t sx1509b_pin_cfg_reg_get (sx1509b_registers_t reg, uint32_t pin);
-//}}}
-//{{{
-/**
- * @brief Function for setting register configuration of a port.
- *
- * @param reg  Register address, if register has two banks, address of bank B has to be used.
- * @param port Port number.
- * @param mask Mask for the operating.
- * @param flag Operation, should the mask be written into register, clear values or set them.
- *
- * @retval NRF_ERROR_INVALID_PARAM Returned if there is no port with such number.
- * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
- */
-ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
-                                    uint32_t            port,
-                                    uint8_t             mask,
-                                    sx1509b_port_op_t   flag);
-//}}}
-//{{{
-/**
- * @brief Function for getting register configuration of a port.
- *
- * @param reg  Register address, if register has two banks, address of bank B has to be used.
- * @param port Port number.
- *
- * @retval Register value.
- */
-uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port);
 //}}}
 //{{{
 /**
@@ -299,21 +272,6 @@ __STATIC_INLINE ret_code_t sx1509b_pin_debounce (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
- * @brief Function for setting high input for given pin.
- *
- * @param pin_number Pin number.
- * @param set        High input setting.
- * @arg   true       High input is enabled.
- * @arg   false      High input is disabled.
- *
- * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
- * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
- */
-ret_code_t sx1509b_pin_high_input (uint32_t pin_number, bool set);
-//}}}
-
-//{{{
-/**
  * @brief Function for setting level shift for given pin.
  *
  * @param pin_number Pin number.
@@ -325,118 +283,17 @@ __STATIC_INLINE ret_code_t sx1509b_pin_level_shifter (uint32_t pin_number, sx150
 //}}}
 //{{{
 /**
- * @brief Function for setting longslew for given port.
+ * @brief Function for setting high input for given pin.
  *
- * @param port_num Port number.
- * @param out_mask Long slew mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_long_slew (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting low drive for given port.
- *
- * @param port_num Port number.
- * @param out_mask Low drive mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_low_drive (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting open drain for given port.
- *
- * @param port_num Port number.
- * @param out_mask Open drain mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_open_drain (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting polarity for given port.
- *
- * @param port_num Port number.
- * @param out_mask Polarity mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_polarity (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting debounce for given port.
- *
- * @param port_num Port number.
- * @param out_mask Debounce mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_debounce (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting high input for given port.
- *
- * @param port_num Port number.
- * @param out_mask High input mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ * @param pin_number Pin number.
+ * @param set        High input setting.
+ * @arg   true       High input is enabled.
+ * @arg   false      High input is disabled.
  *
  * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
  * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
  */
-ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
-//}}}
-
-//{{{
-/**
- * @brief Function for setting pull up for given port.
- *
- * @param port_num Port number.
- * @param out_mask Pull up mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_pull_up (uint8_t port_num,
-                                                uint8_t           out_mask,
-                                                sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for setting pull down for given port.
- *
- * @param port_num Port number.
- * @param out_mask Pull down mask.
- * @param flag     Port operation flag. @ref sx1509b_port_op_t
- *
- * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_port_pull_down (uint8_t port_num,
-                                                  uint8_t           out_mask,
-                                                  sx1509b_port_op_t flag);
-//}}}
-//{{{
-/**
- * @brief Function for configuring the given GPIO pin number as output, hiding inner details.
- *        This function can be used to configure a pin as simple output with gate driving.
- *
- * @param pin_number Specifies the pin number.
- *
- * @note  Sense capability on the pin is disabled as the pins are configured as output.
- *
- * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
- */
-__STATIC_INLINE ret_code_t sx1509b_pin_cfg_output (uint32_t pin_number);
+ret_code_t sx1509b_pin_high_input (uint32_t pin_number, bool set);
 //}}}
 //{{{
 /**
@@ -452,7 +309,6 @@ __STATIC_INLINE ret_code_t sx1509b_pin_cfg_output (uint32_t pin_number);
  */
 ret_code_t sx1509b_pin_cfg_input (uint32_t pin_number, sx1509b_pin_pull_t pull_config);
 //}}}
-
 //{{{
 /**
  * @brief Function for resetting pin configuration to its default state.
@@ -463,7 +319,6 @@ ret_code_t sx1509b_pin_cfg_input (uint32_t pin_number, sx1509b_pin_pull_t pull_c
  */
 ret_code_t sx1509b_pin_cfg_default (uint32_t pin_number);
 //}}}
-
 //{{{
 /**
  * @brief Function for configuring the given GPIO pin number as a watcher. Only input is connected.
@@ -519,7 +374,6 @@ ret_code_t sx1509b_pin_cfg_sense_set (uint32_t pin_number, sx1509b_pin_sense_t s
  */
 ret_code_t sx1509b_pin_dir_set (uint32_t pin_number, sx1509b_pin_dir_t direction);
 //}}}
-
 //{{{
 /**
  * @brief Function for setting a GPIO pin.
@@ -610,6 +464,150 @@ __STATIC_INLINE uint32_t sx1509b_pin_out_read (uint32_t pin_number);
  */
 __STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get (uint32_t pin_number);
 //}}}
+
+//{{{
+/**
+ * @brief Function for setting register configuration of a port.
+ *
+ * @param reg  Register address, if register has two banks, address of bank B has to be used.
+ * @param port Port number.
+ * @param mask Mask for the operating.
+ * @param flag Operation, should the mask be written into register, clear values or set them.
+ *
+ * @retval NRF_ERROR_INVALID_PARAM Returned if there is no port with such number.
+ * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
+ */
+ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
+                                    uint32_t            port,
+                                    uint8_t             mask,
+                                    sx1509b_port_op_t   flag);
+//}}}
+//{{{
+/**
+ * @brief Function for getting register configuration of a port.
+ *
+ * @param reg  Register address, if register has two banks, address of bank B has to be used.
+ * @param port Port number.
+ *
+ * @retval Register value.
+ */
+uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port);
+//}}}
+//{{{
+/**
+ * @brief Function for setting longslew for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Long slew mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_long_slew (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting low drive for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Low drive mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_low_drive (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting open drain for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Open drain mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_open_drain (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting polarity for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Polarity mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_polarity (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting debounce for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Debounce mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_debounce (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting high input for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask High input mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @retval NRF_ERROR_INVALID_PARAM Returned if there is no pin with such number.
+ * @retval other                   Return error code from nrf_twi_sensor @ref nrf_twi_sensor_write
+ */
+ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting pull up for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Pull up mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_pull_up (uint8_t port_num,
+                                                uint8_t           out_mask,
+                                                sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for setting pull down for given port.
+ *
+ * @param port_num Port number.
+ * @param out_mask Pull down mask.
+ * @param flag     Port operation flag. @ref sx1509b_port_op_t
+ *
+ * @return Return error code from port config set @ref sx1509b_port_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_port_pull_down (uint8_t port_num,
+                                                  uint8_t           out_mask,
+                                                  sx1509b_port_op_t flag);
+//}}}
+//{{{
+/**
+ * @brief Function for configuring the given GPIO pin number as output, hiding inner details.
+ *        This function can be used to configure a pin as simple output with gate driving.
+ *
+ * @param pin_number Specifies the pin number.
+ *
+ * @note  Sense capability on the pin is disabled as the pins are configured as output.
+ *
+ * @return Return error code from pin config set @ref sx1509b_pin_cfg_reg_set
+ */
+__STATIC_INLINE ret_code_t sx1509b_pin_cfg_output (uint32_t pin_number);
+//}}}
+
 //{{{
 /**
  * @brief Function for getting expander port number based on pin number.
@@ -618,6 +616,7 @@ __STATIC_INLINE sx1509b_pin_sense_t sx1509b_pin_sense_get (uint32_t pin_number);
  */
 __STATIC_INLINE uint8_t sx1509b_pin_port_decode (uint32_t pin_number);
 //}}}
+
 //{{{
 /**
  * @brief Function for setting output direction on selected pins on a given port.

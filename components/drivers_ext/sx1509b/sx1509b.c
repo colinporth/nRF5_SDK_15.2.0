@@ -43,7 +43,7 @@
 
 static uint8_t m_inst_count;
 static uint8_t m_max_instance_count;
-static sx1509b_instance_t * m_p_instances;
+static sx1509b_instance_t* m_p_instances;
 
 #define RETURN_IF_ERR(_err) if (_err != NRF_SUCCESS) return _err;
 
@@ -90,6 +90,7 @@ ret_code_t sx1509b_add_instance (nrf_twi_sensor_t* p_twi_sensor, uint8_t sensor_
 
   m_p_instances[m_inst_count].p_sensor_data = p_twi_sensor;
   m_p_instances[m_inst_count].sensor_addr = sensor_address;
+
   sx1509b_default_cfg_set (m_inst_count);
   m_inst_count++;
 
@@ -180,6 +181,7 @@ ret_code_t sx1509b_sw_reset (uint8_t instance_num) {
   }
 //}}}
 
+// pin
 //{{{
 ret_code_t sx1509b_pin_cfg_reg_set (sx1509b_registers_t reg, uint32_t pin, uint8_t set)
 {
@@ -272,58 +274,6 @@ uint8_t sx1509b_pin_cfg_reg_get (sx1509b_registers_t reg, uint32_t pin)
 }
 //}}}
 //{{{
-ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
-                                    uint32_t            port,
-                                    uint8_t             mask,
-                                    sx1509b_port_op_t   flag)
-{
-    if (port >= SX1509B_INNER_PORT_COUNT * m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-
-    uint8_t inst_num = port / SX1509B_INNER_PORT_COUNT;
-    port %= SX1509B_INNER_PORT_COUNT;
-    uint8_t reg_addr = reg + !port;
-
-    uint8_t * reg_val = &m_p_instances[inst_num].registers[reg_addr];
-
-    switch (flag)
-    {
-        case SX1509B_PORT_WRITE:
-            *reg_val = mask;
-            break;
-        case SX1509B_PORT_CLEAR:
-            *reg_val &= ~mask;
-            break;
-        case SX1509B_PORT_SET:
-            *reg_val |= mask;
-            break;
-        default:
-            return NRF_ERROR_INVALID_PARAM;
-    }
-    uint8_t send_msg[] = {
-        reg_addr,
-        *reg_val
-    };
-    return nrf_twi_sensor_write(m_p_instances[inst_num].p_sensor_data, m_p_instances[inst_num].sensor_addr, send_msg, ARRAY_SIZE(send_msg), true);
-}
-//}}}
-//{{{
-uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port)
-{
-    if (port >= SX1509B_INNER_PORT_COUNT * m_inst_count)
-    {
-        return 0;
-    }
-
-    uint8_t inst_num = port / SX1509B_INNER_PORT_COUNT;
-    port %= SX1509B_INNER_PORT_COUNT;
-    uint8_t reg_addr = reg + !port;
-    return m_p_instances[inst_num].registers[reg_addr];
-}
-//}}}
-//{{{
 ret_code_t sx1509b_pin_data_update (nrf_twi_sensor_reg_cb_t user_cb)
 {
     ret_code_t err_code;
@@ -394,45 +344,6 @@ ret_code_t sx1509b_pin_high_input (uint32_t pin_number, bool set)
     uint8_t send_msg[] = {
         reg_addr,
         *p_reg_val
-    };
-    return nrf_twi_sensor_write(m_p_instances[inst_num].p_sensor_data,
-                                m_p_instances[inst_num].sensor_addr,
-                                send_msg,
-                                ARRAY_SIZE(send_msg),
-                                true);
-}
-//}}}
-//{{{
-ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag)
-{
-    if (port_num >= SX1509B_INNER_PORT_COUNT * m_inst_count)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
-
-    uint8_t inst_num = port_num / SX1509B_INNER_PORT_COUNT;
-    port_num %= SX1509B_INNER_PORT_COUNT;
-    uint8_t reg_addr = SX1509B_REG_HIGH_INPUT_B + !port_num;
-
-    uint8_t * reg_val = &m_p_instances[inst_num].high_input[!port_num];
-
-    switch (flag)
-    {
-        case SX1509B_PORT_WRITE:
-            *reg_val = out_mask;
-            break;
-        case SX1509B_PORT_CLEAR:
-            *reg_val &= ~out_mask;
-            break;
-        case SX1509B_PORT_SET:
-            *reg_val |= out_mask;
-            break;
-        default:
-            return NRF_ERROR_INVALID_PARAM;
-    }
-    uint8_t send_msg[] = {
-        reg_addr,
-        *reg_val
     };
     return nrf_twi_sensor_write(m_p_instances[inst_num].p_sensor_data,
                                 m_p_instances[inst_num].sensor_addr,
@@ -563,21 +474,6 @@ ret_code_t sx1509b_pin_dir_set (uint32_t pin_number, sx1509b_pin_dir_t direction
 }
 //}}}
 //{{{
-ret_code_t sx1509b_ports_read (uint8_t start_port, uint32_t length, uint8_t * p_masks)
-{
-    if (start_port + length > SX1509B_INNER_PORT_COUNT * m_inst_count)
-    {
-        return NRF_ERROR_INVALID_LENGTH;
-    }
-
-    for (uint8_t i = 0; i < length; i++)
-    {
-        p_masks[i] = sx1509b_port_in_read(start_port + i);
-    }
-    return NRF_SUCCESS;
-}
-//}}}
-//{{{
 ret_code_t sx1509b_latches_read (uint8_t start_port, uint32_t length, uint8_t * p_masks)
 {
     if (start_port + length > SX1509B_INNER_PORT_COUNT * m_inst_count)
@@ -607,6 +503,115 @@ ret_code_t sx1509b_pin_latch_clear (uint32_t pin_number)
 }
 //}}}
 
+// port
+//{{{
+ret_code_t sx1509b_port_cfg_reg_set (sx1509b_registers_t reg,
+                                    uint32_t            port,
+                                    uint8_t             mask,
+                                    sx1509b_port_op_t   flag)
+{
+    if (port >= SX1509B_INNER_PORT_COUNT * m_inst_count)
+    {
+        return NRF_ERROR_INVALID_PARAM;
+    }
+
+    uint8_t inst_num = port / SX1509B_INNER_PORT_COUNT;
+    port %= SX1509B_INNER_PORT_COUNT;
+    uint8_t reg_addr = reg + !port;
+
+    uint8_t * reg_val = &m_p_instances[inst_num].registers[reg_addr];
+
+    switch (flag)
+    {
+        case SX1509B_PORT_WRITE:
+            *reg_val = mask;
+            break;
+        case SX1509B_PORT_CLEAR:
+            *reg_val &= ~mask;
+            break;
+        case SX1509B_PORT_SET:
+            *reg_val |= mask;
+            break;
+        default:
+            return NRF_ERROR_INVALID_PARAM;
+    }
+    uint8_t send_msg[] = {
+        reg_addr,
+        *reg_val
+    };
+    return nrf_twi_sensor_write(m_p_instances[inst_num].p_sensor_data, m_p_instances[inst_num].sensor_addr, send_msg, ARRAY_SIZE(send_msg), true);
+}
+//}}}
+//{{{
+uint8_t sx1509b_port_cfg_reg_get (sx1509b_registers_t reg, uint32_t port)
+{
+    if (port >= SX1509B_INNER_PORT_COUNT * m_inst_count)
+    {
+        return 0;
+    }
+
+    uint8_t inst_num = port / SX1509B_INNER_PORT_COUNT;
+    port %= SX1509B_INNER_PORT_COUNT;
+    uint8_t reg_addr = reg + !port;
+    return m_p_instances[inst_num].registers[reg_addr];
+}
+//}}}
+//{{{
+ret_code_t sx1509b_port_high_input (uint8_t port_num, uint8_t out_mask, sx1509b_port_op_t flag)
+{
+    if (port_num >= SX1509B_INNER_PORT_COUNT * m_inst_count)
+    {
+        return NRF_ERROR_INVALID_PARAM;
+    }
+
+    uint8_t inst_num = port_num / SX1509B_INNER_PORT_COUNT;
+    port_num %= SX1509B_INNER_PORT_COUNT;
+    uint8_t reg_addr = SX1509B_REG_HIGH_INPUT_B + !port_num;
+
+    uint8_t * reg_val = &m_p_instances[inst_num].high_input[!port_num];
+
+    switch (flag)
+    {
+        case SX1509B_PORT_WRITE:
+            *reg_val = out_mask;
+            break;
+        case SX1509B_PORT_CLEAR:
+            *reg_val &= ~out_mask;
+            break;
+        case SX1509B_PORT_SET:
+            *reg_val |= out_mask;
+            break;
+        default:
+            return NRF_ERROR_INVALID_PARAM;
+    }
+    uint8_t send_msg[] = {
+        reg_addr,
+        *reg_val
+    };
+    return nrf_twi_sensor_write(m_p_instances[inst_num].p_sensor_data,
+                                m_p_instances[inst_num].sensor_addr,
+                                send_msg,
+                                ARRAY_SIZE(send_msg),
+                                true);
+}
+//}}}
+//{{{
+ret_code_t sx1509b_ports_read (uint8_t start_port, uint32_t length, uint8_t * p_masks)
+{
+    if (start_port + length > SX1509B_INNER_PORT_COUNT * m_inst_count)
+    {
+        return NRF_ERROR_INVALID_LENGTH;
+    }
+
+    for (uint8_t i = 0; i < length; i++)
+    {
+        p_masks[i] = sx1509b_port_in_read(start_port + i);
+    }
+    return NRF_SUCCESS;
+}
+//}}}
+
+// led
 //{{{
 ret_code_t sx1509b_led_driver_enable (uint8_t instance_num, bool clock_internal, uint8_t frequency)
 {
@@ -812,6 +817,7 @@ ret_code_t sx1509b_led_pin_disable (uint32_t pin_number)
 }
 //}}}
 
+// key
 //{{{
 ret_code_t sx1509b_key_engine_enable (uint8_t instance_num,
                                      uint8_t             rows,
