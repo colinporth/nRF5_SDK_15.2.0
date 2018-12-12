@@ -96,23 +96,9 @@ void assert_nrf_callback (uint16_t line_num, const uint8_t* p_file_name) {
 //}}}
 
 //{{{
-/**@brief Function for handling the Connection Parameters Module.
- * @details This function will be called for all events in the Connection Parameters Module that
- *          are passed to the application.
- * @note All this function does is to disconnect. This could have been done by simply
- *       setting the disconnect_on_fail config parameter, but instead we use the event
- *       handler mechanism to demonstrate its use.
- * @param[in] p_evt  Event received from the Connection Parameters Module.
- */
-static void on_conn_params_evt (ble_conn_params_evt_t* p_evt) {
-
-  if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
-    APP_ERROR_CHECK (sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE));
-  }
-//}}}
-
-//{{{
 static void advertising_start() {
+
+  NRF_LOG_INFO ("advertising_start");
 
   APP_ERROR_CHECK (sd_ble_gap_adv_start (m_adv_handle, APP_BLE_CONN_CFG_TAG));
   bsp_board_led_on (ADVERTISING_LED);
@@ -120,28 +106,18 @@ static void advertising_start() {
 //}}}
 
 //{{{
-static void nrf_qwr_error_handler (uint32_t nrf_error) {
-  APP_ERROR_HANDLER (nrf_error);
+static void leds_init() {
+  bsp_board_init (BSP_INIT_LEDS);
   }
 //}}}
 //{{{
-static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
+static void timers_init() {
 
-  if (led_state) {
-    bsp_board_led_on (LEDBUTTON_LED);
-    NRF_LOG_INFO ("LED ON");
-    }
-  else {
-    bsp_board_led_off (LEDBUTTON_LED);
-    NRF_LOG_INFO ("LED OFF");
-    }
+  // Initialize timer module, making it use the scheduler
+  APP_ERROR_CHECK (app_timer_init());
   }
 //}}}
-//{{{
-static void conn_params_error_handler (uint32_t nrf_error) {
-  APP_ERROR_HANDLER (nrf_error);
-  }
-//}}}
+
 //{{{
 static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
 
@@ -166,9 +142,26 @@ static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
   }
 //}}}
 //{{{
+static void buttons_init() {
+
+  // The array must be static because a pointer to it will be saved in the button handler module.
+  static app_button_cfg_t buttons[] = { {LEDBUTTON_BUTTON, false, BUTTON_PULL, button_event_handler} };
+
+  APP_ERROR_CHECK (app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY));
+  }
+//}}}
+
+//{{{
+static void power_management_init() {
+  APP_ERROR_CHECK (nrf_pwr_mgmt_init());
+  }
+//}}}
+
+//{{{
 static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
 
-  ret_code_t err_code;
+  NRF_LOG_INFO ("ble_evt_handler %d", p_ble_evt->header.evt_id);
+
   switch (p_ble_evt->header.evt_id) {
     //{{{
     case BLE_GAP_EVT_CONNECTED:
@@ -214,17 +207,19 @@ static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
       }
       break;
     //}}}
-    //{{{
-    case BLE_GATTS_EVT_SYS_ATTR_MISSING:
-      // No system attributes have been stored.
-      APP_ERROR_CHECK (sd_ble_gatts_sys_attr_set(m_conn_handle, NULL, 0, 0));
-      break;
-    //}}}
+
     //{{{
     case BLE_GATTC_EVT_TIMEOUT:
       // Disconnect on GATT Client timeout event.
       NRF_LOG_DEBUG ("GATT Client Timeout");
       APP_ERROR_CHECK (sd_ble_gap_disconnect (p_ble_evt->evt.gattc_evt.conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
+      break;
+    //}}}
+
+    //{{{
+    case BLE_GATTS_EVT_SYS_ATTR_MISSING:
+      // No system attributes have been stored.
+      APP_ERROR_CHECK (sd_ble_gatts_sys_attr_set(m_conn_handle, NULL, 0, 0));
       break;
     //}}}
     //{{{
@@ -236,44 +231,6 @@ static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
     //}}}
     default: break;
     }
-  }
-//}}}
-
-//{{{
-static void log_init() {
-
-  APP_ERROR_CHECK (NRF_LOG_INIT (NULL));
-  NRF_LOG_DEFAULT_BACKENDS_INIT();
-  }
-//}}}
-//{{{
-static void leds_init() {
-  bsp_board_init (BSP_INIT_LEDS);
-  }
-//}}}
-//{{{
-static void timers_init() {
-
-  // Initialize timer module, making it use the scheduler
-  APP_ERROR_CHECK (app_timer_init());
-  }
-//}}}
-//{{{
-static void buttons_init() {
-
-  ret_code_t err_code;
-
-  //The array must be static because a pointer to it will be saved in the button handler module.
-  static app_button_cfg_t buttons[] = {
-    {LEDBUTTON_BUTTON, false, BUTTON_PULL, button_event_handler}
-    };
-
-  APP_ERROR_CHECK (app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY));
-  }
-//}}}
-//{{{
-static void power_management_init() {
-  APP_ERROR_CHECK (nrf_pwr_mgmt_init());
   }
 //}}}
 //{{{
@@ -293,6 +250,7 @@ static void ble_stack_init() {
   NRF_SDH_BLE_OBSERVER (m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
   }
 //}}}
+
 //{{{
 /**@brief Function for the GAP initialization.
  * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
@@ -300,13 +258,12 @@ static void ble_stack_init() {
  */
 static void gap_params_init() {
 
-  ble_gap_conn_params_t   gap_conn_params;
   ble_gap_conn_sec_mode_t sec_mode;
-
   BLE_GAP_CONN_SEC_MODE_SET_OPEN (&sec_mode);
-  APP_ERROR_CHECK (sd_ble_gap_device_name_set (&sec_mode, (const uint8_t *)DEVICE_NAME, strlen(DEVICE_NAME)));
+  APP_ERROR_CHECK (sd_ble_gap_device_name_set (&sec_mode, (const uint8_t*)DEVICE_NAME, strlen(DEVICE_NAME)));
 
-  memset(&gap_conn_params, 0, sizeof(gap_conn_params));
+  ble_gap_conn_params_t gap_conn_params;
+  memset (&gap_conn_params, 0, sizeof(gap_conn_params));
 
   gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
   gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
@@ -318,7 +275,26 @@ static void gap_params_init() {
 //}}}
 //{{{
 static void gatt_init() {
-  APP_ERROR_CHECK(nrf_ble_gatt_init (&m_gatt, NULL));
+  APP_ERROR_CHECK (nrf_ble_gatt_init (&m_gatt, NULL));
+  }
+//}}}
+
+//{{{
+static void nrf_qwr_error_handler (uint32_t nrf_error) {
+  APP_ERROR_HANDLER (nrf_error);
+  }
+//}}}
+//{{{
+static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
+
+  if (led_state) {
+    NRF_LOG_INFO ("LED ON");
+    bsp_board_led_on (LEDBUTTON_LED);
+    }
+  else {
+    NRF_LOG_INFO ("LED OFF");
+    bsp_board_led_off (LEDBUTTON_LED);
+    }
   }
 //}}}
 //{{{
@@ -327,14 +303,15 @@ static void services_init() {
   // Initialize Queued Write Module.
   nrf_ble_qwr_init_t qwr_init = {0};
   qwr_init.error_handler = nrf_qwr_error_handler;
-  APP_ERROR_CHECK (nrf_ble_qwr_init(&m_qwr, &qwr_init));
+  APP_ERROR_CHECK (nrf_ble_qwr_init (&m_qwr, &qwr_init));
 
   // Initialize LBS.
-  ble_lbs_init_t init     = {0};
+  ble_lbs_init_t init = {0};
   init.led_write_handler = led_write_handler;
   APP_ERROR_CHECK (ble_lbs_init (&m_lbs, &init));
   }
 //}}}
+
 //{{{
 /**@brief Function for initializing the Advertising functionality.
  * @details Encodes the required advertising data and passes it to the stack.
@@ -359,10 +336,9 @@ static void advertising_init() {
   APP_ERROR_CHECK (ble_advdata_encode (&advdata, m_adv_data.adv_data.p_data, &m_adv_data.adv_data.len));
   APP_ERROR_CHECK (ble_advdata_encode (&srdata, m_adv_data.scan_rsp_data.p_data, &m_adv_data.scan_rsp_data.len));
 
-  ble_gap_adv_params_t adv_params;
-
   // Set advertising parameters.
-  memset(&adv_params, 0, sizeof(adv_params));
+  ble_gap_adv_params_t adv_params;
+  memset (&adv_params, 0, sizeof(adv_params));
 
   adv_params.primary_phy     = BLE_GAP_PHY_1MBPS;
   adv_params.duration        = APP_ADV_DURATION;
@@ -372,6 +348,26 @@ static void advertising_init() {
   adv_params.interval        = APP_ADV_INTERVAL;
 
   APP_ERROR_CHECK (sd_ble_gap_adv_set_configure (&m_adv_handle, &m_adv_data, &adv_params));
+  }
+//}}}
+
+//{{{
+// Function for handling the Connection Parameters Module.
+// This function will be called for all events in the Connection Parameters Module that are passed to the application.
+// All this function does is to disconnect. This could have been done by simply
+// setting the disconnect_on_fail config parameter, but instead we use the event handler mechanism to demonstrate its use.
+// p_evt  Event received from the Connection Parameters Module.
+static void on_conn_params_evt (ble_conn_params_evt_t* p_evt) {
+
+  NRF_LOG_INFO ("on_conn_params_evt %d", p_evt->evt_type);
+
+  if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
+    APP_ERROR_CHECK (sd_ble_gap_disconnect (m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE));
+  }
+//}}}
+//{{{
+static void conn_params_error_handler (uint32_t nrf_error) {
+  APP_ERROR_HANDLER (nrf_error);
   }
 //}}}
 //{{{
@@ -389,13 +385,17 @@ static void conn_params_init() {
   cp_init.evt_handler                    = on_conn_params_evt;
   cp_init.error_handler                  = conn_params_error_handler;
 
-  APP_ERROR_CHECK (ble_conn_params_init(&cp_init));
+  APP_ERROR_CHECK (ble_conn_params_init (&cp_init));
   }
 //}}}
 
 int main() {
 
-  log_init();
+  // log init
+  APP_ERROR_CHECK (NRF_LOG_INIT (NULL));
+  NRF_LOG_DEFAULT_BACKENDS_INIT();
+  NRF_LOG_INFO ("BlinkyBle "__TIME__" "__DATE__);
+
   leds_init();
   timers_init();
   buttons_init();
@@ -407,7 +407,6 @@ int main() {
   advertising_init();
   conn_params_init();
 
-  NRF_LOG_INFO ("BlinkyBle " __TIME__  " "__DATE__);
   advertising_start();
 
   for (;;)
