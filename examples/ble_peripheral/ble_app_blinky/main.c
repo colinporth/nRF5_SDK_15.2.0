@@ -31,7 +31,7 @@
 #include "nrf_log_default_backends.h"
 //}}}
 //{{{  defines
-#define DEVICE_NAME                     "Colins_Blinky"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                     "Nordic_Blinky"                         /**< Name of device. Will be included in the advertising data. */
 
 #define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define APP_BLE_CONN_CFG_TAG            1                                       /**< A tag identifying the SoftDevice BLE configuration. */
@@ -57,14 +57,14 @@
 #define LEDBUTTON_LED     BSP_BOARD_LED_2 // LED to be toggled with the help of the LED Button Service
 #define LEDBUTTON_BUTTON  BUTTON          // Button that will trigger the notification event with the LED Button Service
 
-static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                /**< Handle of the current connection. */
-static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           /**< Advertising handle used to identify an advertising set. */
-static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            /**< Buffer for storing an encoded advertising set. */
-static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; /**< Buffer for storing an encoded scan data. */
+static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                // Handle of the current connection
+static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           // Advertising handle used to identify an advertising set
+static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            // Buffer for storing an encoded advertising set
+static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
-BLE_LBS_DEF (m_lbs);        // LED Button Service instance
-NRF_BLE_QWR_DEF (m_qwr);    // Context for the Queued Write module
-NRF_BLE_GATT_DEF (m_gatt);  // GATT module instance
+BLE_LBS_DEF (m_lbs);       // LED Button Service instance
+NRF_BLE_QWR_DEF (m_qwr);   // Context for Queued Write module
+NRF_BLE_GATT_DEF (m_gatt); // GATT module instance
 //{{{
 // Struct that contains pointers to the encoded advertising data
 static ble_gap_adv_data_t m_adv_data = {
@@ -255,8 +255,7 @@ static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
 //{{{
 static void log_init() {
 
-  ret_code_t err_code = NRF_LOG_INIT (NULL);
-  APP_ERROR_CHECK (err_code);
+  APP_ERROR_CHECK (NRF_LOG_INIT (NULL));
   NRF_LOG_DEFAULT_BACKENDS_INIT();
   }
 //}}}
@@ -283,7 +282,6 @@ static void buttons_init() {
 //}}}
 //{{{
 static void power_management_init() {
-
   APP_ERROR_CHECK (nrf_pwr_mgmt_init());
   }
 //}}}
@@ -353,14 +351,16 @@ static void advertising_init() {
   advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
 
   ble_advdata_t srdata;
-  memset(&srdata, 0, sizeof(srdata));
+  memset (&srdata, 0, sizeof(srdata));
   ble_uuid_t adv_uuids[] = {{LBS_UUID_SERVICE, m_lbs.uuid_type}};
   srdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
   srdata.uuids_complete.p_uuids = adv_uuids;
+
   APP_ERROR_CHECK (ble_advdata_encode (&advdata, m_adv_data.adv_data.p_data, &m_adv_data.adv_data.len));
 
   // Set advertising parameters.
   ble_gap_adv_params_t adv_params;
+
   memset (&adv_params, 0, sizeof(adv_params));
   adv_params.primary_phy = BLE_GAP_PHY_1MBPS;
   adv_params.duration = APP_ADV_DURATION;
@@ -368,6 +368,7 @@ static void advertising_init() {
   adv_params.p_peer_addr = NULL;
   adv_params.filter_policy = BLE_GAP_ADV_FP_ANY;
   adv_params.interval = APP_ADV_INTERVAL;
+
   APP_ERROR_CHECK (sd_ble_gap_adv_set_configure (&m_adv_handle, &m_adv_data, &adv_params));
   }
 //}}}
