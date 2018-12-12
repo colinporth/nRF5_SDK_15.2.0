@@ -40,25 +40,23 @@
  */
 //}}}
 #pragma once
-
 #include "nrf_gpio.h"
 #include "nordic_common.h"
-
-#if defined(BOARD_PCA10040)
-  #include "pca10040.h"
-#elif defined(BOARD_PCA10056)
-  #include "pca10056.h"
-#elif defined(BOARD_PCA20020)
-  #include "pca20020.h"
-#elif defined(BOARD_PCA10059)
-  #include "pca10059.h"
-#endif
-
 //{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
 //}}}
+
+#if defined(BOARD_PCA10040)
+  #include "pca10040.h"
+#elif defined(BOARD_PCA10056)
+  #include "pca10056.h"
+#elif defined(BOARD_PCA10059)
+  #include "pca10059.h"
+#elif defined(BOARD_PCA20020)
+  #include "pca20020.h"
+#endif
 
 #define BSP_INIT_NONE    0        /**< No initialization of LEDs or buttons (@ref bsp_board_init).*/
 #define BSP_INIT_LEDS    (1 << 0) /**< Enable LEDs during initialization (@ref bsp_board_init).*/

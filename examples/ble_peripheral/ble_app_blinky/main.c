@@ -62,9 +62,9 @@ static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           /**< Adv
 static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            /**< Buffer for storing an encoded advertising set. */
 static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; /**< Buffer for storing an encoded scan data. */
 
-BLE_LBS_DEF (m_lbs);        /**< LED Button Service instance. */
-NRF_BLE_GATT_DEF (m_gatt);  /**< GATT module instance. */
-NRF_BLE_QWR_DEF (m_qwr);    /**< Context for the Queued Write module.*/
+BLE_LBS_DEF (m_lbs);        // LED Button Service instance
+NRF_BLE_QWR_DEF (m_qwr);    // Context for the Queued Write module
+NRF_BLE_GATT_DEF (m_gatt);  // GATT module instance
 //{{{
 // Struct that contains pointers to the encoded advertising data
 static ble_gap_adv_data_t m_adv_data = {
@@ -217,7 +217,7 @@ static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
         };
 
       APP_ERROR_CHECK (sd_ble_gap_phy_update(p_ble_evt->evt.gap_evt.conn_handle, &phys));
-      } 
+      }
       break;
     //}}}
     //{{{
@@ -305,16 +305,14 @@ static void ble_stack_init() {
   }
 //}}}
 //{{{
-/**@brief Function for the GAP initialization.
- * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
- *          device including the device name, appearance, and the preferred connection parameters.
- */
+// Function for the GAP initialization.
+// This function sets up all the necessary GAP (Generic Access Profile) parameters of the
+//  device including the device name, appearance, and the preferred connection parameters
 static void gap_params_init() {
 
   ble_gap_conn_sec_mode_t sec_mode;
   BLE_GAP_CONN_SEC_MODE_SET_OPEN (&sec_mode);
-
-  APP_ERROR_CHECK (sd_ble_gap_device_name_set(&sec_mode, (const uint8_t *)DEVICE_NAME, strlen(DEVICE_NAME)));
+  APP_ERROR_CHECK (sd_ble_gap_device_name_set (&sec_mode, (const uint8_t *)DEVICE_NAME, strlen(DEVICE_NAME)));
 
   ble_gap_conn_params_t  gap_conn_params;
   memset (&gap_conn_params, 0, sizeof(gap_conn_params));
@@ -322,63 +320,54 @@ static void gap_params_init() {
   gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
   gap_conn_params.slave_latency     = SLAVE_LATENCY;
   gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
-  APP_ERROR_CHECK (sd_ble_gap_ppcp_set(&gap_conn_params));
+  APP_ERROR_CHECK (sd_ble_gap_ppcp_set (&gap_conn_params));
   }
 //}}}
 //{{{
 static void gatt_init() {
-
   APP_ERROR_CHECK (nrf_ble_gatt_init (&m_gatt, NULL));
   }
 //}}}
 //{{{
 static void services_init() {
 
-  // Initialize Queued Write Module.
+  // init Queued Write Module.
   nrf_ble_qwr_init_t qwr_init = {0};
   qwr_init.error_handler = nrf_qwr_error_handler;
-  APP_ERROR_CHECK(nrf_ble_qwr_init(&m_qwr, &qwr_init));
+  APP_ERROR_CHECK (nrf_ble_qwr_init (&m_qwr, &qwr_init));
 
-  // Initialize LBS.
-  ble_lbs_init_t init     = {0};
+  // init LBS.
+  ble_lbs_init_t init = {0};
   init.led_write_handler = led_write_handler;
-  APP_ERROR_CHECK (ble_lbs_init(&m_lbs, &init));
+  APP_ERROR_CHECK (ble_lbs_init (&m_lbs, &init));
   }
 //}}}
 //{{{
-/**@brief Function for initializing the Advertising functionality.
- * @details Encodes the required advertising data and passes it to the stack.
- *          Also builds a structure to be passed to the stack when starting advertising.
- */
 static void advertising_init() {
 
-
   // Build and set advertising data.
-  ble_uuid_t adv_uuids[] = {{LBS_UUID_SERVICE, m_lbs.uuid_type}};
-
   ble_advdata_t advdata;
   memset (&advdata, 0, sizeof(advdata));
-  advdata.name_type          = BLE_ADVDATA_FULL_NAME;
+  advdata.name_type = BLE_ADVDATA_FULL_NAME;
   advdata.include_appearance = true;
-  advdata.flags              = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+  advdata.flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
 
   ble_advdata_t srdata;
   memset(&srdata, 0, sizeof(srdata));
+  ble_uuid_t adv_uuids[] = {{LBS_UUID_SERVICE, m_lbs.uuid_type}};
   srdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
-  srdata.uuids_complete.p_uuids  = adv_uuids;
-
+  srdata.uuids_complete.p_uuids = adv_uuids;
   APP_ERROR_CHECK (ble_advdata_encode (&advdata, m_adv_data.adv_data.p_data, &m_adv_data.adv_data.len));
 
   // Set advertising parameters.
   ble_gap_adv_params_t adv_params;
   memset (&adv_params, 0, sizeof(adv_params));
-  adv_params.primary_phy     = BLE_GAP_PHY_1MBPS;
-  adv_params.duration        = APP_ADV_DURATION;
+  adv_params.primary_phy = BLE_GAP_PHY_1MBPS;
+  adv_params.duration = APP_ADV_DURATION;
   adv_params.properties.type = BLE_GAP_ADV_TYPE_CONNECTABLE_SCANNABLE_UNDIRECTED;
-  adv_params.p_peer_addr     = NULL;
-  adv_params.filter_policy   = BLE_GAP_ADV_FP_ANY;
-  adv_params.interval        = APP_ADV_INTERVAL;
-
+  adv_params.p_peer_addr = NULL;
+  adv_params.filter_policy = BLE_GAP_ADV_FP_ANY;
+  adv_params.interval = APP_ADV_INTERVAL;
   APP_ERROR_CHECK (sd_ble_gap_adv_set_configure (&m_adv_handle, &m_adv_data, &adv_params));
   }
 //}}}
@@ -386,17 +375,18 @@ static void advertising_init() {
 static void conn_params_init() {
 
   ble_conn_params_init_t cp_init;
-  memset (&cp_init, 0, sizeof(cp_init));
-  cp_init.p_conn_params                  = NULL;
-  cp_init.first_conn_params_update_delay = FIRST_CONN_PARAMS_UPDATE_DELAY;
-  cp_init.next_conn_params_update_delay  = NEXT_CONN_PARAMS_UPDATE_DELAY;
-  cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
-  cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
-  cp_init.disconnect_on_fail             = false;
-  cp_init.evt_handler                    = on_conn_params_evt;
-  cp_init.error_handler                  = conn_params_error_handler;
 
-  APP_ERROR_CHECK (ble_conn_params_init(&cp_init));
+  memset (&cp_init, 0, sizeof(cp_init));
+  cp_init.p_conn_params = NULL;
+  cp_init.first_conn_params_update_delay = FIRST_CONN_PARAMS_UPDATE_DELAY;
+  cp_init.next_conn_params_update_delay = NEXT_CONN_PARAMS_UPDATE_DELAY;
+  cp_init.max_conn_params_update_count = MAX_CONN_PARAMS_UPDATE_COUNT;
+  cp_init.start_on_notify_cccd_handle = BLE_GATT_HANDLE_INVALID;
+  cp_init.disconnect_on_fail = false;
+  cp_init.evt_handler = on_conn_params_evt;
+  cp_init.error_handler = conn_params_error_handler;
+
+  APP_ERROR_CHECK (ble_conn_params_init (&cp_init));
   }
 //}}}
 
