@@ -39,31 +39,12 @@
  *
  */
 //}}}
-#ifndef BOARDS_H
-#define BOARDS_H
+#pragma once
 
 #include "nrf_gpio.h"
 #include "nordic_common.h"
 
-#if defined(BOARD_NRF6310)
-  #include "nrf6310.h"
-#elif defined(BOARD_PCA10000)
-  #include "pca10000.h"
-#elif defined(BOARD_PCA10001)
-  #include "pca10001.h"
-#elif defined(BOARD_PCA10002)
-  #include "pca10000.h"
-#elif defined(BOARD_PCA10003)
-  #include "pca10003.h"
-#elif defined(BOARD_PCA20006)
-  #include "pca20006.h"
-#elif defined(BOARD_PCA10028)
-  #include "pca10028.h"
-#elif defined(BOARD_PCA10031)
-  #include "pca10031.h"
-#elif defined(BOARD_PCA10036)
-  #include "pca10036.h"
-#elif defined(BOARD_PCA10040)
+#if defined(BOARD_PCA10040)
   #include "pca10040.h"
 #elif defined(BOARD_PCA10056)
   #include "pca10056.h"
@@ -71,34 +52,19 @@
   #include "pca20020.h"
 #elif defined(BOARD_PCA10059)
   #include "pca10059.h"
-#elif defined(BOARD_WT51822)
-  #include "wt51822.h"
-#elif defined(BOARD_N5DK1)
-  #include "n5_starterkit.h"
-#elif defined (BOARD_D52DK1)
-  #include "d52_starterkit.h"
-#elif defined (BOARD_ARDUINO_PRIMO)
-  #include "arduino_primo.h"
-#elif defined (CUSTOM_BOARD_INC)
-  #include STRINGIFY(CUSTOM_BOARD_INC.h)
-#elif defined(BOARD_CUSTOM)
-  #include "custom_board.h"
-#else
-#error "Board is not defined"
-
 #endif
 
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
-/**@defgroup BSP_BOARD_INIT_FLAGS Board initialization flags.
- * @{ */
 #define BSP_INIT_NONE    0        /**< No initialization of LEDs or buttons (@ref bsp_board_init).*/
 #define BSP_INIT_LEDS    (1 << 0) /**< Enable LEDs during initialization (@ref bsp_board_init).*/
 #define BSP_INIT_BUTTONS (1 << 1) /**< Enable buttons during initialization (@ref bsp_board_init).*/
-/**@} */
 
+//{{{
 /**
  * Function for returning the state of an LED.
  *
@@ -107,37 +73,44 @@ extern "C" {
  * @return True if the LED is turned on.
  */
 bool bsp_board_led_state_get(uint32_t led_idx);
-
+//}}}
+//{{{
 /**
  * Function for turning on an LED.
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
 void bsp_board_led_on(uint32_t led_idx);
-
+//}}}
+//{{{
 /**
  * Function for turning off an LED.
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
 void bsp_board_led_off(uint32_t led_idx);
-
+//}}}
+//{{{
 /**
  * Function for inverting the state of an LED.
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
 void bsp_board_led_invert(uint32_t led_idx);
+//}}}
+//{{{
 /**
  * Function for turning off all LEDs.
  */
 void bsp_board_leds_off(void);
-
+//}}}
+//{{{
 /**
  * Function for turning on all LEDs.
  */
 void bsp_board_leds_on(void);
-
+//}}}
+//{{{
 /**
  * Function for initializing the BSP handling for the board.
  *
@@ -147,7 +120,8 @@ void bsp_board_leds_on(void);
  *                         See @ref BSP_BOARD_INIT_FLAGS.
  */
 void bsp_board_init(uint32_t init_flags);
-
+//}}}
+//{{{
 /**
  * Function for converting pin number to LED index.
  *
@@ -156,7 +130,8 @@ void bsp_board_init(uint32_t init_flags);
  * @return LED index of the given pin or 0xFFFFFFFF if invalid pin provided.
  */
 uint32_t bsp_board_pin_to_led_idx(uint32_t pin_number);
-
+//}}}
+//{{{
 /**
  * Function for converting LED index to pin number.
  *
@@ -165,7 +140,8 @@ uint32_t bsp_board_pin_to_led_idx(uint32_t pin_number);
  * @return Pin number.
  */
 uint32_t bsp_board_led_idx_to_pin(uint32_t led_idx);
-
+//}}}
+//{{{
 /**
  * Function for returning the state of a button.
  *
@@ -174,7 +150,8 @@ uint32_t bsp_board_led_idx_to_pin(uint32_t led_idx);
  * @return True if the button is pressed.
  */
 bool bsp_board_button_state_get(uint32_t button_idx);
-
+//}}}
+//{{{
 /**
  * Function for converting pin number to button index.
  *
@@ -183,8 +160,8 @@ bool bsp_board_button_state_get(uint32_t button_idx);
  * @return Button index of the given pin or 0xFFFFFFFF if invalid pin provided.
  */
 uint32_t bsp_board_pin_to_button_idx(uint32_t pin_number);
-
-
+//}}}
+//{{{
 /**
  * Function for converting button index to pin number.
  *
@@ -193,6 +170,7 @@ uint32_t bsp_board_pin_to_button_idx(uint32_t pin_number);
  * @return Pin number.
  */
 uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
+//}}}
 
 #define BSP_BOARD_LED_0 0
 #define BSP_BOARD_LED_1 1
@@ -266,7 +244,6 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
 #define BSP_LED_7_PORT 0
 #endif
 
-
 #define LEDS_MASK      (BSP_LED_0_MASK | BSP_LED_1_MASK | \
                         BSP_LED_2_MASK | BSP_LED_3_MASK | \
                         BSP_LED_4_MASK | BSP_LED_5_MASK | \
@@ -280,7 +257,6 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
 #define BSP_BOARD_BUTTON_5 5
 #define BSP_BOARD_BUTTON_6 6
 #define BSP_BOARD_BUTTON_7 7
-
 
 #ifdef BSP_BUTTON_0
 #define BSP_BUTTON_0_MASK (1<<BSP_BUTTON_0)
@@ -328,7 +304,6 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
                         BSP_BUTTON_4_MASK | BSP_BUTTON_5_MASK | \
                         BSP_BUTTON_6_MASK | BSP_BUTTON_7_MASK)
 
-
 #define LEDS_OFF(leds_mask) do {  ASSERT(sizeof(leds_mask) == 4);                     \
                         NRF_GPIO->OUTSET = (leds_mask) & (LEDS_MASK & LEDS_INV_MASK); \
                         NRF_GPIO->OUTCLR = (leds_mask) & (LEDS_MASK & ~LEDS_INV_MASK); } while (0)
@@ -349,9 +324,8 @@ uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
                                   for (pin = 0; pin < 32; pin++)      \
                                       if ( (leds_mask) & (1 << pin) ) \
                                           nrf_gpio_cfg_output(pin); } while (0)
-
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
-#endif
+//}}}
