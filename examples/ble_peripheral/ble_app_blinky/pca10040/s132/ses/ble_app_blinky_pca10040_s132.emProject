@@ -136,7 +136,7 @@
     </folder>
     <file file_name="../../../main.c" />
     <file file_name="../config/sdk_config.h" />
-    <folder Name="nRFrf\components\board">
+    <folder Name="nRF\components\board">
       <file file_name="../../../../../../components/boards/boards.c" />
       <file file_name="../../../../../../components/boards/pca20020.h" />
       <file file_name="../../../../../../components/boards/boards.h" />
