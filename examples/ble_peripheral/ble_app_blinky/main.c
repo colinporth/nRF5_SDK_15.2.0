@@ -94,19 +94,19 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 //}}}
-#define ADVERTISING_LED                 BSP_BOARD_LED_0                         /**< Is on when device is advertising. */
-#define CONNECTED_LED                   BSP_BOARD_LED_1                         /**< Is on when device has connected. */
-#define LEDBUTTON_LED                   BSP_BOARD_LED_2                         /**< LED to be toggled with the help of the LED Button Service. */
-#define LEDBUTTON_BUTTON                BUTTON                            /**< Button that will trigger the notification event with the LED Button Service */
+#define ADVERTISING_LED   BSP_BOARD_LED_0  // Is on when device is advertising
+#define CONNECTED_LED     BSP_BOARD_LED_1  // Is on when device has connected
+#define LEDBUTTON_LED     BSP_BOARD_LED_2  // LED to be toggled with the help of the LED Button Service
+#define LEDBUTTON_BUTTON  BUTTON           // Button that will trigger the notification event with the LED Button Service
 
-BLE_LBS_DEF(m_lbs);        /**< LED Button Service instance. */
-NRF_BLE_GATT_DEF(m_gatt);  /**< GATT module instance. */
-NRF_BLE_QWR_DEF(m_qwr);    /**< Context for the Queued Write module.*/
+BLE_LBS_DEF (m_lbs);        // LED Button Service instance
+NRF_BLE_GATT_DEF (m_gatt);  // GATT module instance
+NRF_BLE_QWR_DEF (m_qwr);    // Context for the Queued Write module
 
-static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                /**< Handle of the current connection. */
-static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           /**< Advertising handle used to identify an advertising set. */
-static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            /**< Buffer for storing an encoded advertising set. */
-static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; /**< Buffer for storing an encoded scan data. */
+static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                // Handle of the current connection
+static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           // Advertising handle used to identify an advertising set
+static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            // Buffer for storing an encoded advertising set
+static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
 //{{{
 /**@brief Struct that contains pointers to the encoded advertising data. */
@@ -169,20 +169,11 @@ static void advertising_start() {
 //}}}
 
 //{{{
-/**@brief Function for handling Queued Write Module errors.
- * @details A pointer to this function will be passed to each service which may need to inform the
- *          application about an error.
- * @param[in]   nrf_error   Error code containing information about what went wrong.
- */
 static void nrf_qwr_error_handler (uint32_t nrf_error) {
   APP_ERROR_HANDLER(nrf_error);
   }
 //}}}
 //{{{
-/**@brief Function for handling write events to the LED characteristic.
- * @param[in] p_lbs     Instance of LED Button Service to which the write applies.
- * @param[in] led_state Written/desired state of the LED.
- */
 static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
 
   if (led_state) {
@@ -196,18 +187,11 @@ static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t l
   }
 //}}}
 //{{{
-/**@brief Function for handling a Connection Parameters error.
- * @param[in] nrf_error  Error code containing information about what went wrong.
- */
 static void conn_params_error_handler (uint32_t nrf_error) {
   APP_ERROR_HANDLER(nrf_error);
   }
 //}}}
 //{{{
-/**@brief Function for handling events from the button handler module.
- * @param[in] pin_no        The pin that the event applies to.
- * @param[in] button_action The button action (press/release).
- */
 static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
 
   ret_code_t err_code;
@@ -231,10 +215,6 @@ static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
   }
 //}}}
 //{{{
-/**@brief Function for handling BLE events.
- * @param[in]   p_ble_evt   Bluetooth stack event.
- * @param[in]   p_context   Unused.
- */
 static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
 
   ret_code_t err_code;
