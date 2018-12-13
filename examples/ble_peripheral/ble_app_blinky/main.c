@@ -58,24 +58,24 @@
 #define LEDBUTTON_LED     BSP_BOARD_LED_2 // LED to be toggled with the help of the LED Button Service
 #define LEDBUTTON_BUTTON  BUTTON          // Button that will trigger the notification event with the LED Button Service
 
-BLE_LBS_DEF (m_lbs);       // LED Button Service instance
-NRF_BLE_QWR_DEF (m_qwr);   // Context for the Queued Write module
-NRF_BLE_GATT_DEF (m_gatt); // GATT module instance
+BLE_LBS_DEF (gLbs);       // LED Button Service instance
+NRF_BLE_QWR_DEF (gQwr);   // Queued Write context
+NRF_BLE_GATT_DEF (gGatt); // GATT module instance
 
-static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                // Handle current connection
-static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           // Advertising handle
-static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            // Buffer for storing an encoded advertising set
-static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
+static uint16_t gConnHandle = BLE_CONN_HANDLE_INVALID;              // Handle current connection
+static uint8_t gAdvHandle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;         // Advertising handle
+static uint8_t mEncHandle[BLE_GAP_ADV_SET_DATA_SIZE_MAX];           // Buffer for storing an encoded advertising set
+static uint8_t gEncScanResponseData[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
 //{{{
 /**@brief Struct that contains pointers to the encoded advertising data. */
 static ble_gap_adv_data_t m_adv_data = {
   .adv_data = {
-    .p_data = m_enc_advdata,
+    .p_data = mEncHandle,
     .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
     },
   .scan_rsp_data = {
-    .p_data = m_enc_scan_response_data,
+    .p_data = gEncScanResponseData,
     .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
     }
   };
@@ -96,22 +96,22 @@ void assert_nrf_callback (uint16_t line_num, const uint8_t* p_file_name) {
 //}}}
 
 //{{{
-static void advertising_start() {
+static void advertisingStart() {
 
   NRF_LOG_INFO ("advertising_start");
 
-  APP_ERROR_CHECK (sd_ble_gap_adv_start (m_adv_handle, APP_BLE_CONN_CFG_TAG));
+  APP_ERROR_CHECK (sd_ble_gap_adv_start (gAdvHandle, APP_BLE_CONN_CFG_TAG));
   bsp_board_led_on (ADVERTISING_LED);
   }
 //}}}
 
 //{{{
-static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
+static void buttonHandler (uint8_t pin_no, uint8_t button_action) {
 
   switch (pin_no) {
     case LEDBUTTON_BUTTON: {
       NRF_LOG_INFO ("Send button state change");
-      ret_code_t err_code = ble_lbs_on_button_change (m_conn_handle, &m_lbs, button_action);
+      ret_code_t err_code = ble_lbs_on_button_change (gConnHandle, &gLbs, button_action);
       if (err_code != NRF_SUCCESS &&
           err_code != BLE_ERROR_INVALID_CONN_HANDLE &&
           err_code != NRF_ERROR_INVALID_STATE &&
@@ -141,8 +141,8 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
       bsp_board_led_on (CONNECTED_LED);
       bsp_board_led_off (ADVERTISING_LED);
 
-      m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-      APP_ERROR_CHECK (nrf_ble_qwr_conn_handle_assign (&m_qwr, m_conn_handle));
+      gConnHandle = p_ble_evt->evt.gap_evt.conn_handle;
+      APP_ERROR_CHECK (nrf_ble_qwr_conn_handle_assign (&gQwr, gConnHandle));
 
       APP_ERROR_CHECK (app_button_enable());
       break;
@@ -152,18 +152,18 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
       NRF_LOG_INFO ("Disconnected");
 
       bsp_board_led_off (CONNECTED_LED);
-      m_conn_handle = BLE_CONN_HANDLE_INVALID;
+      gConnHandle = BLE_CONN_HANDLE_INVALID;
 
       APP_ERROR_CHECK (app_button_disable());
 
-      advertising_start();
+      advertisingStart();
 
       break;
     //}}}
     //{{{
     case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
       // Pairing not supported
-      APP_ERROR_CHECK (sd_ble_gap_sec_params_reply (m_conn_handle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, NULL));
+      APP_ERROR_CHECK (sd_ble_gap_sec_params_reply (gConnHandle, BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP, NULL, NULL));
       break;
     //}}}
     //{{{
@@ -190,7 +190,7 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
     //{{{
     case BLE_GATTS_EVT_SYS_ATTR_MISSING:
       // No system attributes have been stored.
-      APP_ERROR_CHECK (sd_ble_gatts_sys_attr_set(m_conn_handle, NULL, 0, 0));
+      APP_ERROR_CHECK (sd_ble_gatts_sys_attr_set(gConnHandle, NULL, 0, 0));
       break;
     //}}}
     //{{{
@@ -245,12 +245,12 @@ static void gapParamsInit() {
 //}}}
 
 //{{{
-static void nrf_qwr_error_handler (uint32_t nrf_error) {
+static void nrfQwrErrorHandler (uint32_t nrf_error) {
   APP_ERROR_HANDLER (nrf_error);
   }
 //}}}
 //{{{
-static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
+static void ledHandler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
 
   if (led_state) {
     NRF_LOG_INFO ("LED ON");
@@ -267,13 +267,13 @@ static void servicesInit() {
 
   // init Queued Write Module.
   nrf_ble_qwr_init_t qwr_init = {0};
-  qwr_init.error_handler = nrf_qwr_error_handler;
-  APP_ERROR_CHECK (nrf_ble_qwr_init (&m_qwr, &qwr_init));
+  qwr_init.error_handler = nrfQwrErrorHandler;
+  APP_ERROR_CHECK (nrf_ble_qwr_init (&gQwr, &qwr_init));
 
   // inite LBS.
   ble_lbs_init_t init = {0};
-  init.led_write_handler = led_write_handler;
-  APP_ERROR_CHECK (ble_lbs_init (&m_lbs, &init));
+  init.led_write_handler = ledHandler;
+  APP_ERROR_CHECK (ble_lbs_init (&gLbs, &init));
   }
 //}}}
 
@@ -284,7 +284,7 @@ static void servicesInit() {
  */
 static void advertisingInit() {
 
-  ble_uuid_t adv_uuids[] = { {LBS_UUID_SERVICE, m_lbs.uuid_type} };
+  ble_uuid_t adv_uuids[] = { {LBS_UUID_SERVICE, gLbs.uuid_type} };
 
   // Build and set advertising data.
   ble_advdata_t advdata;
@@ -312,7 +312,7 @@ static void advertisingInit() {
   adv_params.filter_policy   = BLE_GAP_ADV_FP_ANY;
   adv_params.interval        = APP_ADV_INTERVAL;
 
-  APP_ERROR_CHECK (sd_ble_gap_adv_set_configure (&m_adv_handle, &m_adv_data, &adv_params));
+  APP_ERROR_CHECK (sd_ble_gap_adv_set_configure (&gAdvHandle, &m_adv_data, &adv_params));
   }
 //}}}
 
@@ -327,7 +327,7 @@ static void onConnParamsEvt (ble_conn_params_evt_t* p_evt) {
   NRF_LOG_INFO ("on_conn_params_evt %d", p_evt->evt_type);
 
   if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
-    APP_ERROR_CHECK (sd_ble_gap_disconnect (m_conn_handle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE));
+    APP_ERROR_CHECK (sd_ble_gap_disconnect (gConnHandle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE));
   }
 //}}}
 //{{{
@@ -362,18 +362,18 @@ int main() {
 
   bsp_board_init (BSP_INIT_LEDS);
   APP_ERROR_CHECK (app_timer_init());
-  static app_button_cfg_t buttons[] = { {LEDBUTTON_BUTTON, false, BUTTON_PULL, button_event_handler} };
+  static app_button_cfg_t buttons[] = { {LEDBUTTON_BUTTON, false, BUTTON_PULL, buttonHandler} };
   APP_ERROR_CHECK (app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY));
   APP_ERROR_CHECK (nrf_pwr_mgmt_init());
 
   bleStackInit();
   gapParamsInit();
-  APP_ERROR_CHECK (nrf_ble_gatt_init (&m_gatt, NULL));
+  APP_ERROR_CHECK (nrf_ble_gatt_init (&gGatt, NULL));
   servicesInit();
   advertisingInit();
   connParamsInit();
 
-  advertising_start();
+  advertisingStart();
 
   for (;;)
     if (NRF_LOG_PROCESS() == false)
