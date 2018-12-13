@@ -15,6 +15,7 @@
 
 #include "nrf_sdh.h"
 #include "nrf_sdh_ble.h"
+
 #include "boards.h"
 #include "app_timer.h"
 #include "app_button.h"
@@ -31,27 +32,26 @@
 #include "nrf_log_default_backends.h"
 //}}}
 //{{{  defines
-#define DEVICE_NAME                     "Nordic_Blinky"                         /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME  "Nordic_Blinky"  // Name of device. Will be included in the advertising data. */
 
-#define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
-#define APP_BLE_CONN_CFG_TAG            1                                       /**< A tag identifying the SoftDevice BLE configuration. */
+#define APP_BLE_OBSERVER_PRIO  3  // Application's BLE observer priority. You shouldn't need to modify this value. */
+#define APP_BLE_CONN_CFG_TAG   1  // A tag identifying the SoftDevice BLE configuration. */
 
-#define APP_ADV_INTERVAL                64                                      /**< The advertising interval (in units of 0.625 ms; this value corresponds to 40 ms). */
-#define APP_ADV_DURATION                BLE_GAP_ADV_TIMEOUT_GENERAL_UNLIMITED   /**< The advertising time-out (in units of seconds). When set to 0, we will never time out. */
+#define APP_ADV_INTERVAL  64                                      // The advertising interval (in units of 0.625 ms; this value corresponds to 40 ms). */
+#define APP_ADV_DURATION  BLE_GAP_ADV_TIMEOUT_GENERAL_UNLIMITED   // The advertising time-out (in units of seconds). When set to 0, we will never time out. */
 
+#define MIN_CONN_INTERVAL MSEC_TO_UNITS(100, UNIT_1_25_MS)  // Minimum acceptable connection interval (0.5 seconds). */
+#define MAX_CONN_INTERVAL MSEC_TO_UNITS(200, UNIT_1_25_MS)  // Maximum acceptable connection interval (1 second). */
+#define SLAVE_LATENCY     0
+#define CONN_SUP_TIMEOUT  MSEC_TO_UNITS(4000, UNIT_10_MS)   // Connection supervisory time-out (4 seconds). */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(100, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.5 seconds). */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(200, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (1 second). */
-#define SLAVE_LATENCY                   0                                       /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory time-out (4 seconds). */
+#define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(20000)  // Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (15 seconds). */
+#define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(5000)   // Time between each call to sd_ble_gap_conn_param_update after the first call (5 seconds). */
+#define MAX_CONN_PARAMS_UPDATE_COUNT    3   // Number of attempts before giving up the connection parameter negotiation. */
 
-#define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(20000)                  /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (15 seconds). */
-#define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(5000)                   /**< Time between each call to sd_ble_gap_conn_param_update after the first call (5 seconds). */
-#define MAX_CONN_PARAMS_UPDATE_COUNT    3                                       /**< Number of attempts before giving up the connection parameter negotiation. */
+#define BUTTON_DETECTION_DELAY  APP_TIMER_TICKS(50)  // Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks). */
 
-#define BUTTON_DETECTION_DELAY          APP_TIMER_TICKS(50)                     /**< Delay from a GPIOTE event until a button is reported as pushed (in number of timer ticks). */
-
-#define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+#define DEAD_BEEF  0xDEADBEEF  // Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 //}}}
 #define ADVERTISING_LED   BSP_BOARD_LED_0 // Is on when device is advertising
 #define CONNECTED_LED     BSP_BOARD_LED_1 // Is on when device has connected
@@ -68,7 +68,7 @@ static uint8_t mEncHandle[BLE_GAP_ADV_SET_DATA_SIZE_MAX];           // Buffer fo
 static uint8_t gEncScanResponseData[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
 //{{{
-/**@brief Struct that contains pointers to the encoded advertising data. */
+// Struct that contains pointers to the encoded advertising data
 static ble_gap_adv_data_t m_adv_data = {
   .adv_data = {
     .p_data = mEncHandle,
@@ -129,11 +129,11 @@ static void buttonHandler (uint8_t pin_no, uint8_t button_action) {
 //}}}
 
 //{{{
-static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
+static void bleEvtHandler (ble_evt_t const* ble_evt, void* p_context) {
 
-  NRF_LOG_INFO ("bleEvtHandler %d", p_ble_evt->header.evt_id);
+  NRF_LOG_INFO ("bleEvtHandler %d", ble_evt->header.evt_id);
 
-  switch (p_ble_evt->header.evt_id) {
+  switch (ble_evt->header.evt_id) {
     //{{{
     case BLE_GAP_EVT_CONNECTED:
       NRF_LOG_INFO ("Connected");
@@ -141,7 +141,7 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
       bsp_board_led_on (CONNECTED_LED);
       bsp_board_led_off (ADVERTISING_LED);
 
-      gConnHandle = p_ble_evt->evt.gap_evt.conn_handle;
+      gConnHandle = ble_evt->evt.gap_evt.conn_handle;
       APP_ERROR_CHECK (nrf_ble_qwr_conn_handle_assign (&gQwr, gConnHandle));
 
       APP_ERROR_CHECK (app_button_enable());
@@ -174,7 +174,7 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
         .rx_phys = BLE_GAP_PHY_AUTO,
         .tx_phys = BLE_GAP_PHY_AUTO,
         };
-      APP_ERROR_CHECK (sd_ble_gap_phy_update(p_ble_evt->evt.gap_evt.conn_handle, &phys));
+      APP_ERROR_CHECK (sd_ble_gap_phy_update (ble_evt->evt.gap_evt.conn_handle, &phys));
       }
       break;
     //}}}
@@ -183,7 +183,7 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
     case BLE_GATTC_EVT_TIMEOUT:
       // Disconnect on GATT Client timeout event.
       NRF_LOG_DEBUG ("GATT Client Timeout");
-      APP_ERROR_CHECK (sd_ble_gap_disconnect (p_ble_evt->evt.gattc_evt.conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
+      APP_ERROR_CHECK (sd_ble_gap_disconnect (ble_evt->evt.gattc_evt.conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
       break;
     //}}}
 
@@ -197,7 +197,7 @@ static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
     case BLE_GATTS_EVT_TIMEOUT:
       // Disconnect on GATT Server timeout event.
       NRF_LOG_DEBUG ("GATT Server Timeout");
-      APP_ERROR_CHECK (sd_ble_gap_disconnect (p_ble_evt->evt.gatts_evt.conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
+      APP_ERROR_CHECK (sd_ble_gap_disconnect (ble_evt->evt.gatts_evt.conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION));
       break;
     //}}}
     default: break;
@@ -250,7 +250,7 @@ static void nrfQwrErrorHandler (uint32_t nrf_error) {
   }
 //}}}
 //{{{
-static void ledHandler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t led_state) {
+static void ledHandler (uint16_t conn_handle, ble_lbs_t* lbs, uint8_t led_state) {
 
   if (led_state) {
     NRF_LOG_INFO ("LED ON");
@@ -321,12 +321,11 @@ static void advertisingInit() {
 // This function will be called for all events in the Connection Parameters Module that are passed to the application.
 // All this function does is to disconnect. This could have been done by simply
 // setting the disconnect_on_fail config parameter, but instead we use the event handler mechanism to demonstrate its use.
-// p_evt  Event received from the Connection Parameters Module.
-static void onConnParamsEvt (ble_conn_params_evt_t* p_evt) {
+static void onConnParamsEvt (ble_conn_params_evt_t* evt) {
 
-  NRF_LOG_INFO ("on_conn_params_evt %d", p_evt->evt_type);
+  NRF_LOG_INFO ("onConnParamsEvt %d", evt->evt_type);
 
-  if (p_evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
+  if (evt->evt_type == BLE_CONN_PARAMS_EVT_FAILED)
     APP_ERROR_CHECK (sd_ble_gap_disconnect (gConnHandle, BLE_HCI_CONN_INTERVAL_UNACCEPTABLE));
   }
 //}}}

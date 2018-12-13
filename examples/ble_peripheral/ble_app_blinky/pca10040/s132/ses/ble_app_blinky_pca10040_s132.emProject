@@ -122,14 +122,26 @@
       <file file_name="../../../../../../components/ble/common/ble_srv_common.c" />
       <file file_name="../../../../../../components/ble/nrf_ble_gatt/nrf_ble_gatt.c" />
       <file file_name="../../../../../../components/ble/nrf_ble_qwr/nrf_ble_qwr.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/ble/common/ble_advdata.h" />
+        <file file_name="../../../../../../components/ble/common/ble_conn_params.h" />
+        <file file_name="../../../../../../components/ble/common/ble_conn_state.h" />
+        <file file_name="../../../../../../components/ble/common/ble_date_time.h" />
+        <file file_name="../../../../../../components/ble/common/ble_gatt_db.h" />
+        <file file_name="../../../../../../components/ble/common/ble_sensor_location.h" />
+        <file file_name="../../../../../../components/ble/common/ble_srv_common.h" />
+      </folder>
     </folder>
     <folder Name="external/UTF8/UTF16 converter">
       <file file_name="../../../../../../external/utf_converter/utf.c" />
     </folder>
     <folder Name="nRF_BLE_Services">
       <file file_name="../../../../../../components/ble/ble_services/ble_lbs/ble_lbs.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/ble/ble_services/ble_lbs/ble_lbs.h" />
+      </folder>
     </folder>
-    <folder Name="nRF_SoftDevice">
+    <folder Name="nRF\components\softDevice">
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_ble.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_soc.c" />
