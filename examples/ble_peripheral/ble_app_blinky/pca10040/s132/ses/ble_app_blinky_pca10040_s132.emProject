@@ -133,6 +133,27 @@
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_ble.c" />
       <file file_name="../../../../../../components/softdevice/common/nrf_sdh_soc.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_err.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_gap.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_gatt.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_gattc.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_gatts.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_hci.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_l2cap.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_ranges.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/ble_types.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_error.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_error_sdm.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_error_soc.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_nvic.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_sd_def.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_sdm.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_soc.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf_svc.h" />
+        <file file_name="../../../../../../components/softdevice/s132/headers/nrf52/nrf_mbr.h" />
+      </folder>
     </folder>
     <file file_name="../../../main.c" />
     <file file_name="../config/sdk_config.h" />

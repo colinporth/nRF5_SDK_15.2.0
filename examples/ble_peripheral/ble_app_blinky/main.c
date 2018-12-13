@@ -62,8 +62,8 @@ BLE_LBS_DEF (m_lbs);       // LED Button Service instance
 NRF_BLE_QWR_DEF (m_qwr);   // Context for the Queued Write module
 NRF_BLE_GATT_DEF (m_gatt); // GATT module instance
 
-static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                // Handle of the current connection
-static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           // Advertising handle used to identify an advertising set
+static uint16_t m_conn_handle = BLE_CONN_HANDLE_INVALID;                // Handle current connection
+static uint8_t m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;           // Advertising handle
 static uint8_t m_enc_advdata[BLE_GAP_ADV_SET_DATA_SIZE_MAX];            // Buffer for storing an encoded advertising set
 static uint8_t m_enc_scan_response_data[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
@@ -106,21 +106,7 @@ static void advertising_start() {
 //}}}
 
 //{{{
-static void leds_init() {
-  bsp_board_init (BSP_INIT_LEDS);
-  }
-//}}}
-//{{{
-static void timers_init() {
-
-  // Initialize timer module, making it use the scheduler
-  APP_ERROR_CHECK (app_timer_init());
-  }
-//}}}
-
-//{{{
 static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
-
 
   switch (pin_no) {
     case LEDBUTTON_BUTTON: {
@@ -141,26 +127,11 @@ static void button_event_handler (uint8_t pin_no, uint8_t button_action) {
     }
   }
 //}}}
-//{{{
-static void buttons_init() {
-
-  // The array must be static because a pointer to it will be saved in the button handler module.
-  static app_button_cfg_t buttons[] = { {LEDBUTTON_BUTTON, false, BUTTON_PULL, button_event_handler} };
-
-  APP_ERROR_CHECK (app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY));
-  }
-//}}}
 
 //{{{
-static void power_management_init() {
-  APP_ERROR_CHECK (nrf_pwr_mgmt_init());
-  }
-//}}}
+static void bleEvtHandler (ble_evt_t const* p_ble_evt, void* p_context) {
 
-//{{{
-static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
-
-  NRF_LOG_INFO ("ble_evt_handler %d", p_ble_evt->header.evt_id);
+  NRF_LOG_INFO ("bleEvtHandler %d", p_ble_evt->header.evt_id);
 
   switch (p_ble_evt->header.evt_id) {
     //{{{
@@ -234,7 +205,7 @@ static void ble_evt_handler (ble_evt_t const* p_ble_evt, void* p_context) {
   }
 //}}}
 //{{{
-static void ble_stack_init() {
+static void bleStackInit() {
 
   APP_ERROR_CHECK (nrf_sdh_enable_request());
 
@@ -247,35 +218,29 @@ static void ble_stack_init() {
   APP_ERROR_CHECK (nrf_sdh_ble_enable (&ram_start));
 
   // Register a handler for BLE events.
-  NRF_SDH_BLE_OBSERVER (m_ble_observer, APP_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
+  NRF_SDH_BLE_OBSERVER (m_ble_observer, APP_BLE_OBSERVER_PRIO, bleEvtHandler, NULL);
   }
 //}}}
 
 //{{{
-/**@brief Function for the GAP initialization.
- * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
- *          device including the device name, appearance, and the preferred connection parameters.
- */
-static void gap_params_init() {
+// Function for the GAP initialization.
+// This function sets up all the necessary GAP (Generic Access Profile) parameters of the
+// device including the device name, appearance, and the preferred connection parameters
+static void gapParamsInit() {
 
-  ble_gap_conn_sec_mode_t sec_mode;
-  BLE_GAP_CONN_SEC_MODE_SET_OPEN (&sec_mode);
-  APP_ERROR_CHECK (sd_ble_gap_device_name_set (&sec_mode, (const uint8_t*)DEVICE_NAME, strlen(DEVICE_NAME)));
+  ble_gap_conn_sec_mode_t secMode;
+  BLE_GAP_CONN_SEC_MODE_SET_OPEN (&secMode);
+  APP_ERROR_CHECK (sd_ble_gap_device_name_set (&secMode, (const uint8_t*)DEVICE_NAME, strlen(DEVICE_NAME)));
 
-  ble_gap_conn_params_t gap_conn_params;
-  memset (&gap_conn_params, 0, sizeof(gap_conn_params));
+  ble_gap_conn_params_t gapConnParams;
+  memset (&gapConnParams, 0, sizeof(gapConnParams));
 
-  gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
-  gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
-  gap_conn_params.slave_latency     = SLAVE_LATENCY;
-  gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
+  gapConnParams.min_conn_interval = MIN_CONN_INTERVAL;
+  gapConnParams.max_conn_interval = MAX_CONN_INTERVAL;
+  gapConnParams.slave_latency     = SLAVE_LATENCY;
+  gapConnParams.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
-  APP_ERROR_CHECK (sd_ble_gap_ppcp_set (&gap_conn_params));
-  }
-//}}}
-//{{{
-static void gatt_init() {
-  APP_ERROR_CHECK (nrf_ble_gatt_init (&m_gatt, NULL));
+  APP_ERROR_CHECK (sd_ble_gap_ppcp_set (&gapConnParams));
   }
 //}}}
 
@@ -298,14 +263,14 @@ static void led_write_handler (uint16_t conn_handle, ble_lbs_t* p_lbs, uint8_t l
   }
 //}}}
 //{{{
-static void services_init() {
+static void servicesInit() {
 
-  // Initialize Queued Write Module.
+  // init Queued Write Module.
   nrf_ble_qwr_init_t qwr_init = {0};
   qwr_init.error_handler = nrf_qwr_error_handler;
   APP_ERROR_CHECK (nrf_ble_qwr_init (&m_qwr, &qwr_init));
 
-  // Initialize LBS.
+  // inite LBS.
   ble_lbs_init_t init = {0};
   init.led_write_handler = led_write_handler;
   APP_ERROR_CHECK (ble_lbs_init (&m_lbs, &init));
@@ -317,7 +282,7 @@ static void services_init() {
  * @details Encodes the required advertising data and passes it to the stack.
  *          Also builds a structure to be passed to the stack when starting advertising.
  */
-static void advertising_init() {
+static void advertisingInit() {
 
   ble_uuid_t adv_uuids[] = { {LBS_UUID_SERVICE, m_lbs.uuid_type} };
 
@@ -357,7 +322,7 @@ static void advertising_init() {
 // All this function does is to disconnect. This could have been done by simply
 // setting the disconnect_on_fail config parameter, but instead we use the event handler mechanism to demonstrate its use.
 // p_evt  Event received from the Connection Parameters Module.
-static void on_conn_params_evt (ble_conn_params_evt_t* p_evt) {
+static void onConnParamsEvt (ble_conn_params_evt_t* p_evt) {
 
   NRF_LOG_INFO ("on_conn_params_evt %d", p_evt->evt_type);
 
@@ -366,12 +331,12 @@ static void on_conn_params_evt (ble_conn_params_evt_t* p_evt) {
   }
 //}}}
 //{{{
-static void conn_params_error_handler (uint32_t nrf_error) {
+static void connParamsErrorHandler (uint32_t nrf_error) {
   APP_ERROR_HANDLER (nrf_error);
   }
 //}}}
 //{{{
-static void conn_params_init() {
+static void connParamsInit() {
 
   ble_conn_params_init_t cp_init;
   memset (&cp_init, 0, sizeof(cp_init));
@@ -382,8 +347,8 @@ static void conn_params_init() {
   cp_init.max_conn_params_update_count   = MAX_CONN_PARAMS_UPDATE_COUNT;
   cp_init.start_on_notify_cccd_handle    = BLE_GATT_HANDLE_INVALID;
   cp_init.disconnect_on_fail             = false;
-  cp_init.evt_handler                    = on_conn_params_evt;
-  cp_init.error_handler                  = conn_params_error_handler;
+  cp_init.evt_handler                    = onConnParamsEvt;
+  cp_init.error_handler                  = connParamsErrorHandler;
 
   APP_ERROR_CHECK (ble_conn_params_init (&cp_init));
   }
@@ -391,21 +356,22 @@ static void conn_params_init() {
 
 int main() {
 
-  // log init
   APP_ERROR_CHECK (NRF_LOG_INIT (NULL));
   NRF_LOG_DEFAULT_BACKENDS_INIT();
   NRF_LOG_INFO ("BlinkyBle "__TIME__" "__DATE__);
 
-  leds_init();
-  timers_init();
-  buttons_init();
-  power_management_init();
-  ble_stack_init();
-  gap_params_init();
-  gatt_init();
-  services_init();
-  advertising_init();
-  conn_params_init();
+  bsp_board_init (BSP_INIT_LEDS);
+  APP_ERROR_CHECK (app_timer_init());
+  static app_button_cfg_t buttons[] = { {LEDBUTTON_BUTTON, false, BUTTON_PULL, button_event_handler} };
+  APP_ERROR_CHECK (app_button_init(buttons, ARRAY_SIZE(buttons), BUTTON_DETECTION_DELAY));
+  APP_ERROR_CHECK (nrf_pwr_mgmt_init());
+
+  bleStackInit();
+  gapParamsInit();
+  APP_ERROR_CHECK (nrf_ble_gatt_init (&m_gatt, NULL));
+  servicesInit();
+  advertisingInit();
+  connParamsInit();
 
   advertising_start();
 
