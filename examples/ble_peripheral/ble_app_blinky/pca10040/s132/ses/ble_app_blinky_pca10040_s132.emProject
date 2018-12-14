@@ -40,18 +40,18 @@
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_str_formatter.c" />
       <folder Name="inc">
-        <file file_name="../../../../../../components/libraries/log/nrf_log.h" />
         <file file_name="../../../../../../components/libraries/log/nrf_log_backend_interface.h" />
-        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_rtt.h" />
         <file file_name="../../../../../../components/libraries/log/nrf_log_backend_uart.h" />
-        <file file_name="../../../../../../components/libraries/log/nrf_log_ctrl.h" />
         <file file_name="../../../../../../components/libraries/log/nrf_log_default_backends.h" />
-        <file file_name="../../../../../../components/libraries/log/nrf_log_instance.h" />
         <file file_name="../../../../../../components/libraries/log/nrf_log_str_formatter.h" />
         <file file_name="../../../../../../components/libraries/log/nrf_log_types.h" />
         <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_serial.h" />
         <file file_name="../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h" />
         <file file_name="../../../../../../components/libraries/log/src/nrf_log_internal.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_ctrl.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_backend_rtt.h" />
+        <file file_name="../../../../../../components/libraries/log/nrf_log_instance.h" />
       </folder>
     </folder>
     <folder Name="nRF\components\libraries">
@@ -75,6 +75,17 @@
       <file file_name="../../../../../../components/libraries/ringbuf/nrf_ringbuf.c" />
       <file file_name="../../../../../../components/libraries/experimental_section_vars/nrf_section_iter.c" />
       <file file_name="../../../../../../components/libraries/strerror/nrf_strerror.c" />
+      <file file_name="../../../../../../components/libraries/cli/uart/nrf_cli_uart.c" />
+      <folder Name="inc">
+        <file file_name="../../../../../../components/libraries/cli/uart/nrf_cli_uart.h" />
+        <file file_name="../../../../../../components/libraries/cli/nrf_cli.h" />
+        <file file_name="../../../../../../components/libraries/cli/nrf_cli_types.h" />
+        <file file_name="../../../../../../components/libraries/cli/nrf_cli_vt100.h" />
+        <file file_name="../../../../../../components/libraries/queue/nrf_queue.h" />
+      </folder>
+      <file file_name="../../../../../../components/libraries/cli/cli_utils_cmds.c" />
+      <file file_name="../../../../../../components/libraries/cli/nrf_cli.c" />
+      <file file_name="../../../../../../components/libraries/queue/nrf_queue.c" />
     </folder>
     <folder Name="startup">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
@@ -97,7 +108,6 @@
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_power_clock.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/prs/nrfx_prs.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uart.c" />
-      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uarte.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_twi.c" />
       <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_twim.c" />
       <folder Name="inc">
@@ -105,10 +115,11 @@
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_power_clock.h" />
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_gpiote.h" />
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_uart.h" />
-        <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_uarte.h" />
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_twi.h" />
         <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_twim.h" />
+        <file file_name="../../../../../../modules/nrfx/drivers/include/nrfx_uarte.h" />
       </folder>
+      <file file_name="../../../../../../modules/nrfx/drivers/src/nrfx_uarte.c" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />

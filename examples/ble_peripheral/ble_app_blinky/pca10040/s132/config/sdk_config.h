@@ -7080,13 +7080,13 @@
 // <e> NRF_QUEUE_ENABLED - nrf_queue - Queue module
 //==========================================================
 #ifndef NRF_QUEUE_ENABLED
-#define NRF_QUEUE_ENABLED 0
+#define NRF_QUEUE_ENABLED 1
 #endif
 // <q> NRF_QUEUE_CLI_CMDS  - Enable CLI commands specific to the module
  
 
 #ifndef NRF_QUEUE_CLI_CMDS
-#define NRF_QUEUE_CLI_CMDS 0
+#define NRF_QUEUE_CLI_CMDS 1
 #endif
 
 // </e>
@@ -7227,7 +7227,7 @@
  
 
 #ifndef NRF_CLI_ENABLED
-#define NRF_CLI_ENABLED 0
+#define NRF_CLI_ENABLED 1
 #endif
 
 // <o> NRF_CLI_ARGC_MAX - Maximum number of parameters passed to the command handler. 
@@ -7468,7 +7468,7 @@
  
 
 #ifndef NRF_LOG_CLI_CMDS
-#define NRF_LOG_CLI_CMDS 0
+#define NRF_LOG_CLI_CMDS 1
 #endif
 
 // <o> NRF_LOG_DEFAULT_LEVEL  - Default Severity level
@@ -7545,7 +7545,7 @@
 // <8=> White 
 
 #ifndef NRF_LOG_COLOR_DEFAULT
-#define NRF_LOG_COLOR_DEFAULT 0
+#define NRF_LOG_COLOR_DEFAULT 4
 #endif
 
 // <o> NRF_LOG_ERROR_COLOR  - ANSI escape code prefix.
@@ -7577,7 +7577,7 @@
 // <8=> White 
 
 #ifndef NRF_LOG_WARNING_COLOR
-#define NRF_LOG_WARNING_COLOR 4
+#define NRF_LOG_WARNING_COLOR 3
 #endif
 
 // </e>
@@ -9901,7 +9901,7 @@
 // <8=> White 
 
 #ifndef NRF_SDH_BLE_DEBUG_COLOR
-#define NRF_SDH_BLE_DEBUG_COLOR 0
+#define NRF_SDH_BLE_DEBUG_COLOR 6
 #endif
 
 // </e>
