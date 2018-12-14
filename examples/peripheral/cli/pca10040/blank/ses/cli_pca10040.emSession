@@ -14,7 +14,7 @@
   <ProjectSessionItem path="cli_pca10040"/>
   <ProjectSessionItem path="cli_pca10040;cli_pca10040"/>
   <ProjectSessionItem path="cli_pca10040;cli_pca10040;Board Definition"/>
-  <ProjectSessionItem path="cli_pca10040;cli_pca10040;nRF_Libraries"/>
+  <ProjectSessionItem path="cli_pca10040;cli_pca10040;nRF_Log"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -39,9 +39,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="310" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="290" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="181" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="175" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="88" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca20020.h" selected="0" top="76" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="1671" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/fds/fds.c" selected="1" top="1659" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="cli_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

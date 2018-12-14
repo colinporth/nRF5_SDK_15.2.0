@@ -1,6 +1,5 @@
 "Output/cli_pca10040 Release/Obj/thumb_crt0.o"
 "Output/cli_pca10040 Release/Obj/nrf_log_backend_flash.o"
-"Output/cli_pca10040 Release/Obj/nrf_log_backend_rtt.o"
 "Output/cli_pca10040 Release/Obj/nrf_log_backend_serial.o"
 "Output/cli_pca10040 Release/Obj/nrf_log_backend_uart.o"
 "Output/cli_pca10040 Release/Obj/nrf_log_default_backends.o"
