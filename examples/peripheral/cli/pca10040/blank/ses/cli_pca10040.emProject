@@ -103,11 +103,6 @@
     <folder Name="Board Support">
       <file file_name="../../../../../../components/libraries/bsp/bsp.c" />
     </folder>
-    <folder Name="Application">
-      <file file_name="../../../demo_cli_cmds.c" />
-      <file file_name="../../../main.c" />
-      <file file_name="../config/sdk_config.h" />
-    </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT.c" />
       <file file_name="../../../../../../external/segger_rtt/SEGGER_RTT_Syscalls_SES.c" />
@@ -118,6 +113,9 @@
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
     </folder>
+    <file file_name="../config/sdk_config.h" />
+    <file file_name="../../../main.c" />
+    <file file_name="../../../demo_cli_cmds.c" />
   </project>
   <configuration
     Name="Release"

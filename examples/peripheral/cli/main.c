@@ -58,11 +58,11 @@
 #define USE_CYCCNT_TIMESTAMP_FOR_LOG 0
 
 #if NRF_LOG_BACKEND_FLASHLOG_ENABLED
-NRF_LOG_BACKEND_FLASHLOG_DEF(m_flash_log_backend);
+  NRF_LOG_BACKEND_FLASHLOG_DEF(m_flash_log_backend);
 #endif
 
 #if NRF_LOG_BACKEND_CRASHLOG_ENABLED
-NRF_LOG_BACKEND_CRASHLOG_DEF(m_crash_log_backend);
+  NRF_LOG_BACKEND_CRASHLOG_DEF(m_crash_log_backend);
 #endif
 
 /* Counter timer. */
@@ -73,68 +73,66 @@ extern uint32_t m_counter;
 extern bool m_counter_active;
 
 #if CLI_OVER_USB_CDC_ACM
-
-#ifndef USBD_POWER_DETECTION
-#define USBD_POWER_DETECTION true
-#endif
-
-
-static void usbd_user_ev_handler(app_usbd_event_type_t event)
-{
-    switch (event)
-    {
-        case APP_USBD_EVT_STOPPED:
-            app_usbd_disable();
-            break;
-        case APP_USBD_EVT_POWER_DETECTED:
-            if (!nrf_drv_usbd_is_enabled())
-            {
-                app_usbd_enable();
-            }
-            break;
-        case APP_USBD_EVT_POWER_REMOVED:
-            app_usbd_stop();
-            break;
-        case APP_USBD_EVT_POWER_READY:
-            app_usbd_start();
-            break;
-        default:
-            break;
-    }
-}
-
+  #ifndef USBD_POWER_DETECTION
+    #define USBD_POWER_DETECTION true
+  #endif
+  //{{{
+  static void usbd_user_ev_handler(app_usbd_event_type_t event)
+  {
+      switch (event)
+      {
+          case APP_USBD_EVT_STOPPED:
+              app_usbd_disable();
+              break;
+          case APP_USBD_EVT_POWER_DETECTED:
+              if (!nrf_drv_usbd_is_enabled())
+              {
+                  app_usbd_enable();
+              }
+              break;
+          case APP_USBD_EVT_POWER_REMOVED:
+              app_usbd_stop();
+              break;
+          case APP_USBD_EVT_POWER_READY:
+              app_usbd_start();
+              break;
+          default:
+              break;
+      }
+  }
+  //}}}
 #endif //CLI_OVER_USB_CDC_ACM
 
-/**
- * @brief Command line interface instance
- * */
 #define CLI_EXAMPLE_LOG_QUEUE_SIZE  (4)
 
 #if CLI_OVER_USB_CDC_ACM
-NRF_CLI_CDC_ACM_DEF(m_cli_cdc_acm_transport);
-NRF_CLI_DEF(m_cli_cdc_acm,
-            "usb_cli:~$ ",
-            &m_cli_cdc_acm_transport.transport,
-            '\r',
-            CLI_EXAMPLE_LOG_QUEUE_SIZE);
+  NRF_CLI_CDC_ACM_DEF(m_cli_cdc_acm_transport);
+  NRF_CLI_DEF(m_cli_cdc_acm,
+              "usb_cli:~$ ",
+              &m_cli_cdc_acm_transport.transport,
+              '\r',
+              CLI_EXAMPLE_LOG_QUEUE_SIZE);
 #endif //CLI_OVER_USB_CDC_ACM
 
 #if CLI_OVER_UART
-NRF_CLI_UART_DEF(m_cli_uart_transport, 0, 64, 16);
-NRF_CLI_DEF(m_cli_uart,
-            "uart_cli:~$ ",
-            &m_cli_uart_transport.transport,
-            '\r',
-            CLI_EXAMPLE_LOG_QUEUE_SIZE);
+  NRF_CLI_UART_DEF(m_cli_uart_transport, 0, 64, 16);
+  NRF_CLI_DEF(m_cli_uart,
+              "uart_cli:~$ ",
+              &m_cli_uart_transport.transport,
+              '\r',
+              CLI_EXAMPLE_LOG_QUEUE_SIZE);
 #endif
 
 NRF_CLI_RTT_DEF(m_cli_rtt_transport);
+//{{{
 NRF_CLI_DEF(m_cli_rtt,
             "rtt_cli:~$ ",
             &m_cli_rtt_transport.transport,
             '\n',
             CLI_EXAMPLE_LOG_QUEUE_SIZE);
+//}}}
 
+//{{{
 static void timer_handle(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
@@ -145,7 +143,9 @@ static void timer_handle(void * p_context)
         NRF_LOG_RAW_INFO("counter = %d\r\n", m_counter);
     }
 }
+//}}}
 
+//{{{
 static void cli_start(void)
 {
     ret_code_t ret;
@@ -163,7 +163,8 @@ static void cli_start(void)
     ret = nrf_cli_start(&m_cli_rtt);
     APP_ERROR_CHECK(ret);
 }
-
+//}}}
+//{{{
 static void cli_init(void)
 {
     ret_code_t ret;
@@ -186,7 +187,9 @@ static void cli_init(void)
     APP_ERROR_CHECK(ret);
 }
 
+//}}}
 
+//{{{
 static void usbd_init(void)
 {
 #if CLI_OVER_USB_CDC_ACM
@@ -220,8 +223,9 @@ static void usbd_init(void)
     nrf_delay_ms(1000);
 #endif
 }
+//}}}
 
-
+//{{{
 static void cli_process(void)
 {
 #if CLI_OVER_USB_CDC_ACM
@@ -234,8 +238,9 @@ static void cli_process(void)
 
     nrf_cli_process(&m_cli_rtt);
 }
+//}}}
 
-
+//{{{
 static void flashlog_init(void)
 {
     ret_code_t ret;
@@ -257,78 +262,74 @@ static void flashlog_init(void)
     nrf_log_backend_enable(&m_crash_log_backend);
 #endif
 }
+//}}}
 
+//{{{
 static inline void stack_guard_init(void)
 {
     APP_ERROR_CHECK(nrf_mpu_init());
     APP_ERROR_CHECK(nrf_stack_guard_init());
 }
-
+//}}}
+//{{{
 uint32_t cyccnt_get(void)
 {
     return DWT->CYCCNT;
 }
+//}}}
 
+//{{{
+int main(void) {
 
-int main(void)
-{
-    ret_code_t ret;
-
-    if (USE_CYCCNT_TIMESTAMP_FOR_LOG)
-    {
-        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-        DWT->CYCCNT = 0;
-        APP_ERROR_CHECK(NRF_LOG_INIT(cyccnt_get, 64000000));
+  ret_code_t ret;
+  if (USE_CYCCNT_TIMESTAMP_FOR_LOG) {
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    DWT->CYCCNT = 0;
+    APP_ERROR_CHECK (NRF_LOG_INIT (cyccnt_get, 64000000));
     }
-    else
-    {
-        APP_ERROR_CHECK(NRF_LOG_INIT(app_timer_cnt_get));
+  else {
+    APP_ERROR_CHECK (NRF_LOG_INIT (app_timer_cnt_get));
     }
 
-    ret = nrf_drv_clock_init();
-    APP_ERROR_CHECK(ret);
-    nrf_drv_clock_lfclk_request(NULL);
+  ret = nrf_drv_clock_init();
+  APP_ERROR_CHECK (ret);
+  nrf_drv_clock_lfclk_request (NULL);
 
-    ret = app_timer_init();
-    APP_ERROR_CHECK(ret);
+  ret = app_timer_init();
+  APP_ERROR_CHECK(ret);
 
-    ret = app_timer_create(&m_timer_0, APP_TIMER_MODE_REPEATED, timer_handle);
-    APP_ERROR_CHECK(ret);
+  ret = app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timer_handle);
+  APP_ERROR_CHECK(ret);
 
-    ret = app_timer_start(m_timer_0, APP_TIMER_TICKS(1000), NULL);
-    APP_ERROR_CHECK(ret);
+  ret = app_timer_start (m_timer_0, APP_TIMER_TICKS(1000), NULL);
+  APP_ERROR_CHECK(ret);
 
-    cli_init();
+  cli_init();
+  usbd_init();
 
-    usbd_init();
+  ret = fds_init ();
+  APP_ERROR_CHECK (ret);
 
-    ret = fds_init();
-    APP_ERROR_CHECK(ret);
+  UNUSED_RETURN_VALUE (nrf_log_config_load());
 
+  cli_start();
+  flashlog_init();
+  stack_guard_init();
 
-    UNUSED_RETURN_VALUE(nrf_log_config_load());
+  NRF_LOG_RAW_INFO("Command Line Interface example started.\r\n");
+  NRF_LOG_RAW_INFO("Please press the Tab key to see all available commands.\r\n");
 
-    cli_start();
+  while (true) {
+    UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
 
-    flashlog_init();
-
-    stack_guard_init();
-
-    NRF_LOG_RAW_INFO("Command Line Interface example started.\r\n");
-    NRF_LOG_RAW_INFO("Please press the Tab key to see all available commands.\r\n");
-
-    while (true)
-    {
-        UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
-#if CLI_OVER_USB_CDC_ACM && APP_USBD_CONFIG_EVENT_QUEUE_ENABLE
-        while (app_usbd_event_queue_process())
-        {
-            /* Nothing to do */
-        }
-#endif
-        cli_process();
+    #if CLI_OVER_USB_CDC_ACM && APP_USBD_CONFIG_EVENT_QUEUE_ENABLE
+      while (app_usbd_event_queue_process())
+      {
+          /* Nothing to do */
+      }
+   #endif
+    cli_process();
     }
-}
-
-/** @} */
+  }
+//}}}
