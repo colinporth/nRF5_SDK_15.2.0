@@ -39,11 +39,6 @@
  <Watch4>
   <Watches active="0" update="Never"/>
  </Watch4>
- <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="262" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="244" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte.c" selected="0" top="550" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte_async.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/src/nrf_log_default_backends.c" selected="1" top="0" codecName="Default"/>
- </Files>
+ <Files/>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

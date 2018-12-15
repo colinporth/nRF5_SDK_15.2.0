@@ -38,9 +38,6 @@
  <Watch4>
   <Watches active="0" update="Never"/>
  </Watch4>
- <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="181" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="175" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="88" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca20020.h" selected="0" top="76" codecName="Default"/>
- </Files>
+ <Files/>
  <ARMCrossStudioWindow activeProject="cli_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

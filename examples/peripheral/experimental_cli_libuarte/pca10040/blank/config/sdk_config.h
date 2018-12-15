@@ -1035,7 +1035,7 @@
 // <e> NRF_LOG_ENABLED - nrf_log - Logger
 //==========================================================
 #ifndef NRF_LOG_ENABLED
-#define NRF_LOG_ENABLED 0
+#define NRF_LOG_ENABLED 1
 #endif
 // <h> Log message pool - Configuration of log message pool
 
@@ -1157,7 +1157,7 @@
 // <e> NRF_LOG_USES_COLORS - If enabled then ANSI escape code for colors is prefixed to every string
 //==========================================================
 #ifndef NRF_LOG_USES_COLORS
-#define NRF_LOG_USES_COLORS 0
+#define NRF_LOG_USES_COLORS 1
 #endif
 // <o> NRF_LOG_COLOR_DEFAULT  - ANSI escape code prefix.
  
@@ -1214,7 +1214,7 @@
 // <i> Function for getting the timestamp is provided by the user
 //==========================================================
 #ifndef NRF_LOG_USES_TIMESTAMP
-#define NRF_LOG_USES_TIMESTAMP 0
+#define NRF_LOG_USES_TIMESTAMP 1
 #endif
 // <o> NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY - Default frequency of the timestamp (in Hz) or 0 to use app_timer frequency. 
 #ifndef NRF_LOG_TIMESTAMP_DEFAULT_FREQUENCY

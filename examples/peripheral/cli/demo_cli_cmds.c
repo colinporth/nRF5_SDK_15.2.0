@@ -6,9 +6,9 @@
 #include "nrf_stack_guard.h"
 //}}}
 
-#define CLI_EXAMPLE_MAX_CMD_CNT (20u)
-#define CLI_EXAMPLE_MAX_CMD_LEN (33u)
-#define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK     (20000u)
+#define CLI_EXAMPLE_MAX_CMD_CNT  (20u)
+#define CLI_EXAMPLE_MAX_CMD_LEN  (33u)
+#define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK  (20000u)
 
 /* buffer holding dynamicly created user commands */
 static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
@@ -21,7 +21,7 @@ bool m_counter_active = false;
 
 //{{{
 /* Command handlers */
-static void cmd_print_param (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     for (size_t i = 1; i < argc; i++)
     {
@@ -30,7 +30,7 @@ static void cmd_print_param (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_print_all (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     for (size_t i = 1; i < argc; i++)
     {
@@ -40,7 +40,7 @@ static void cmd_print_all (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_print (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     ASSERT(p_cli);
     ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
@@ -70,7 +70,7 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
 NRF_CLI_CMD_REGISTER (print, &m_sub_print, "print", cmd_print);
 
 //{{{
-static void cmd_python (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_python (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
@@ -82,7 +82,7 @@ NRF_CLI_CMD_REGISTER (python, NULL, "python", cmd_python);
 
 //{{{
 /* function required by qsort */
-static int string_cmp (const void * p_a, const void * p_b)
+static int string_cmp (const void* p_a, const void * p_b)
 {
     ASSERT(p_a);
     ASSERT(p_b);
@@ -90,7 +90,7 @@ static int string_cmp (const void * p_a, const void * p_b)
 }
 //}}}
 //{{{
-static void cmd_dynamic (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_dynamic (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if ((argc == 1) || nrf_cli_help_requested(p_cli))
     {
@@ -109,7 +109,7 @@ static void cmd_dynamic (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_dynamic_add (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_dynamic_add (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (nrf_cli_help_requested(p_cli))
     {
@@ -169,7 +169,7 @@ static void cmd_dynamic_add (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_dynamic_show (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_dynamic_show (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (nrf_cli_help_requested(p_cli))
     {
@@ -196,7 +196,7 @@ static void cmd_dynamic_show (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_dynamic_execute (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_dynamic_execute (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (nrf_cli_help_requested(p_cli))
     {
@@ -222,7 +222,7 @@ static void cmd_dynamic_execute (nrf_cli_t const * p_cli, size_t argc, char **ar
 }
 //}}}
 //{{{
-static void cmd_dynamic_remove (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_dynamic_remove (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if ((argc == 1) || nrf_cli_help_requested(p_cli))
     {
@@ -260,7 +260,7 @@ static void cmd_dynamic_remove (nrf_cli_t const * p_cli, size_t argc, char **arg
 //}}}
 //{{{
 /* dynamic command creation */
-static void dynamic_cmd_get (size_t idx, nrf_cli_static_entry_t * p_static) {
+static void dynamic_cmd_get (size_t idx, nrf_cli_static_entry_t* p_static) {
     ASSERT(p_static);
 
     if (idx < m_dynamic_cmd_cnt)
@@ -297,7 +297,7 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
 NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usage.", cmd_dynamic);
 
 //{{{
-static void cmd_counter_start (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (argc != 1)
     {
@@ -309,7 +309,7 @@ static void cmd_counter_start (nrf_cli_t const * p_cli, size_t argc, char **argv
 }
 //}}}
 //{{{
-static void cmd_counter_stop (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (argc != 1)
     {
@@ -321,7 +321,7 @@ static void cmd_counter_stop (nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_counter_reset (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     if (argc != 1)
     {
@@ -333,7 +333,7 @@ static void cmd_counter_reset (nrf_cli_t const * p_cli, size_t argc, char **argv
 }
 //}}}
 //{{{
-static void cmd_counter (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     ASSERT(p_cli);
     ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
@@ -382,7 +382,7 @@ NRF_CLI_CMD_REGISTER (counter, &m_sub_counter, "Display seconds on terminal scre
 //}}}
 
 //{{{
-static void cmd_nordic (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
@@ -444,7 +444,7 @@ void cli_example_stack_overflow_force()
 }
 //}}}
 //{{{
-static void cmd_stack_overflow (nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_stack_overflow (nrf_cli_t const* p_cli, size_t argc, char** argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
