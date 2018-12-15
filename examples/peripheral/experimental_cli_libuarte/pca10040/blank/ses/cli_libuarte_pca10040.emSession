@@ -14,6 +14,8 @@
   <ProjectSessionItem path="cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;Board"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Drivers"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Libraries"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Log"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;Startup"/>
  </Project>
@@ -39,6 +41,10 @@
  <Watch4>
   <Watches active="0" update="Never"/>
  </Watch4>
- <Files/>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="22" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="2" y="16" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c" selected="0" top="7" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/cli/nrf_cli.c" selected="1" top="45" codecName="Default"/>
+ </Files>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

@@ -26,8 +26,6 @@
 "Output/cli_pca10040 Release/Obj/nrf_atomic.o"
 "Output/cli_pca10040 Release/Obj/nrf_balloc.o"
 "Output/cli_pca10040 Release/Obj/nrf_cli.o"
-"Output/cli_pca10040 Release/Obj/nrf_cli_cdc_acm.o"
-"Output/cli_pca10040 Release/Obj/nrf_cli_rtt.o"
 "Output/cli_pca10040 Release/Obj/nrf_cli_uart.o"
 "Output/cli_pca10040 Release/Obj/nrf_fprintf.o"
 "Output/cli_pca10040 Release/Obj/nrf_fprintf_format.o"

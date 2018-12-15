@@ -53,7 +53,7 @@ static uint8_t m_dynamic_cmd_cnt;
 static bool m_counter_active;
 static uint32_t m_counter;
 
-#define CLI_EXAMPLE_LOG_QUEUE_SIZE (4)
+#define CLI_EXAMPLE_LOG_QUEUE_SIZE 4
 NRF_CLI_UART_DEF (m_cli_uart_transport, 0, 64, 16);
 NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
 
@@ -96,12 +96,14 @@ static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   }
 //}}}
 NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nordic);
+
 //{{{
 static void cmd_python (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Nice joke ;)\r\n");
   }
 //}}}
 NRF_CLI_CMD_REGISTER (python, NULL, "python", cmd_python);
+
 //{{{  counter commands
 //{{{
 static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv)
@@ -514,7 +516,7 @@ int main() {
   uart_config.pseltxd = TX_PIN_NUMBER;
   uart_config.pselrxd = RX_PIN_NUMBER;
   uart_config.hwfc = NRF_UART_HWFC_DISABLED;
-  APP_ERROR_CHECK(nrf_cli_init (&m_cli_uart, &uart_config, true, true, NRF_LOG_SEVERITY_INFO));
+  APP_ERROR_CHECK (nrf_cli_init (&m_cli_uart, &uart_config, true, true, NRF_LOG_SEVERITY_INFO));
 
   //APP_ERROR_CHECK (fds_init());
   nrf_log_config_load();

@@ -33,6 +33,7 @@
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_section_iter.o"
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_sortlist.o"
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_strerror.o"
+"Output/cli_libuarte_pca10040 Release/Obj/cli_utils_cmds.o"
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_drv_clock.o"
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_nvic.o"
 "Output/cli_libuarte_pca10040 Release/Obj/nrf_soc.o"

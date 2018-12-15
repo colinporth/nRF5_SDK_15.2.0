@@ -69,8 +69,6 @@
       <file file_name="../../../../../../components/libraries/atomic/nrf_atomic.c" />
       <file file_name="../../../../../../components/libraries/balloc/nrf_balloc.c" />
       <file file_name="../../../../../../components/libraries/cli/nrf_cli.c" />
-      <file file_name="../../../../../../components/libraries/cli/cdc_acm/nrf_cli_cdc_acm.c" />
-      <file file_name="../../../../../../components/libraries/cli/rtt/nrf_cli_rtt.c" />
       <file file_name="../../../../../../components/libraries/cli/uart/nrf_cli_uart.c" />
       <file file_name="../../../../../../external/fprintf/nrf_fprintf.c" />
       <file file_name="../../../../../../external/fprintf/nrf_fprintf_format.c" />
