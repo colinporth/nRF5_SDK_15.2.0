@@ -2,7 +2,7 @@
 #include "nrf_log.h"
 
 //{{{
-static void cmd_reset(nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_reset (nrf_cli_t const * p_cli, size_t argc, char **argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
@@ -17,7 +17,7 @@ static void cmd_reset(nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_error(nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_error (nrf_cli_t const * p_cli, size_t argc, char **argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
@@ -32,7 +32,7 @@ static void cmd_error(nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_app_size(nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_app_size (nrf_cli_t const * p_cli, size_t argc, char **argv)
 {
     UNUSED_PARAMETER(argc);
     UNUSED_PARAMETER(argv);
@@ -54,7 +54,7 @@ static void cmd_app_size(nrf_cli_t const * p_cli, size_t argc, char **argv)
 //}}}
 
 //{{{
-static void cmd_log_msg_error(nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_log_msg_error (nrf_cli_t const * p_cli, size_t argc, char **argv)
 {
     if (nrf_cli_help_requested(p_cli))
     {
@@ -81,7 +81,7 @@ static void cmd_log_msg_error(nrf_cli_t const * p_cli, size_t argc, char **argv)
 }
 //}}}
 //{{{
-static void cmd_log_msg_warning(nrf_cli_t const * p_cli, size_t argc, char **argv)
+static void cmd_log_msg_warning (nrf_cli_t const * p_cli, size_t argc, char **argv)
 {
     if (nrf_cli_help_requested(p_cli))
     {
@@ -108,17 +108,14 @@ static void cmd_log_msg_warning(nrf_cli_t const * p_cli, size_t argc, char **arg
 }
 //}}}
 
-NRF_CLI_CMD_REGISTER(reset, NULL, "System reset.", cmd_reset);
+NRF_CLI_CMD_REGISTER (reset, NULL, "System reset.", cmd_reset);
+NRF_CLI_CMD_REGISTER (error, NULL, "Trigger error.", cmd_error);
+NRF_CLI_CMD_REGISTER (app_size, NULL, "Print application size.", cmd_app_size);
 
-NRF_CLI_CMD_REGISTER(error, NULL, "Trigger error.", cmd_error);
+NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_log_msg) {
+  NRF_CLI_CMD (error,   NULL, "Error log message with parameters", cmd_log_msg_error),
+  NRF_CLI_CMD (warning, NULL, "Warning log message with parameters", cmd_log_msg_warning),
+  NRF_CLI_SUBCMD_SET_END
+  };
 
-NRF_CLI_CMD_REGISTER(app_size, NULL, "Print application size.", cmd_app_size);
-
-NRF_CLI_CREATE_STATIC_SUBCMD_SET(m_sub_log_msg)
-{
-    NRF_CLI_CMD(error,   NULL, "Error log message with parameters", cmd_log_msg_error),
-    NRF_CLI_CMD(warning, NULL, "Warning log message with parameters", cmd_log_msg_warning),
-    NRF_CLI_SUBCMD_SET_END
-};
-
-NRF_CLI_CMD_REGISTER(log_msg, &m_sub_log_msg, "Trigger log message with decimal arguments", NULL);
+NRF_CLI_CMD_REGISTER (log_msg, &m_sub_log_msg, "Trigger log message with decimal arguments", NULL);

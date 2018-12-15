@@ -1,9 +1,9 @@
-#ifndef NRF_CLI_VT100_H__
-#define NRF_CLI_VT100_H__
-
+#pragma once
+//{{{
 #ifdef __cplusplus
 extern "C" {
 #endif
+//}}}
 
 #define NRF_CLI_VT100_ASCII_ESC     (0x1b)
 #define NRF_CLI_VT100_ASCII_DEL     (0x7F)
@@ -585,9 +585,8 @@ extern "C" {
         NRF_CLI_VT100_ASCII_ESC, '[', '4', '0' + (__col), 'm', '\0'           \
     }
 
+//{{{
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* NRF_CLI_VT100_H__ */
-
+//}}}

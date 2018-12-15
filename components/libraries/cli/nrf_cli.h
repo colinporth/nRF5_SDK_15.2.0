@@ -1,5 +1,5 @@
 #pragma once
-
+//{{{  includes
 #include "sdk_common.h"
 #include "nrf_cli_types.h"
 #include "nrf_section.h"
@@ -15,7 +15,7 @@
 
 #include "nrf_fprintf.h"
 #include "nrf_fprintf_format.h"
-
+//}}}
 //{{{
 #ifdef __cplusplus
 extern "C" {
