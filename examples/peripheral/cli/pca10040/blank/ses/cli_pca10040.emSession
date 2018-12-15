@@ -14,7 +14,6 @@
   <ProjectSessionItem path="cli_pca10040"/>
   <ProjectSessionItem path="cli_pca10040;cli_pca10040"/>
   <ProjectSessionItem path="cli_pca10040;cli_pca10040;Board Definition"/>
-  <ProjectSessionItem path="cli_pca10040;cli_pca10040;nRF_Libraries"/>
   <ProjectSessionItem path="cli_pca10040;cli_pca10040;nRF_Log"/>
  </Project>
  <Register1/>
@@ -40,8 +39,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="45" y="508" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/cli/nrf_cli.c" selected="0" top="503" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="52" y="34" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/cli/uart/nrf_cli_uart.h" selected="1" top="18" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="508" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/cli/nrf_cli.c" selected="0" top="503" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="34" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/cli/uart/nrf_cli_uart.h" selected="1" top="18" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="cli_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
