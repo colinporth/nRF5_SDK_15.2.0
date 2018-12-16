@@ -35,10 +35,9 @@
 static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
 static uint8_t m_dynamic_cmd_cnt;
 
-NRF_CLI_LIBUARTE_DEF (gCliLibuarteTransport, 256, 256);
-NRF_CLI_DEF (gCliLibuarte, "cli:", &gCliLibuarteTransport.transport, '\r', 4);
-//NRF_CLI_UART_DEF (m_cli_uart_transport, 0, 64, 16);
-//NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', 4);
+//NRF_CLI_UART_DEF (gCliTransport, 0, 64, 16);
+NRF_CLI_LIBUARTE_DEF (gCliTransport, 256, 256);
+NRF_CLI_DEF (gCli, "cli:", &gCliTransport.transport, '\r', 4);
 
 static uint32_t gCounter;
 static bool gCounter_active = false;
@@ -427,8 +426,8 @@ int main() {
   // libuarte cli init
   cli_libuarte_config_t config =  {
     TX_PIN_NUMBER, RX_PIN_NUMBER, NRF_UARTE_HWFC_DISABLED, NRF_UARTE_PARITY_EXCLUDED, NRF_UARTE_BAUDRATE_115200 };
-  APP_ERROR_CHECK (nrf_cli_init (&gCliLibuarte, &config, true, true, NRF_LOG_SEVERITY_INFO));
-  APP_ERROR_CHECK (nrf_cli_start (&gCliLibuarte));
+  APP_ERROR_CHECK (nrf_cli_init (&gCli, &config, true, true, NRF_LOG_SEVERITY_INFO));
+  APP_ERROR_CHECK (nrf_cli_start (&gCli));
   //{{{  cli init
   //nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
   //uart_config.pseltxd = TX_PIN_NUMBER;
@@ -444,7 +443,6 @@ int main() {
 
   while (true) {
     NRF_LOG_PROCESS();
-    nrf_cli_process (&gCliLibuarte);
-    //nrf_cli_process (&m_cli_uart);
+    nrf_cli_process (&gCli);
     }
   }
