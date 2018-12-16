@@ -53,6 +53,175 @@ static void timer_handle (void* p_context) {
   }
 //}}}
 
+//{{{  nordic command
+static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+
+  nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,
+    "\r\n"
+    "            .co:.                   'xo,          \r\n"
+    "         .,collllc,.             'ckOOo::,..      \r\n"
+    "      .:ooooollllllll:'.     .;dOOOOOOo:::;;;'.   \r\n"
+    "   'okxddoooollllllllllll;'ckOOOOOOOOOo:::;;;,,,' \r\n"
+    "   OOOkxdoooolllllllllllllllldxOOOOOOOo:::;;;,,,'.\r\n"
+    "   OOOOOOkdoolllllllllllllllllllldxOOOo:::;;;,,,'.\r\n"
+    "   OOOOOOOOOkxollllllllllllllllllcccldl:::;;;,,,'.\r\n"
+    "   OOOOOOOOOOOOOxdollllllllllllllccccc::::;;;,,,'.\r\n"
+    "   OOOOOOOOOOOOOOOOkxdlllllllllllccccc::::;;;,,,'.\r\n"
+    "   kOOOOOOOOOOOOOOOOOOOkdolllllllccccc::::;;;,,,'.\r\n"
+    "   kOOOOOOOOOOOOOOOOOOOOOOOxdllllccccc::::;;;,,,'.\r\n"
+    "   kOOOOOOOOOOOOOOOOOOOOOOOOOOkxolcccc::::;;;,,,'.\r\n"
+    "   kOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOkdlc::::;;;,,,'.\r\n"
+    "   xOOOOOOOOOOOxdkOOOOOOOOOOOOOOOOOOOOxoc:;;;,,,'.\r\n"
+    "   xOOOOOOOOOOOdc::ldkOOOOOOOOOOOOOOOOOOOkdc;,,,''\r\n"
+    "   xOOOOOOOOOOOdc::;;,;cdkOOOOOOOOOOOOOOOOOOOxl;''\r\n"
+    "   .lkOOOOOOOOOdc::;;,,''..;oOOOOOOOOOOOOOOOOOOOx'\r\n"
+    "      .;oOOOOOOdc::;;,.       .:xOOOOOOOOOOOOd;.  \r\n"
+    "          .:xOOdc:,.              'ckOOOOkl'      \r\n"
+    "             .od'                    'xk,         \r\n"
+    "\r\n");
+
+  nrf_cli_fprintf (p_cli,NRF_CLI_NORMAL,
+    "                Nordic Semiconductor              \r\n\r\n");
+  }
+
+
+NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nordic);
+//}}}
+//{{{  counter commands
+static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (argc != 1) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+  gCounter_active = true;
+  }
+
+
+static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (argc != 1) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+  gCounter_active = false;
+  }
+
+
+static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (argc != 1) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+  gCounter = 0;
+  }
+
+
+static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  ASSERT(p_cli);
+  ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+  static const nrf_cli_getopt_option_t opt[] = { NRF_CLI_OPT( "--test", "-t", "dummy option help string" ) };
+  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
+    return;
+    }
+  if (argc != 2) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+  if (!strcmp(argv[1], "-t") || !strcmp(argv[1], "--test")) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Dummy test option.\r\n");
+    return;
+    }
+  /* subcommands have their own handlers and they are not processed here */
+  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+  }
+
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_counter) {
+  NRF_CLI_CMD(reset,  NULL, "Reset seconds counter.",  cmd_counter_reset),
+  NRF_CLI_CMD(start,  NULL, "Start seconds counter.",  cmd_counter_start),
+  NRF_CLI_CMD(stop,   NULL, "Stop seconds counter.",   cmd_counter_stop),
+  NRF_CLI_SUBCMD_SET_END
+  };
+
+NRF_CLI_CMD_REGISTER (counter, &m_sub_counter, "Display seconds on terminal screen", cmd_counter);
+//}}}
+//{{{  stack overflow command
+#define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK  (20000u)
+
+// This function cannot be static otherwise it can be inlined. As a result, variable:
+//   tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK] will be always created on stack. This will block
+//   possiblity to call functions: nrf_cli_help_requested and nrf_cli_help_print within
+//   cmd_stack_overflow, because stack guard will be triggered. */
+void cli_example_stack_overflow_force() {
+  char tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK];
+  volatile char* p_tab = tab;
+  // This function accesses stack area protected by nrf_stack_guard. As a result
+  // MPU (memory protection unit) triggers an exception (hardfault). Hardfault handler will log exception reason
+  for (size_t idx = 0; idx < STACK_SIZE; idx++)
+    *(p_tab + idx) = (uint8_t)idx;
+  }
+
+
+static void cmd_stack_overflow (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+  cli_example_stack_overflow_force();
+  }
+
+
+NRF_CLI_CMD_REGISTER (stack_overflow, NULL,
+                      "Command tests nrf_stack_guard module. Upon command call stack will be "
+                      "overflowed and microcontroller shall log proper reset reason. \n\rTo observe "
+                      "stack_guard execution, stack shall be set to value lower than 20000 bytes.",
+                      cmd_stack_overflow);
+//}}}
+//{{{  print commands
+static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  for (size_t i = 1; i < argc; i++)
+    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "argv[%d] = %s\r\n", i, argv[i]);
+  }
+
+
+static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  for (size_t i = 1; i < argc; i++)
+    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s ", argv[i]);
+  nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "\r\n");
+  }
+
+
+static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  ASSERT(p_cli);
+  ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+
+  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print(p_cli, NULL, 0);
+    return;
+    }
+
+  if (argc != 2) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+
+  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+  }
+
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
+  NRF_CLI_CMD (all,   NULL, "Print all entered parameters.", cmd_print_all),
+  NRF_CLI_CMD (param, NULL, "Print each parameter in new line.", cmd_print_param),
+  NRF_CLI_SUBCMD_SET_END
+  };
+
+NRF_CLI_CMD_REGISTER (print, &m_sub_print, "print", cmd_print);
+//}}}
 //{{{  dynamic commands
 //{{{
 /* function required by qsort */
@@ -234,170 +403,6 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
   };
 
 NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usage.", cmd_dynamic);
-//}}}
-//{{{  print commands
-static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  for (size_t i = 1; i < argc; i++)
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "argv[%d] = %s\r\n", i, argv[i]);
-  }
-
-
-static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  for (size_t i = 1; i < argc; i++)
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s ", argv[i]);
-  nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "\r\n");
-  }
-
-
-static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  ASSERT(p_cli);
-  ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-
-  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-    nrf_cli_help_print(p_cli, NULL, 0);
-    return;
-    }
-
-  if (argc != 2) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
-    return;
-    }
-
-  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
-  }
-
-
-NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
-  NRF_CLI_CMD (all,   NULL, "Print all entered parameters.", cmd_print_all),
-  NRF_CLI_CMD (param, NULL, "Print each parameter in new line.", cmd_print_param),
-  NRF_CLI_SUBCMD_SET_END
-  };
-
-NRF_CLI_CMD_REGISTER (print, &m_sub_print, "print", cmd_print);
-//}}}
-//{{{  counter commands
-static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
-    return;
-    }
-
-  gCounter_active = true;
-  }
-
-static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
-    return;
-    }
-  gCounter_active = false;
-  }
-
-static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
-    return;
-    }
-  gCounter = 0;
-  }
-
-static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  ASSERT(p_cli);
-  ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-  static const nrf_cli_getopt_option_t opt[] = { NRF_CLI_OPT( "--test", "-t", "dummy option help string" ) };
-  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-    nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
-    return;
-    }
-  if (argc != 2) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
-    return;
-    }
-  if (!strcmp(argv[1], "-t") || !strcmp(argv[1], "--test")) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Dummy test option.\r\n");
-    return;
-    }
-  /* subcommands have their own handlers and they are not processed here */
-  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
-  }
-
-NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_counter) {
-  NRF_CLI_CMD(reset,  NULL, "Reset seconds counter.",  cmd_counter_reset),
-  NRF_CLI_CMD(start,  NULL, "Start seconds counter.",  cmd_counter_start),
-  NRF_CLI_CMD(stop,   NULL, "Stop seconds counter.",   cmd_counter_stop),
-  NRF_CLI_SUBCMD_SET_END
-  };
-
-NRF_CLI_CMD_REGISTER (counter, &m_sub_counter, "Display seconds on terminal screen", cmd_counter);
-//}}}
-//{{{  nordic command
-static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  if (nrf_cli_help_requested (p_cli)) {
-    nrf_cli_help_print (p_cli, NULL, 0);
-    return;
-    }
-  nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,
-    "\r\n"
-    "            .co:.                   'xo,          \r\n"
-    "         .,collllc,.             'ckOOo::,..      \r\n"
-    "      .:ooooollllllll:'.     .;dOOOOOOo:::;;;'.   \r\n"
-    "   'okxddoooollllllllllll;'ckOOOOOOOOOo:::;;;,,,' \r\n"
-    "   OOOkxdoooolllllllllllllllldxOOOOOOOo:::;;;,,,'.\r\n"
-    "   OOOOOOkdoolllllllllllllllllllldxOOOo:::;;;,,,'.\r\n"
-    "   OOOOOOOOOkxollllllllllllllllllcccldl:::;;;,,,'.\r\n"
-    "   OOOOOOOOOOOOOxdollllllllllllllccccc::::;;;,,,'.\r\n"
-    "   OOOOOOOOOOOOOOOOkxdlllllllllllccccc::::;;;,,,'.\r\n"
-    "   kOOOOOOOOOOOOOOOOOOOkdolllllllccccc::::;;;,,,'.\r\n"
-    "   kOOOOOOOOOOOOOOOOOOOOOOOxdllllccccc::::;;;,,,'.\r\n"
-    "   kOOOOOOOOOOOOOOOOOOOOOOOOOOkxolcccc::::;;;,,,'.\r\n"
-    "   kOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOkdlc::::;;;,,,'.\r\n"
-    "   xOOOOOOOOOOOxdkOOOOOOOOOOOOOOOOOOOOxoc:;;;,,,'.\r\n"
-    "   xOOOOOOOOOOOdc::ldkOOOOOOOOOOOOOOOOOOOkdc;,,,''\r\n"
-    "   xOOOOOOOOOOOdc::;;,;cdkOOOOOOOOOOOOOOOOOOOxl;''\r\n"
-    "   .lkOOOOOOOOOdc::;;,,''..;oOOOOOOOOOOOOOOOOOOOx'\r\n"
-    "      .;oOOOOOOdc::;;,.       .:xOOOOOOOOOOOOd;.  \r\n"
-    "          .:xOOdc:,.              'ckOOOOkl'      \r\n"
-    "             .od'                    'xk,         \r\n"
-    "\r\n");
-
-  nrf_cli_fprintf (p_cli,NRF_CLI_NORMAL,
-    "                Nordic Semiconductor              \r\n\r\n");
-  }
-
-NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nordic);
-//}}}
-//{{{  stackOverflow command
-#define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK  (20000u)
-
-/* This function cannot be static otherwise it can be inlined. As a result, variable:
-   tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK] will be always created on stack. This will block
-   possiblity to call functions: nrf_cli_help_requested and nrf_cli_help_print within
-   cmd_stack_overflow, because stack guard will be triggered. */
-void cli_example_stack_overflow_force() {
-  char tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK];
-  volatile char* p_tab = tab;
-  /* This function accesses stack area protected by nrf_stack_guard. As a result
-     MPU (memory protection unit) triggers an exception (hardfault). Hardfault handler will log
-     exception reason.*/
-  for (size_t idx = 0; idx < STACK_SIZE; idx++)
-    *(p_tab + idx) = (uint8_t)idx;
-  }
-
-
-static void cmd_stack_overflow (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  if (nrf_cli_help_requested (p_cli)) {
-    nrf_cli_help_print (p_cli, NULL, 0);
-    return;
-    }
-  cli_example_stack_overflow_force();
-  }
-
-
-NRF_CLI_CMD_REGISTER (stack_overflow, NULL,
-                      "Command tests nrf_stack_guard module. Upon command call stack will be "
-                      "overflowed and microcontroller shall log proper reset reason. \n\rTo observe "
-                      "stack_guard execution, stack shall be set to value lower than 20000 bytes.",
-                      cmd_stack_overflow);
 //}}}
 
 int main() {

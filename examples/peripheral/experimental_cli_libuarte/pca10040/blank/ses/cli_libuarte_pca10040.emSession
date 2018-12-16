@@ -14,8 +14,6 @@
   <ProjectSessionItem path="cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;board"/>
-  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Libraries"/>
-  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Libraries;inc"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -39,6 +37,8 @@
  <Watch4>
   <Watches active="0" update="Never"/>
  </Watch4>
- <Files/>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/bsp/bsp.c" selected="1" top="0" codecName="Default"/>
+ </Files>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

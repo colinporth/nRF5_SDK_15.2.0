@@ -1,5 +1,5 @@
 #pragma once
-//{{{
+//{{{  includes
 #include <nrfx.h>
 #include "app_timer.h"
 #include "sdk_errors.h"
@@ -31,8 +31,8 @@ typedef struct {
 #define LOW_POWER_PWM_CONFIG_BIT_MASK(mask) (mask)
 
 #define LOW_POWER_PWM_DEFAULT_CONFIG(mask) {         \
-  .active_high = LOW_POWER_PWM_CONFIG_ACTIVE_HIGH ,  \
-  .period      = LOW_POWER_PWM_CONFIG_PERIOD   ,     \
+  .active_high = LOW_POWER_PWM_CONFIG_ACTIVE_HIGH,   \
+  .period      = LOW_POWER_PWM_CONFIG_PERIOD,        \
   .p_port      = LOW_POWER_PWM_CONFIG_PORT,          \
   .bit_mask    = LOW_POWER_PWM_CONFIG_BIT_MASK(mask) \
   }
