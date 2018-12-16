@@ -12,10 +12,11 @@
 #include "app_error.h"
 #include "app_util.h"
 
+#include "boards.h"
+#include "led_softblink.h"
+
 #include "nrf_cli.h"
 #include "nrf_cli_types.h"
-
-#include "boards.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
@@ -208,7 +209,9 @@ int main() {
   APP_ERROR_CHECK (app_timer_init());
   APP_ERROR_CHECK (app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timer_handle));
   APP_ERROR_CHECK (app_timer_start (m_timer_0, APP_TIMER_TICKS (1000), NULL));
-
+  
+  bsp_board_init (BSP_INIT_LEDS);
+  
   // cli
   cli_libuarte_config_t libuarte_config;
   libuarte_config.tx_pin = TX_PIN_NUMBER;
@@ -220,6 +223,10 @@ int main() {
   APP_ERROR_CHECK (nrf_cli_start (&m_cli_libuarte));
 
   NRF_LOG_RAW_INFO ("libcli - built "__TIME__" " __DATE__"\r\n");
+
+  const led_sb_init_params_t leds = LED_SB_INIT_DEFAULT_PARAMS (LEDS_MASK);
+  APP_ERROR_CHECK (led_softblink_init (&leds));
+  APP_ERROR_CHECK (led_softblink_start (LEDS_MASK));
 
   while (true) {
     NRF_LOG_PROCESS();
