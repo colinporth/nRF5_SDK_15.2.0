@@ -13,6 +13,8 @@
  <Project>
   <ProjectSessionItem path="cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Libraries"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Libraries;inc"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -36,6 +38,9 @@
  <Watch4>
   <Watches active="0" update="Never"/>
  </Watch4>
- <Files/>
+ <Files>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="213" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="205" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="53" y="25" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/led_softblink/led_softblink.h" selected="1" top="21" codecName="Default"/>
+ </Files>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

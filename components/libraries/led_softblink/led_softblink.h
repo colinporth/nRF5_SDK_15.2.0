@@ -23,11 +23,11 @@ typedef struct {
   } led_sb_init_params_t;
 
 #define LED_SB_INIT_PARAMS_ACTIVE_HIGH            false
-#define LED_SB_INIT_PARAMS_DUTY_CYCLE_MAX         220
+#define LED_SB_INIT_PARAMS_DUTY_CYCLE_MAX         255
 #define LED_SB_INIT_PARAMS_DUTY_CYCLE_MIN         0
 #define LED_SB_INIT_PARAMS_DUTY_CYCLE_STEP        5
-#define LED_SB_INIT_PARAMS_OFF_TIME_TICKS         65536
-#define LED_SB_INIT_PARAMS_ON_TIME_TICKS          0
+#define LED_SB_INIT_PARAMS_OFF_TIME_TICKS         20000
+#define LED_SB_INIT_PARAMS_ON_TIME_TICKS          20000
 #define LED_SB_INIT_PARAMS_LEDS_PIN_BM(mask)      (mask)
 #define LED_SB_INIT_PARAMS_LEDS_PORT              NRF_GPIO
 
