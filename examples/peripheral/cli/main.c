@@ -46,14 +46,14 @@
 //}}}
 #define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK  (20000u)
 
-#define CLI_EXAMPLE_MAX_CMD_CNT  (20u)
-#define CLI_EXAMPLE_MAX_CMD_LEN  (33u)
+#define CLI_EXAMPLE_MAX_CMD_CNT  20
+#define CLI_EXAMPLE_MAX_CMD_LEN  33
 static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
 static uint8_t m_dynamic_cmd_cnt;
 static bool m_counter_active;
 static uint32_t m_counter;
 
-#define CLI_EXAMPLE_LOG_QUEUE_SIZE 4
+#define CLI_EXAMPLE_LOG_QUEUE_SIZE  4
 NRF_CLI_UART_DEF (m_cli_uart_transport, 0, 64, 16);
 NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
 
