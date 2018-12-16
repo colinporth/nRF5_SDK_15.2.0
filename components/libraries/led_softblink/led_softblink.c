@@ -25,7 +25,7 @@
 
   APP_TIMER_DEF(m_led_softblink_timer);
 
-  static led_sb_context_t m_led_sb = {0};
+  static led_sb_context_t m_led_sb = { 0 };
 
   //{{{
   /**@brief Timer event handler for softblink.
@@ -82,7 +82,36 @@
   //}}}
 
   //{{{
-  ret_code_t led_softblink_init (led_sb_init_params_t const * p_init_params)
+  ret_code_t led_softblink_start (uint32_t leds_pin_bit_mask) {
+
+    ASSERT (m_led_sb.led_sb_state == NRFX_DRV_STATE_INITIALIZED);
+    return low_power_pwm_start (&m_led_sb.pwm_instance, leds_pin_bit_mask);
+    }
+  //}}}
+  //{{{
+  ret_code_t led_softblink_stop() {
+
+    return low_power_pwm_stop (&m_led_sb.pwm_instance);
+    }
+  //}}}
+
+  //{{{
+  void led_softblink_on_time_set (uint32_t on_time_ticks) {
+
+    ASSERT(m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
+    m_led_sb.params.on_time_ticks = on_time_ticks;
+    }
+  //}}}
+  //{{{
+  void led_softblink_off_time_set (uint32_t off_time_ticks) {
+
+    ASSERT(m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
+    m_led_sb.params.off_time_ticks = off_time_ticks;
+    }
+  //}}}
+
+  //{{{
+  ret_code_t led_softblink_init (led_sb_init_params_t const* p_init_params)
   {
       ret_code_t err_code;
 
@@ -130,37 +159,6 @@
   }
 
   //}}}
-  //{{{
-  ret_code_t led_softblink_start (uint32_t leds_pin_bit_mask) {
-
-    ASSERT (m_led_sb.led_sb_state == NRFX_DRV_STATE_INITIALIZED);
-    ret_code_t err_code = low_power_pwm_start(&m_led_sb.pwm_instance, leds_pin_bit_mask);
-    return err_code;
-    }
-  //}}}
-  //{{{
-  ret_code_t led_softblink_stop() {
-
-    ret_code_t err_code = low_power_pwm_stop (&m_led_sb.pwm_instance);
-    return err_code;
-    }
-  //}}}
-
-  //{{{
-  void led_softblink_off_time_set (uint32_t off_time_ticks) {
-
-    ASSERT(m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
-    m_led_sb.params.off_time_ticks = off_time_ticks;
-    }
-  //}}}
-  //{{{
-  void led_softblink_on_time_set (uint32_t on_time_ticks) {
-
-    ASSERT(m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
-    m_led_sb.params.on_time_ticks = on_time_ticks;
-    }
-  //}}}
-
   //{{{
   ret_code_t led_softblink_uninit() {
 

@@ -46,6 +46,45 @@
 #ifdef USE_APP_CONFIG
 #include "app_config.h"
 #endif
+// <h> nRF_Core
+
+//==========================================================
+// <e> NRF_MPU_ENABLED - nrf_mpu - Module for MPU
+//==========================================================
+#ifndef NRF_MPU_ENABLED
+#define NRF_MPU_ENABLED 1
+#endif
+// <q> NRF_MPU_CLI_CMDS  - Enable CLI commands specific to the module.
+
+
+#ifndef NRF_MPU_CLI_CMDS
+#define NRF_MPU_CLI_CMDS 1
+#endif
+
+// </e>
+
+// <e> NRF_STACK_GUARD_ENABLED - nrf_stack_guard - Stack guard
+//==========================================================
+#ifndef NRF_STACK_GUARD_ENABLED
+#define NRF_STACK_GUARD_ENABLED 1
+#endif
+// <o> NRF_STACK_GUARD_CONFIG_SIZE  - Size of the stack guard.
+
+// <5=> 32 bytes
+// <6=> 64 bytes
+// <7=> 128 bytes
+// <8=> 256 bytes
+// <9=> 512 bytes
+// <10=> 1024 bytes
+// <11=> 2048 bytes
+// <12=> 4096 bytes
+
+#ifndef NRF_STACK_GUARD_CONFIG_SIZE
+#define NRF_STACK_GUARD_CONFIG_SIZE 7
+#endif
+
+// </e>
+
 // <h> nRF_Drivers
 
 //==========================================================

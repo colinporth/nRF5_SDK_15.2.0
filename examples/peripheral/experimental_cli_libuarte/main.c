@@ -17,15 +17,23 @@
 
 #include "nrf_cli.h"
 #include "nrf_cli_types.h"
+#include "nrf_mpu.h"
+#include "nrf_stack_guard.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 
 #include "nrf_cli_libuarte.h"
+//#include "nrf_cli_uart.h"
 
 #include "nrf_drv_clock.h"
 //}}}
+
+#define CLI_EXAMPLE_MAX_CMD_CNT  20
+#define CLI_EXAMPLE_MAX_CMD_LEN  33
+static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
+static uint8_t m_dynamic_cmd_cnt;
 
 static uint32_t m_counter;
 static bool m_counter_active = false;
@@ -33,6 +41,8 @@ static bool m_counter_active = false;
 #define CLI_EXAMPLE_LOG_QUEUE_SIZE 4
 NRF_CLI_LIBUARTE_DEF (m_cli_libuarte_transport, 256, 256);
 NRF_CLI_DEF (m_cli_libuarte, "libcli$ ", &m_cli_libuarte_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
+//NRF_CLI_UART_DEF (m_cli_uart_transport, 0, 64, 16);
+//NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
 
 APP_TIMER_DEF (m_timer_0);
 //{{{
@@ -45,6 +55,190 @@ static void timer_handle (void * p_context) {
   }
 //}}}
 
+//{{{  dynamic commands
+//{{{
+/* function required by qsort */
+static int string_cmp (const void* p_a, const void * p_b) {
+
+  ASSERT(p_a);
+  ASSERT(p_b);
+  return strcmp((const char *)p_a, (const char *)p_b);
+  }
+//}}}
+//{{{
+static void cmd_dynamic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print(p_cli, NULL, 0);
+    return;
+    }
+
+  if (argc > 2)
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+  else
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: please specify subcommand\r\n", argv[0]);
+  }
+//}}}
+//{{{
+static void cmd_dynamic_add (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if (nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print(p_cli, NULL, 0);
+    return;
+    }
+
+  if (argc != 2) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+
+  if (m_dynamic_cmd_cnt >= CLI_EXAMPLE_MAX_CMD_CNT) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "command limit reached\r\n");
+    return;
+    }
+
+  uint8_t idx;
+  nrf_cli_cmd_len_t cmd_len = strlen(argv[1]);
+
+  if (cmd_len >= CLI_EXAMPLE_MAX_CMD_LEN) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "too long command\r\n");
+    return;
+    }
+
+  for (idx = 0; idx < cmd_len; idx++) {
+    if (!isalnum((int)(argv[1][idx]))) {
+      nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "bad command name - please use only alphanumerical characters\r\n");
+      return;
+      }
+    }
+
+  for (idx = 0; idx < CLI_EXAMPLE_MAX_CMD_CNT; idx++) {
+    if (!strcmp(m_dynamic_cmd_buffer[idx], argv[1])) {
+      nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "duplicated command\r\n");
+      return;
+      }
+    }
+
+  sprintf (m_dynamic_cmd_buffer[m_dynamic_cmd_cnt++], "%s", argv[1]);
+  qsort (m_dynamic_cmd_buffer, m_dynamic_cmd_cnt, sizeof (m_dynamic_cmd_buffer[0]), string_cmp);
+  nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "command added successfully\r\n");
+  }
+//}}}
+//{{{
+static void cmd_dynamic_show (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if (nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print(p_cli, NULL, 0);
+    return;
+    }
+
+ if (argc != 1) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+
+  if (m_dynamic_cmd_cnt == 0) {
+    nrf_cli_fprintf(p_cli, NRF_CLI_WARNING, "Please add some commands first.\r\n");
+    return;
+    }
+
+  nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Dynamic command list:\r\n");
+  for (uint8_t i = 0; i < m_dynamic_cmd_cnt; i++)
+    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "[%3d] %s\r\n", i, m_dynamic_cmd_buffer[i]);
+  }
+//}}}
+//{{{
+static void cmd_dynamic_execute (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+
+  if (argc != 2) {
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+
+  for (uint8_t idx = 0; idx <  m_dynamic_cmd_cnt; idx++) {
+    if (!strcmp (m_dynamic_cmd_buffer[idx], argv[1])) {
+      nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "dynamic command: %s\r\n", argv[1]);
+      return;
+      }
+    }
+
+  nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: uknown parameter: %s\r\n", argv[0], argv[1]);
+  }
+//}}}
+//{{{
+static void cmd_dynamic_remove (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+
+  if (argc != 2) {
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    return;
+    }
+
+  for (uint8_t idx = 0; idx <  m_dynamic_cmd_cnt; idx++) {
+    if (!strcmp(m_dynamic_cmd_buffer[idx], argv[1])) {
+      if (idx == CLI_EXAMPLE_MAX_CMD_CNT - 1)
+        m_dynamic_cmd_buffer[idx][0] = '\0';
+      else
+        memmove (m_dynamic_cmd_buffer[idx], m_dynamic_cmd_buffer[idx + 1],
+                 sizeof(m_dynamic_cmd_buffer[idx]) * (m_dynamic_cmd_cnt - idx));
+      --m_dynamic_cmd_cnt;
+      nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "command removed successfully\r\n");
+      return;
+      }
+    }
+
+  nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "did not find command: %s\r\n", argv[1]);
+  }
+//}}}
+//{{{
+/* dynamic command creation */
+static void dynamic_cmd_get (size_t idx, nrf_cli_static_entry_t* p_static) {
+
+  ASSERT(p_static);
+
+  if (idx < m_dynamic_cmd_cnt) {
+    /* m_dynamic_cmd_buffer must be sorted alphabetically to ensure correct CLI completion */
+    p_static->p_syntax = m_dynamic_cmd_buffer[idx];
+    p_static->handler  = NULL;
+    p_static->p_subcmd = NULL;
+    p_static->p_help = "Show dynamic command name.";
+    }
+  else
+    /* if there are no more dynamic commands available p_syntax must be set to NULL */
+    p_static->p_syntax = NULL;
+  }
+//}}}
+
+NRF_CLI_CREATE_DYNAMIC_CMD (m_sub_dynamic_set, dynamic_cmd_get);
+
+//{{{
+NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
+
+  NRF_CLI_CMD (add, NULL,
+    "Add a new dynamic command.\nExample usage: [ dynamic add test ] will add "
+    "a dynamic command 'test'.\nIn this example, command name length is limited to 32 chars. "
+    "You can add up to 20 commands. Commands are automatically sorted to ensure correct "
+    "CLI completion.",
+    cmd_dynamic_add),
+
+  NRF_CLI_CMD (execute, &m_sub_dynamic_set, "Execute a command.", cmd_dynamic_execute),
+  NRF_CLI_CMD (remove, &m_sub_dynamic_set, "Remove a command.", cmd_dynamic_remove),
+  NRF_CLI_CMD (show, NULL, "Show all added dynamic commands.", cmd_dynamic_show),
+  NRF_CLI_SUBCMD_SET_END
+  };
+//}}}
+NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usage.", cmd_dynamic);
+//}}}
+//{{{  print commands
 //{{{
 /* Command handlers */
 static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv) {
@@ -89,7 +283,8 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
   };
 //}}}
 NRF_CLI_CMD_REGISTER (print, &m_sub_print, "print", cmd_print);
-
+//}}}
+//{{{  counter commands
 //{{{
 static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
@@ -160,7 +355,8 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_counter) {
   };
 //}}}
 NRF_CLI_CMD_REGISTER (counter, &m_sub_counter, "Display seconds on terminal screen", cmd_counter);
-
+//}}}
+//{{{  nordic command
 //{{{
 static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
@@ -198,24 +394,29 @@ static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   }
 //}}}
 NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nordic);
+//}}}
 
 int main() {
 
+  // log init
   APP_ERROR_CHECK (NRF_LOG_INIT (app_timer_cnt_get));
 
+  // clock init
   APP_ERROR_CHECK (nrf_drv_clock_init());
   nrf_drv_clock_lfclk_request (NULL);
 
+  // timer init
   APP_ERROR_CHECK (app_timer_init());
   APP_ERROR_CHECK (app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timer_handle));
   APP_ERROR_CHECK (app_timer_start (m_timer_0, APP_TIMER_TICKS (1000), NULL));
 
+  // leds init
   bsp_board_init (BSP_INIT_LEDS);
   const led_sb_init_params_t leds = LED_SB_INIT_DEFAULT_PARAMS (LEDS_MASK);
   APP_ERROR_CHECK (led_softblink_init (&leds));
   APP_ERROR_CHECK (led_softblink_start (LEDS_MASK));
 
-  // cli
+  // libuarteCli init
   cli_libuarte_config_t libuarte_config;
   libuarte_config.tx_pin = TX_PIN_NUMBER;
   libuarte_config.rx_pin = RX_PIN_NUMBER;
@@ -224,11 +425,22 @@ int main() {
   libuarte_config.hwfc = NRF_UARTE_HWFC_DISABLED;
   APP_ERROR_CHECK (nrf_cli_init (&m_cli_libuarte, &libuarte_config, true, true, NRF_LOG_SEVERITY_INFO));
   APP_ERROR_CHECK (nrf_cli_start (&m_cli_libuarte));
+  //{{{  cli init
+  //nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
+  //uart_config.pseltxd = TX_PIN_NUMBER;
+  //uart_config.pselrxd = RX_PIN_NUMBER;
+  //uart_config.hwfc = NRF_UART_HWFC_DISABLED;
+  //APP_ERROR_CHECK (nrf_cli_init (&m_cli_uart, &uart_config, true, true, NRF_LOG_SEVERITY_INFO));
+  //APP_ERROR_CHECK (nrf_cli_start (&m_cli_uart));
+  //}}}
+  APP_ERROR_CHECK (nrf_mpu_init());
+  APP_ERROR_CHECK (nrf_stack_guard_init());
 
-  NRF_LOG_RAW_INFO ("libcli - built "__TIME__" " __DATE__"\r\n");
+  NRF_LOG_RAW_INFO ("cli - built "__TIME__" " __DATE__"\r\n");
 
   while (true) {
     NRF_LOG_PROCESS();
     nrf_cli_process (&m_cli_libuarte);
+    //nrf_cli_process (&m_cli_uart);
     }
   }
