@@ -28,56 +28,40 @@
   static led_sb_context_t m_led_sb = { 0 };
 
   //{{{
-  /**@brief Timer event handler for softblink.
-   *
-   * @param[in] p_context            General purpose pointer. Will be passed to the time-out handler
-   *                                when the timer expires.
-   */
-  static void led_softblink_on_timeout (void* p_context)
-  {
-      static int32_t pause_ticks;
-      ASSERT(m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
-      ret_code_t err_code;
+  static void led_softblink_on_timeout (void* p_context) {
 
-      if (pause_ticks <= 0)
-      {
-          if (m_led_sb.is_counting_up)
-          {
-              if (m_led_sb.duty_cycle >= (m_led_sb.params.duty_cycle_max - m_led_sb.params.duty_cycle_step))
-              {
-                  // Max PWM duty cycle is reached, start decrementing.
-                  m_led_sb.is_counting_up = false;
-                  m_led_sb.duty_cycle     = m_led_sb.params.duty_cycle_max;
-                  pause_ticks = m_led_sb.params.on_time_ticks ? m_led_sb.params.on_time_ticks + APP_TIMER_MIN_TIMEOUT_TICKS : 0;
-              }
-              else
-              {
-                  m_led_sb.duty_cycle += m_led_sb.params.duty_cycle_step;
-              }
+    static int32_t pause_ticks;
+
+    ASSERT (m_led_sb.led_sb_state != NRFX_DRV_STATE_UNINITIALIZED);
+
+    if (pause_ticks <= 0) {
+      if (m_led_sb.is_counting_up) {
+        if (m_led_sb.duty_cycle >= (m_led_sb.params.duty_cycle_max - m_led_sb.params.duty_cycle_step)) {
+          // Max PWM duty cycle is reached, start decrementing.
+          m_led_sb.is_counting_up = false;
+          m_led_sb.duty_cycle     = m_led_sb.params.duty_cycle_max;
+          pause_ticks = m_led_sb.params.on_time_ticks ? m_led_sb.params.on_time_ticks + APP_TIMER_MIN_TIMEOUT_TICKS : 0;
           }
-          else
-          {
-              if (m_led_sb.duty_cycle <= (m_led_sb.params.duty_cycle_min + m_led_sb.params.duty_cycle_step))
-              {
-                  // Min PWM duty cycle is reached, start incrementing.
-                  m_led_sb.is_counting_up = true;
-                  m_led_sb.duty_cycle     = m_led_sb.params.duty_cycle_min;
-                  pause_ticks = m_led_sb.params.off_time_ticks ? m_led_sb.params.off_time_ticks + APP_TIMER_MIN_TIMEOUT_TICKS : 0;
-              }
-              else
-              {
-                  m_led_sb.duty_cycle -= m_led_sb.params.duty_cycle_step;
-              }
+        else
+          m_led_sb.duty_cycle += m_led_sb.params.duty_cycle_step;
+        }
+      else {
+        if (m_led_sb.duty_cycle <= (m_led_sb.params.duty_cycle_min + m_led_sb.params.duty_cycle_step)) {
+          // Min PWM duty cycle is reached, start incrementing.
+          m_led_sb.is_counting_up = true;
+          m_led_sb.duty_cycle     = m_led_sb.params.duty_cycle_min;
+          pause_ticks = m_led_sb.params.off_time_ticks ? m_led_sb.params.off_time_ticks + APP_TIMER_MIN_TIMEOUT_TICKS : 0;
           }
+        else
+          m_led_sb.duty_cycle -= m_led_sb.params.duty_cycle_step;
+        }
       }
-      else
-      {
-          pause_ticks -= PWM_PERIOD;
-      }
+    else
+      pause_ticks -= PWM_PERIOD;
 
-      err_code = low_power_pwm_duty_set(&m_led_sb.pwm_instance, m_led_sb.duty_cycle);
+    ret_code_t err_code = low_power_pwm_duty_set (&m_led_sb.pwm_instance, m_led_sb.duty_cycle);
 
-      APP_ERROR_CHECK(err_code);
+    APP_ERROR_CHECK (err_code);
     }
   //}}}
 
@@ -111,53 +95,38 @@
   //}}}
 
   //{{{
-  ret_code_t led_softblink_init (led_sb_init_params_t const* p_init_params)
-  {
-      ret_code_t err_code;
+  ret_code_t led_softblink_init (led_sb_init_params_t const* p_init_params) { 
 
-      ASSERT(m_led_sb.led_sb_state == NRFX_DRV_STATE_UNINITIALIZED);
-      ASSERT(p_init_params);
+    ASSERT (m_led_sb.led_sb_state == NRFX_DRV_STATE_UNINITIALIZED);
+    ASSERT (p_init_params);
 
-      if ( (p_init_params->duty_cycle_max == 0)                               ||
-           (p_init_params->duty_cycle_max <= p_init_params->duty_cycle_min)   ||
-           (p_init_params->duty_cycle_step == 0)                              ||
-           (p_init_params->leds_pin_bm == 0))
-      {
-          return NRF_ERROR_INVALID_PARAM;
-      }
+    if ((p_init_params->duty_cycle_max == 0)                             ||
+        (p_init_params->duty_cycle_max <= p_init_params->duty_cycle_min) ||
+        (p_init_params->duty_cycle_step == 0)                            ||
+        (p_init_params->leds_pin_bm == 0))
+      return NRF_ERROR_INVALID_PARAM;
 
+    memset (&m_led_sb, 0, sizeof(led_sb_context_t));
+    memcpy (&m_led_sb.params, p_init_params, sizeof(led_sb_init_params_t));
 
+    m_led_sb.is_counting_up = true;
+    m_led_sb.duty_cycle     = p_init_params->duty_cycle_min + p_init_params->duty_cycle_step;
+    m_led_sb.leds_is_on     = false;
+    m_led_sb.bit_mask       = p_init_params->leds_pin_bm;
+    m_led_sb.pwm_config.active_high = m_led_sb.params.active_high;
+    m_led_sb.pwm_config.bit_mask    = p_init_params->leds_pin_bm;
+    m_led_sb.pwm_config.p_port      = p_init_params->p_leds_port;
+    m_led_sb.pwm_config.period      = PWM_PERIOD;
+    m_led_sb.pwm_config.p_timer_id  = &m_led_softblink_timer;
 
-      memset(&m_led_sb, 0, sizeof(led_sb_context_t));
-      memcpy(&m_led_sb.params, p_init_params, sizeof(led_sb_init_params_t));
-
-      m_led_sb.is_counting_up = true;
-      m_led_sb.duty_cycle     = p_init_params->duty_cycle_min + p_init_params->duty_cycle_step;
-      m_led_sb.leds_is_on     = false;
-      m_led_sb.bit_mask       = p_init_params->leds_pin_bm;
-
-      m_led_sb.pwm_config.active_high         = m_led_sb.params.active_high;
-      m_led_sb.pwm_config.bit_mask            = p_init_params->leds_pin_bm;
-      m_led_sb.pwm_config.p_port              = p_init_params->p_leds_port;
-      m_led_sb.pwm_config.period              = PWM_PERIOD;
-      m_led_sb.pwm_config.p_timer_id          = &m_led_softblink_timer;
-
-      err_code = low_power_pwm_init( &m_led_sb.pwm_instance, &m_led_sb.pwm_config, led_softblink_on_timeout);
-
-      if (err_code == NRF_SUCCESS)
-      {
-          m_led_sb.led_sb_state = NRFX_DRV_STATE_INITIALIZED;
-      }
-      else
-      {
-          return err_code;
-      }
-
-      err_code = low_power_pwm_duty_set( &m_led_sb.pwm_instance, p_init_params->duty_cycle_min + p_init_params->duty_cycle_step);
-
+    ret_code_t err_code = low_power_pwm_init (&m_led_sb.pwm_instance, &m_led_sb.pwm_config, led_softblink_on_timeout);
+    if (err_code == NRF_SUCCESS)
+      m_led_sb.led_sb_state = NRFX_DRV_STATE_INITIALIZED;
+    else
       return err_code;
-  }
 
+    return low_power_pwm_duty_set (&m_led_sb.pwm_instance, p_init_params->duty_cycle_min + p_init_params->duty_cycle_step);
+    }
   //}}}
   //{{{
   ret_code_t led_softblink_uninit() {

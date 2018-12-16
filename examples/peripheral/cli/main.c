@@ -421,42 +421,6 @@ NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usag
 //}}}
 
 //{{{
-/* This function cannot be static otherwise it can be inlined. As a result, variable:
-   tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK] will be always created on stack. This will block
-   possiblity to call functions: nrf_cli_help_requested and nrf_cli_help_print within
-   cmd_stack_overflow, because stack guard will be triggered. */
-void cli_example_stack_overflow_force() {
-
-  char tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK];
-  volatile char * p_tab = tab;
-
-  /* This function accesses stack area protected by nrf_stack_guard. As a result
-     MPU (memory protection unit) triggers an exception (hardfault). Hardfault handler will log
-     exception reason.*/
-  for (size_t idx = 0; idx < STACK_SIZE; idx++)
-    *(p_tab + idx) = (uint8_t)idx;
-  }
-//}}}
-//{{{
-static void cmd_stack_overflow (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
-  if (nrf_cli_help_requested (p_cli)) {
-    nrf_cli_help_print (p_cli, NULL, 0);
-    return;
-    }
-
-  cli_example_stack_overflow_force();
-  }
-//}}}
-//{{{
-NRF_CLI_CMD_REGISTER (stack_overflow, NULL,
-                      "Command tests nrf_stack_guard module. Upon command call stack will be "
-                      "overflowed and microcontroller shall log proper reset reason. \n\rTo observe "
-                      "stack_guard execution, stack shall be set to value lower than 20000 bytes.",
-                      cmd_stack_overflow);
-//}}}
-
-//{{{
 static void timer_handle (void* p_context) {
 
   if (m_counter_active) {

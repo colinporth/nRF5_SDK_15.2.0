@@ -1,6 +1,8 @@
 #include "sdk_common.h"
+
 #if NRF_MODULE_ENABLED(LOW_POWER_PWM)
   #include <string.h>
+
   #include "low_power_pwm.h"
   #include "nrf_gpio.h"
   #include "app_timer.h"
@@ -114,56 +116,6 @@
   //}}}
 
   //{{{
-  ret_code_t low_power_pwm_init (low_power_pwm_t * p_pwm_instance,
-                                 low_power_pwm_config_t const * p_pwm_config,
-                                 app_timer_timeout_handler_t handler)
-  {
-      ASSERT(p_pwm_instance->pwm_state == NRFX_DRV_STATE_UNINITIALIZED);
-      ASSERT(p_pwm_config->bit_mask != 0);
-      ASSERT(p_pwm_config->p_port != NULL);
-      ASSERT(p_pwm_config->period != 0);
-
-      ret_code_t err_code;
-      uint32_t bit_mask;
-      uint32_t pin_number = 0;
-
-      p_pwm_instance->handler = handler;
-
-      bit_mask = p_pwm_config->bit_mask;
-
-      p_pwm_instance->active_high = p_pwm_config->active_high;
-      p_pwm_instance->bit_mask = p_pwm_config->bit_mask;
-      p_pwm_instance->bit_mask_toggle = p_pwm_config->bit_mask;
-      p_pwm_instance->p_port = p_pwm_config->p_port;
-      p_pwm_instance->period = p_pwm_config->period;
-      p_pwm_instance->p_timer_id = p_pwm_config->p_timer_id;
-
-      err_code = app_timer_create(p_pwm_instance->p_timer_id, APP_TIMER_MODE_SINGLE_SHOT, pwm_timeout_handler);
-
-      if (err_code != NRF_SUCCESS)
-      {
-          return err_code;
-      }
-
-      while (bit_mask)
-      {
-          if (bit_mask & 0x1UL)
-          {
-              nrf_gpio_cfg_output(pin_number);
-          }
-
-          pin_number++;
-          bit_mask >>= 1UL;
-      }
-
-      pin_off(p_pwm_instance);
-      p_pwm_instance->pwm_state = NRFX_DRV_STATE_INITIALIZED;
-
-      return NRF_SUCCESS;
-  }
-  //}}}
-
-  //{{{
   ret_code_t low_power_pwm_start (low_power_pwm_t * p_pwm_instance,
                                  uint32_t          pin_bit_mask)
   {
@@ -217,6 +169,56 @@
       }
 
       p_pwm_instance->duty_cycle = duty_cycle;
+
+      return NRF_SUCCESS;
+  }
+  //}}}
+
+  //{{{
+  ret_code_t low_power_pwm_init (low_power_pwm_t * p_pwm_instance,
+                                 low_power_pwm_config_t const * p_pwm_config,
+                                 app_timer_timeout_handler_t handler)
+  {
+      ASSERT(p_pwm_instance->pwm_state == NRFX_DRV_STATE_UNINITIALIZED);
+      ASSERT(p_pwm_config->bit_mask != 0);
+      ASSERT(p_pwm_config->p_port != NULL);
+      ASSERT(p_pwm_config->period != 0);
+
+      ret_code_t err_code;
+      uint32_t bit_mask;
+      uint32_t pin_number = 0;
+
+      p_pwm_instance->handler = handler;
+
+      bit_mask = p_pwm_config->bit_mask;
+
+      p_pwm_instance->active_high = p_pwm_config->active_high;
+      p_pwm_instance->bit_mask = p_pwm_config->bit_mask;
+      p_pwm_instance->bit_mask_toggle = p_pwm_config->bit_mask;
+      p_pwm_instance->p_port = p_pwm_config->p_port;
+      p_pwm_instance->period = p_pwm_config->period;
+      p_pwm_instance->p_timer_id = p_pwm_config->p_timer_id;
+
+      err_code = app_timer_create(p_pwm_instance->p_timer_id, APP_TIMER_MODE_SINGLE_SHOT, pwm_timeout_handler);
+
+      if (err_code != NRF_SUCCESS)
+      {
+          return err_code;
+      }
+
+      while (bit_mask)
+      {
+          if (bit_mask & 0x1UL)
+          {
+              nrf_gpio_cfg_output(pin_number);
+          }
+
+          pin_number++;
+          bit_mask >>= 1UL;
+      }
+
+      pin_off(p_pwm_instance);
+      p_pwm_instance->pwm_state = NRFX_DRV_STATE_INITIALIZED;
 
       return NRF_SUCCESS;
   }

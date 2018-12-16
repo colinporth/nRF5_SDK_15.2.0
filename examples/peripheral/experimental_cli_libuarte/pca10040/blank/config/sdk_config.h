@@ -46,7 +46,6 @@
 #ifdef USE_APP_CONFIG
 #include "app_config.h"
 #endif
-// <h> nRF_Core
 
 //==========================================================
 // <e> NRF_MPU_ENABLED - nrf_mpu - Module for MPU

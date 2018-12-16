@@ -35,22 +35,20 @@
 static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
 static uint8_t m_dynamic_cmd_cnt;
 
-static uint32_t m_counter;
-static bool m_counter_active = false;
-
-#define CLI_EXAMPLE_LOG_QUEUE_SIZE 4
-NRF_CLI_LIBUARTE_DEF (m_cli_libuarte_transport, 256, 256);
-NRF_CLI_DEF (m_cli_libuarte, "libcli$ ", &m_cli_libuarte_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
+NRF_CLI_LIBUARTE_DEF (gCliLibuarteTransport, 256, 256);
+NRF_CLI_DEF (gCliLibuarte, "cli:", &gCliLibuarteTransport.transport, '\r', 4);
 //NRF_CLI_UART_DEF (m_cli_uart_transport, 0, 64, 16);
-//NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', CLI_EXAMPLE_LOG_QUEUE_SIZE);
+//NRF_CLI_DEF (m_cli_uart, "cli$ ", &m_cli_uart_transport.transport, '\r', 4);
 
+static uint32_t gCounter;
+static bool gCounter_active = false;
 APP_TIMER_DEF (m_timer_0);
 //{{{
-static void timer_handle (void * p_context) {
+static void timer_handle (void* p_context) {
 
-  if (m_counter_active) {
-    m_counter++;
-    NRF_LOG_RAW_INFO("counter = %d\r\n", m_counter);
+  if (gCounter_active) {
+    gCounter++;
+    NRF_LOG_RAW_INFO ("counter = %d\r\n", gCounter);
     }
   }
 //}}}
@@ -220,7 +218,6 @@ static void dynamic_cmd_get (size_t idx, nrf_cli_static_entry_t* p_static) {
 
 NRF_CLI_CREATE_DYNAMIC_CMD (m_sub_dynamic_set, dynamic_cmd_get);
 
-//{{{
 NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
 
   NRF_CLI_CMD (add, NULL,
@@ -235,29 +232,24 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
   NRF_CLI_CMD (show, NULL, "Show all added dynamic commands.", cmd_dynamic_show),
   NRF_CLI_SUBCMD_SET_END
   };
-//}}}
+
 NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usage.", cmd_dynamic);
 //}}}
 //{{{  print commands
-//{{{
-/* Command handlers */
 static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
   for (size_t i = 1; i < argc; i++)
     nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "argv[%d] = %s\r\n", i, argv[i]);
   }
-//}}}
-//{{{
-static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
+
+static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   for (size_t i = 1; i < argc; i++)
     nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s ", argv[i]);
   nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "\r\n");
   }
-//}}}
-//{{{
-static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
+
+static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   ASSERT(p_cli);
   ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
 
@@ -273,98 +265,77 @@ static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
   nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
   }
-//}}}
-//{{{
-NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
 
+
+NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_print) {
   NRF_CLI_CMD (all,   NULL, "Print all entered parameters.", cmd_print_all),
   NRF_CLI_CMD (param, NULL, "Print each parameter in new line.", cmd_print_param),
   NRF_CLI_SUBCMD_SET_END
   };
-//}}}
+
 NRF_CLI_CMD_REGISTER (print, &m_sub_print, "print", cmd_print);
 //}}}
 //{{{  counter commands
-//{{{
 static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
   if (argc != 1) {
     nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
 
-  m_counter_active = true;
+  gCounter_active = true;
   }
-//}}}
-//{{{
+
 static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
   if (argc != 1) {
     nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
-
-  m_counter_active = false;
+  gCounter_active = false;
   }
-//}}}
-//{{{
+
 static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
   if (argc != 1) {
     nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
-
-  m_counter = 0;
+  gCounter = 0;
   }
-//}}}
-//{{{
-static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
+static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   ASSERT(p_cli);
   ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-
-  /* Extra defined dummy option */
   static const nrf_cli_getopt_option_t opt[] = { NRF_CLI_OPT( "--test", "-t", "dummy option help string" ) };
-
   if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
     nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
     return;
     }
-
   if (argc != 2) {
     nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
-
   if (!strcmp(argv[1], "-t") || !strcmp(argv[1], "--test")) {
     nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Dummy test option.\r\n");
     return;
     }
-
   /* subcommands have their own handlers and they are not processed here */
   nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
   }
-//}}}
-//{{{
+
 NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_counter) {
   NRF_CLI_CMD(reset,  NULL, "Reset seconds counter.",  cmd_counter_reset),
   NRF_CLI_CMD(start,  NULL, "Start seconds counter.",  cmd_counter_start),
   NRF_CLI_CMD(stop,   NULL, "Stop seconds counter.",   cmd_counter_stop),
   NRF_CLI_SUBCMD_SET_END
   };
-//}}}
+
 NRF_CLI_CMD_REGISTER (counter, &m_sub_counter, "Display seconds on terminal screen", cmd_counter);
 //}}}
 //{{{  nordic command
-//{{{
 static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-
   if (nrf_cli_help_requested (p_cli)) {
     nrf_cli_help_print (p_cli, NULL, 0);
     return;
     }
-
   nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,
     "\r\n"
     "            .co:.                   'xo,          \r\n"
@@ -392,12 +363,44 @@ static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   nrf_cli_fprintf (p_cli,NRF_CLI_NORMAL,
     "                Nordic Semiconductor              \r\n\r\n");
   }
-//}}}
+
 NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nordic);
+//}}}
+//{{{  stackOverflow command
+#define CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK  (20000u)
+
+/* This function cannot be static otherwise it can be inlined. As a result, variable:
+   tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK] will be always created on stack. This will block
+   possiblity to call functions: nrf_cli_help_requested and nrf_cli_help_print within
+   cmd_stack_overflow, because stack guard will be triggered. */
+void cli_example_stack_overflow_force() {
+  char tab[CLI_EXAMPLE_VALUE_BIGGER_THAN_STACK];
+  volatile char* p_tab = tab;
+  /* This function accesses stack area protected by nrf_stack_guard. As a result
+     MPU (memory protection unit) triggers an exception (hardfault). Hardfault handler will log
+     exception reason.*/
+  for (size_t idx = 0; idx < STACK_SIZE; idx++)
+    *(p_tab + idx) = (uint8_t)idx;
+  }
+
+
+static void cmd_stack_overflow (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+  cli_example_stack_overflow_force();
+  }
+
+
+NRF_CLI_CMD_REGISTER (stack_overflow, NULL,
+                      "Command tests nrf_stack_guard module. Upon command call stack will be "
+                      "overflowed and microcontroller shall log proper reset reason. \n\rTo observe "
+                      "stack_guard execution, stack shall be set to value lower than 20000 bytes.",
+                      cmd_stack_overflow);
 //}}}
 
 int main() {
-
   // log init
   APP_ERROR_CHECK (NRF_LOG_INIT (app_timer_cnt_get));
 
@@ -416,15 +419,11 @@ int main() {
   APP_ERROR_CHECK (led_softblink_init (&leds));
   APP_ERROR_CHECK (led_softblink_start (LEDS_MASK));
 
-  // libuarteCli init
-  cli_libuarte_config_t libuarte_config;
-  libuarte_config.tx_pin = TX_PIN_NUMBER;
-  libuarte_config.rx_pin = RX_PIN_NUMBER;
-  libuarte_config.baudrate = NRF_UARTE_BAUDRATE_115200;
-  libuarte_config.parity = NRF_UARTE_PARITY_EXCLUDED;
-  libuarte_config.hwfc = NRF_UARTE_HWFC_DISABLED;
-  APP_ERROR_CHECK (nrf_cli_init (&m_cli_libuarte, &libuarte_config, true, true, NRF_LOG_SEVERITY_INFO));
-  APP_ERROR_CHECK (nrf_cli_start (&m_cli_libuarte));
+  // libuarte cli init
+  cli_libuarte_config_t config =  {
+    TX_PIN_NUMBER, RX_PIN_NUMBER, NRF_UARTE_HWFC_DISABLED, NRF_UARTE_PARITY_EXCLUDED, NRF_UARTE_BAUDRATE_115200 };
+  APP_ERROR_CHECK (nrf_cli_init (&gCliLibuarte, &config, true, true, NRF_LOG_SEVERITY_INFO));
+  APP_ERROR_CHECK (nrf_cli_start (&gCliLibuarte));
   //{{{  cli init
   //nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
   //uart_config.pseltxd = TX_PIN_NUMBER;
@@ -440,7 +439,7 @@ int main() {
 
   while (true) {
     NRF_LOG_PROCESS();
-    nrf_cli_process (&m_cli_libuarte);
+    nrf_cli_process (&gCliLibuarte);
     //nrf_cli_process (&m_cli_uart);
     }
   }
