@@ -15,7 +15,7 @@
 
   //{{{
   /*lint -save -e14 */
-  __WEAK void HardFault_process(HardFault_stack_t * p_stack)
+  __WEAK void HardFault_process (HardFault_stack_t * p_stack)
   {
       // Restart the system by default
       NVIC_SystemReset();
@@ -23,7 +23,7 @@
   /*lint -restore */
   //}}}
 
-  void HardFault_c_handler(uint32_t * p_stack_address) {
+  void HardFault_c_handler (uint32_t * p_stack_address) {
 
     NRF_LOG_FINAL_FLUSH();
     #if (__CORTEX_M == 0x04)
@@ -104,6 +104,6 @@
       //}}}
     #endif // __CORTEX_M == 0x04
 
-  HardFault_process((HardFault_stack_t *)p_stack_address);
+  HardFault_process ((HardFault_stack_t *)p_stack_address);
   }
 #endif //NRF_MODULE_ENABLED(HARDFAULT_HANDLER)

@@ -13,7 +13,7 @@
  <Project>
   <ProjectSessionItem path="cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040"/>
-  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;board"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;startup"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -39,7 +39,10 @@
  </Watch4>
  <Files>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/bsp/bsp.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="43" y="440" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="422" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="440" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="422" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="17" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/hardfault/hardfault_implementation.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="8" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c" selected="0" top="20" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="17" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/hardfault/hardfault.h" selected="0" top="0" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

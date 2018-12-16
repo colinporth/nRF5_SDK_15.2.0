@@ -31,7 +31,7 @@
       macros="CMSIS_CONFIG_TOOL=../../../../../../external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar"
       project_directory=""
       project_type="Executable" />
-    <folder Name="Startup">
+    <folder Name="startup">
       <file file_name="$(StudioDir)/source/thumb_crt0.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
@@ -78,6 +78,8 @@
         <file file_name="../../../../../../components/libraries/low_power_pwm/low_power_pwm.h" />
         <file file_name="../../../../../../components/libraries/mpu/nrf_mpu.h" />
         <file file_name="../../../../../../components/libraries/stack_guard/nrf_stack_guard.h" />
+        <file file_name="../../../../../../components/libraries/hardfault/hardfault.h" />
+        <file file_name="../../../../../../components/libraries/hardfault/hardfault_genhf.h" />
       </folder>
       <file file_name="../../../../../../components/libraries/low_power_pwm/low_power_pwm.c" />
       <file file_name="../../../../../../components/libraries/mpu/nrf_mpu.c" />
