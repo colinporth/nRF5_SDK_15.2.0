@@ -13,14 +13,7 @@
   static uint8_t m_string_buff[NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE];
 
   //{{{
-  void nrf_log_backend_rtt_init(void)
-  {
-      SEGGER_RTT_Init();
-  }
-  //}}}
-
-  //{{{
-  static void serial_tx(void const * p_context, char const * buffer, size_t len)
+  static void serial_tx (void const * p_context, char const * buffer, size_t len)
   {
       if (len)
       {
@@ -64,30 +57,38 @@
       }
   }
   //}}}
+
   //{{{
-  static void nrf_log_backend_rtt_put(nrf_log_backend_t const * p_backend,
+  static void nrf_log_backend_rtt_put (nrf_log_backend_t const * p_backend,
                                  nrf_log_entry_t * p_msg)
   {
       nrf_log_backend_serial_put(p_backend, p_msg, m_string_buff, NRF_LOG_BACKEND_RTT_TEMP_BUFFER_SIZE, serial_tx);
   }
   //}}}
   //{{{
-  static void nrf_log_backend_rtt_flush(nrf_log_backend_t const * p_backend)
+  static void nrf_log_backend_rtt_flush (nrf_log_backend_t const * p_backend)
   {
 
   }
   //}}}
   //{{{
-  static void nrf_log_backend_rtt_panic_set(nrf_log_backend_t const * p_backend)
+  static void nrf_log_backend_rtt_panic_set (nrf_log_backend_t const * p_backend)
   {
 
   }
   //}}}
+
   //{{{
+  void nrf_log_backend_rtt_init()
+  {
+      SEGGER_RTT_Init();
+  }
+  //}}}
+
   const nrf_log_backend_api_t nrf_log_backend_rtt_api = {
-          .put       = nrf_log_backend_rtt_put,
-          .flush     = nrf_log_backend_rtt_flush,
-          .panic_set = nrf_log_backend_rtt_panic_set,
-  };
-  //}}}
-#endif //NRF_MODULE_ENABLED(NRF_LOG) && NRF_MODULE_ENABLED(NRF_LOG_BACKEND_RTT)
+    .put       = nrf_log_backend_rtt_put,
+    .flush     = nrf_log_backend_rtt_flush,
+    .panic_set = nrf_log_backend_rtt_panic_set,
+    };
+
+#endif

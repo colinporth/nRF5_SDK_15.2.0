@@ -13,6 +13,7 @@
  <Project>
   <ProjectSessionItem path="cli_libuarte_pca10040"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040"/>
+  <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;nRF_Log"/>
   <ProjectSessionItem path="cli_libuarte_pca10040;cli_libuarte_pca10040;startup"/>
  </Project>
  <Register1/>
@@ -38,7 +39,14 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="flash_placement.xml" selected="1" top="19" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="441" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="424" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="43" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log.h" selected="0" top="31" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="115" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/util/nordic_common.h" selected="0" top="103" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/led_softblink/led_softblink.h" selected="0" top="12" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/led_softblink/led_softblink.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/low_power_pwm/low_power_pwm.c" selected="0" top="165" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="flash_placement.xml" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="Output/cli_libuarte_pca10040 Release/Obj/cli_libuarte_pca10040.ld" selected="1" top="449" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="cli_libuarte_pca10040" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

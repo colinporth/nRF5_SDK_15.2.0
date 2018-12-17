@@ -18,7 +18,7 @@
   #define NRF_LOG_COLOR_CODE_WHITE   "\x1B[1;37m"
 
   //{{{
-  static const char * severity_names[] = {
+  static const char* severity_names[] = {
           NULL,
           "error",
           "warning",
@@ -26,9 +26,8 @@
           "debug"
   };
   //}}}
-
   //{{{
-  static const char * m_colors[] = {
+  static const char* m_colors[] = {
           NRF_LOG_COLOR_CODE_DEFAULT,
           NRF_LOG_COLOR_CODE_BLACK,
           NRF_LOG_COLOR_CODE_RED,
@@ -45,7 +44,7 @@
   static uint32_t m_timestamp_div;
 
   //{{{
-  static void timestamp_print(nrf_fprintf_ctx_t * p_ctx, uint32_t timestamp)
+  static void timestamp_print (nrf_fprintf_ctx_t* p_ctx, uint32_t timestamp)
   {
       if (NRF_LOG_USES_TIMESTAMP)
       {
@@ -72,7 +71,7 @@
   }
   //}}}
   //{{{
-  static void prefix_process(nrf_log_str_formatter_entry_params_t * p_params,
+  static void prefix_process (nrf_log_str_formatter_entry_params_t* p_params,
                              nrf_fprintf_ctx_t * p_ctx)
   {
       if (p_params->dropped)
@@ -99,7 +98,7 @@
   }
   //}}}
   //{{{
-  static void postfix_process(nrf_log_str_formatter_entry_params_t * p_params,
+  static void postfix_process (nrf_log_str_formatter_entry_params_t* p_params,
                               nrf_fprintf_ctx_t * p_ctx,
                               bool newline)
   {
@@ -120,11 +119,8 @@
   //}}}
 
   //{{{
-  void nrf_log_std_entry_process(char const * p_str,
-                                    uint32_t const * p_args,
-                                    uint32_t nargs,
-                                    nrf_log_str_formatter_entry_params_t * p_params,
-                                    nrf_fprintf_ctx_t * p_ctx)
+  void nrf_log_std_entry_process (char const* p_str, uint32_t const* p_args, uint32_t nargs,
+                                    nrf_log_str_formatter_entry_params_t * p_params, nrf_fprintf_ctx_t * p_ctx)
   {
       bool auto_flush = p_ctx->auto_flush;
       p_ctx->auto_flush = false;
@@ -166,10 +162,8 @@
 
   #define HEXDUMP_BYTES_IN_LINE 8
   //{{{
-  void nrf_log_hexdump_entry_process(uint8_t * p_data,
-                                     uint32_t data_len,
-                                     nrf_log_str_formatter_entry_params_t * p_params,
-                                     nrf_fprintf_ctx_t * p_ctx)
+  void nrf_log_hexdump_entry_process (uint8_t* p_data, uint32_t data_len,
+                                     nrf_log_str_formatter_entry_params_t* p_params, nrf_fprintf_ctx_t* p_ctx)
   {
       if (data_len > HEXDUMP_BYTES_IN_LINE)
       {
@@ -214,7 +208,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_str_formatter_timestamp_freq_set(uint32_t freq)
+  void nrf_log_str_formatter_timestamp_freq_set (uint32_t freq)
   {
       m_timestamp_div = 1;
       /* There is no point to have frequency higher than 1MHz (ns are not printed) and too high

@@ -43,7 +43,7 @@ static uint32_t gCounter;
 static bool gCounter_active = false;
 APP_TIMER_DEF (m_timer_0);
 //{{{
-static void timer_handle (void* p_context) {
+static void timerHandle (void* p_context) {
 
   if (gCounter_active) {
     gCounter++;
@@ -414,7 +414,7 @@ int main() {
 
   // timer init
   APP_ERROR_CHECK (app_timer_init());
-  APP_ERROR_CHECK (app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timer_handle));
+  APP_ERROR_CHECK (app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timerHandle));
   APP_ERROR_CHECK (app_timer_start (m_timer_0, APP_TIMER_TICKS (1000), NULL));
 
   // leds init

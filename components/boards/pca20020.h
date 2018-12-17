@@ -85,8 +85,8 @@ extern "C" {
 #define SX_SENSE_LED_B           15
 
 // Uart configuration for testing
-#define RX_PIN_NUMBER            ANA_DIG1
 #define TX_PIN_NUMBER            ANA_DIG0
+#define RX_PIN_NUMBER            ANA_DIG1
 #define CTS_PIN_NUMBER           0
 #define RTS_PIN_NUMBER           0
 #define HWFC                     false

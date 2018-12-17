@@ -67,19 +67,6 @@ static uint8_t gAdvHandle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;         // Advertisi
 static uint8_t mEncHandle[BLE_GAP_ADV_SET_DATA_SIZE_MAX];           // Buffer for storing an encoded advertising set
 static uint8_t gEncScanResponseData[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
-//{{{
-// Struct that contains pointers to the encoded advertising data
-static ble_gap_adv_data_t m_adv_data = {
-  .adv_data = {
-    .p_data = mEncHandle,
-    .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
-    },
-  .scan_rsp_data = {
-    .p_data = gEncScanResponseData,
-    .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
-    }
-  };
-//}}}
 
 //{{{
 /**@brief Function for assert macro callback.
@@ -277,6 +264,19 @@ static void servicesInit() {
   }
 //}}}
 
+//{{{
+// Struct that contains pointers to the encoded advertising data
+static ble_gap_adv_data_t m_adv_data = {
+  .adv_data = {
+    .p_data = mEncHandle,
+    .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
+    },
+  .scan_rsp_data = {
+    .p_data = gEncScanResponseData,
+    .len    = BLE_GAP_ADV_SET_DATA_SIZE_MAX
+    }
+  };
+//}}}
 //{{{
 /**@brief Function for initializing the Advertising functionality.
  * @details Encodes the required advertising data and passes it to the stack.

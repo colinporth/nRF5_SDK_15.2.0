@@ -120,7 +120,7 @@
    */
   //{{{
   //}}}
-  static uint32_t saturate_align_length(uint32_t length)
+  static uint32_t saturate_align_length (uint32_t length)
   {
       length = (length > FLASH_LOG_MAX_PAYLOAD_SIZE) ? FLASH_LOG_MAX_PAYLOAD_SIZE : length; //saturate
       length = CEIL_DIV(length, sizeof(uint32_t))*sizeof(uint32_t);
@@ -137,7 +137,7 @@
    *
    * @return True if message fits into the buffer, false otherwise
    */
-  static bool msg_to_buf(nrf_log_entry_t * p_msg, uint8_t * p_buf, size_t * p_len)
+  static bool msg_to_buf (nrf_log_entry_t* p_msg, uint8_t* p_buf, size_t* p_len)
   {
       uint32_t         data_len;
       nrf_log_header_t header = {0};
@@ -187,7 +187,7 @@
    *
    * @return True if message was successfully fetched, false otherwise.
    */
-  static bool msg_from_buf(uint32_t *           p_buf,
+  static bool msg_from_buf (uint32_t* p_buf,
                            nrf_log_header_t * * pp_header,
                            uint8_t * *          pp_data,
                            uint32_t *           p_len)
@@ -232,7 +232,7 @@
    * @param p_queue           Queue will log messages
    * @param fstorage_blocking If true it indicates that flash operations are blocking, event handler is not used.
    */
-  static void log_msg_queue_process(nrf_queue_t const * p_queue, bool fstorage_blocking)
+  static void log_msg_queue_process (nrf_queue_t const* p_queue, bool fstorage_blocking)
   {
       nrf_log_entry_t * p_msg;
       bool              busy = false;
@@ -288,7 +288,7 @@
   }
   //}}}
   //{{{
-  static void queue_element_drop(nrf_queue_t const * p_queue)
+  static void queue_element_drop (nrf_queue_t const* p_queue)
   {
       nrf_log_entry_t * p_msg;
       if (nrf_queue_pop(p_queue, &p_msg) == NRF_SUCCESS)
@@ -299,7 +299,7 @@
   }
   //}}}
   //{{{
-  static void fstorage_evt_handler(nrf_fstorage_evt_t * p_evt)
+  static void fstorage_evt_handler (nrf_fstorage_evt_t* p_evt)
   {
       if (m_state == LOG_BACKEND_FLASH_ACTIVE)
       {
@@ -347,7 +347,7 @@
    *
    * @return Number of dropped messages
    */
-  static uint32_t message_enqueue(nrf_queue_t const * p_queue, nrf_log_entry_t * p_msg)
+  static uint32_t message_enqueue (nrf_queue_t const* p_queue, nrf_log_entry_t* p_msg)
   {
       uint32_t dropped = 0;
 
@@ -367,7 +367,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_backend_flashlog_put(nrf_log_backend_t const * p_backend,
+  void nrf_log_backend_flashlog_put (nrf_log_backend_t const* p_backend,
                                     nrf_log_entry_t * p_msg)
   {
       if (m_state == LOG_BACKEND_FLASH_ACTIVE)
@@ -384,7 +384,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_backend_crashlog_put(nrf_log_backend_t const * p_backend,
+  void nrf_log_backend_crashlog_put (nrf_log_backend_t const* p_backend,
                                     nrf_log_entry_t * p_msg)
   {
       if (m_state != LOG_BACKEND_FLASH_INACTIVE)
@@ -401,19 +401,19 @@
   }
   //}}}
   //{{{
-  void nrf_log_backend_flashlog_flush(nrf_log_backend_t const * p_backend)
+  void nrf_log_backend_flashlog_flush (nrf_log_backend_t const* p_backend)
   {
       queue_element_drop(mp_flashlog_queue);
   }
   //}}}
   //{{{
-  void nrf_log_backend_crashlog_flush(nrf_log_backend_t const * p_backend)
+  void nrf_log_backend_crashlog_flush (nrf_log_backend_t const* p_backend)
   {
       queue_element_drop(mp_crashlog_queue);
   }
   //}}}
   //{{{
-  void nrf_log_backend_flashlog_panic_set(nrf_log_backend_t const * p_backend)
+  void nrf_log_backend_flashlog_panic_set (nrf_log_backend_t const* p_backend)
   {
       /* Empty */
   }
@@ -422,7 +422,7 @@
   /**
    * @brief Function for injecting log message which will indicate start of crash log.
    */
-  static void crashlog_marker_inject(void)
+  static void crashlog_marker_inject()
   {
       nrf_log_header_t crashlog_marker_hdr = {
               .base = {
@@ -445,7 +445,7 @@
   //}}}
 
   //{{{
-  void nrf_log_backend_crashlog_panic_set(nrf_log_backend_t const * p_backend)
+  void nrf_log_backend_crashlog_panic_set (nrf_log_backend_t const* p_backend)
   {
       if (nrf_fstorage_init(&m_log_flash_fstorage, &nrf_fstorage_nvmc, NULL) == NRF_SUCCESS)
       {
@@ -470,7 +470,7 @@
   /**
    * @brief Function for determining first empty location in area dedicated for flash logger backend.
    */
-  static uint32_t empty_addr_get(void)
+  static uint32_t empty_addr_get()
   {
       uint32_t token = 0;
       nrf_log_header_t * p_dummy_header;
@@ -485,7 +485,7 @@
   }
   //}}}
   //{{{
-  ret_code_t nrf_log_backend_flash_init(nrf_fstorage_api_t const * p_fs_api)
+  ret_code_t nrf_log_backend_flash_init (nrf_fstorage_api_t const* p_fs_api)
   {
       ret_code_t err_code;
 
@@ -509,7 +509,7 @@
   }
   //}}}
   //{{{
-  ret_code_t nrf_log_backend_flash_next_entry_get(uint32_t *                p_token,
+  ret_code_t nrf_log_backend_flash_next_entry_get (uint32_t* p_token,
                                                   nrf_log_header_t * *      pp_header,
                                                   uint8_t * *               pp_data)
   {
@@ -536,7 +536,7 @@
   }
   //}}}
   //{{{
-  ret_code_t nrf_log_backend_flash_erase(void)
+  ret_code_t nrf_log_backend_flash_erase()
   {
       ret_code_t err_code;
 
@@ -601,7 +601,7 @@
 
     #include "nrf_delay.h"
     //{{{
-    static void cli_tx (void const * p_context, char const * p_buffer, size_t len)
+    static void cli_tx (void const* p_context, char const* p_buffer, size_t len)
     {
         nrf_cli_t * * pp_cli = (nrf_cli_t * *)p_context;
         char * p_strbuf = (char *)&p_buffer[len];
@@ -611,7 +611,7 @@
     }
     //}}}
     //{{{
-    static void entry_process (nrf_cli_t const * p_cli, nrf_log_header_t * p_header, uint8_t * p_data)
+    static void entry_process (nrf_cli_t const* p_cli, nrf_log_header_t* p_header, uint8_t* p_data)
     {
         mp_cli = p_cli;
 
@@ -651,7 +651,7 @@
     }
     //}}}
     //{{{
-    static void flashlog_read_cmd (nrf_cli_t const * p_cli, size_t argc, char ** argv)
+    static void flashlog_read_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv)
     {
         if (nrf_cli_help_requested(p_cli))
         {
@@ -683,7 +683,7 @@
     }
     //}}}
     //{{{
-    static void flashlog_status_cmd (nrf_cli_t const * p_cli, size_t argc, char ** argv)
+    static void flashlog_status_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv)
     {
         if (nrf_cli_help_requested(p_cli))
         {
@@ -702,15 +702,12 @@
 
     }
     //}}}
-    //{{{
-    NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_flashlog_cmd)
-    {
-        NRF_CLI_CMD(clear,   NULL, "Remove logs",      flashlog_clear_cmd),
-        NRF_CLI_CMD(read,    NULL, "Read stored logs", flashlog_read_cmd),
-        NRF_CLI_CMD(status,  NULL, "Flash log status", flashlog_status_cmd),
-        NRF_CLI_SUBCMD_SET_END
-    };
-    //}}}
+    NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_flashlog_cmd) {
+      NRF_CLI_CMD (clear,   NULL, "Remove logs",      flashlog_clear_cmd),
+      NRF_CLI_CMD (read,    NULL, "Read stored logs", flashlog_read_cmd),
+      NRF_CLI_CMD (status,  NULL, "Flash log status", flashlog_status_cmd),
+      NRF_CLI_SUBCMD_SET_END
+      };
     NRF_CLI_CMD_REGISTER (flashlog, &m_flashlog_cmd, "Commands for reading logs stored in non-volatile memory", NULL);
   #endif
 #endif
