@@ -1,120 +1,44 @@
-/**
- * Copyright (c) 2017 - 2018, Nordic Semiconductor ASA
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
- *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
-#ifndef NRF_GFX_H__
-#define NRF_GFX_H__
-
+#pragma once
 #include <stdint.h>
 #include <stdbool.h>
 #include "sdk_errors.h"
 #include "nrf_lcd.h"
 #include "nrf_font.h"
 
-/** @file
- *
- * @addtogroup ili9341_config
- * @ingroup ext_drivers
- *
- * @addtogroup st7735_config
- * @ingroup ext_drivers
- *
- * @defgroup nrf_gfx GFX Library
- * @{
- * @ingroup app_common
- *
- * @brief Module for drawing graphical objects like lines, circles, and rectangles.
-    Provides support for different fonts.
- */
+typedef struct {
+  uint16_t x;                 /**< Horizontal coordinate of the point where to start drawing the object. */
+  uint16_t y;                 /**< Vertical coordinate of the point where to start drawing the object. */
+  } nrf_gfx_point_t;
 
-/**
- * @brief GFX point object structure.
- */
-typedef struct
-{
-    uint16_t x;                 /**< Horizontal coordinate of the point where to start drawing the object. */
-    uint16_t y;                 /**< Vertical coordinate of the point where to start drawing the object. */
-}nrf_gfx_point_t;
+typedef struct {
+  uint16_t x_start;           /**< Horizontal coordinate of the point where to start drawing the object. */
+  uint16_t y_start;           /**< Vertical coordinate of the point where to start drawing the object. */
+  uint16_t x_end;             /**< Horizontal coordinate of the point where to end drawing the object. */
+  uint16_t y_end;             /**< Vertical coordinate of the point where to end drawing the object. */
+  uint16_t thickness;         /**< Thickness of the border of the object. */
+  } nrf_gfx_line_t;
 
-/**
- * @brief GFX line object structure.
- */
-typedef struct
-{
-    uint16_t x_start;           /**< Horizontal coordinate of the point where to start drawing the object. */
-    uint16_t y_start;           /**< Vertical coordinate of the point where to start drawing the object. */
-    uint16_t x_end;             /**< Horizontal coordinate of the point where to end drawing the object. */
-    uint16_t y_end;             /**< Vertical coordinate of the point where to end drawing the object. */
-    uint16_t thickness;         /**< Thickness of the border of the object. */
-}nrf_gfx_line_t;
+typedef struct {
+  uint16_t x;                 /**< Horizontal coordinate of the centre of the object. */
+  uint16_t y;                 /**< Vertical coordinate of the centre of the object. */
+  uint16_t r;                 /**< Radius of the object. */
+  } nrf_gfx_circle_t;
 
-/**
- * @brief GFX circle object structure.
- */
-typedef struct
-{
-    uint16_t x;                 /**< Horizontal coordinate of the centre of the object. */
-    uint16_t y;                 /**< Vertical coordinate of the centre of the object. */
-    uint16_t r;                 /**< Radius of the object. */
-}nrf_gfx_circle_t;
+typedef struct {
+  uint16_t x;                 /**< Horizontal coordinate of the point where to start drawing the object. */
+  uint16_t y;                 /**< Vertical coordinate of the point where to start drawing the object. */
+  uint16_t width;             /**< Width of the object. */
+  uint16_t height;            /**< Height of the object. */
+  } nrf_gfx_rect_t;
 
-/**
- * @brief GFX rectangle object structure.
- */
-typedef struct
-{
-    uint16_t x;                 /**< Horizontal coordinate of the point where to start drawing the object. */
-    uint16_t y;                 /**< Vertical coordinate of the point where to start drawing the object. */
-    uint16_t width;             /**< Width of the object. */
-    uint16_t height;            /**< Height of the object. */
-}nrf_gfx_rect_t;
-
-/**
- * @defgroup nrf_gfx_macros Macros for defining new graphic objects
- * @{
- */
+//{{{
 #define NRF_GFX_POINT(_x, _y)   \
     {                           \
         .x = (_x),              \
         .y = (_y)               \
     }
-
+//}}}
+//{{{
 #define NRF_GFX_LINE(_x_0, _y_0, _x_1, _y_1, _thickness)    \
     {                                               \
         .x_start = (_x_0),                          \
@@ -123,14 +47,16 @@ typedef struct
         .y_end = (_y_1),                            \
         .thickness = (_thickness)                   \
     }
-
+//}}}
+//{{{
 #define NRF_GFX_CIRCLE(_x, _y, _radius)     \
     {                                       \
         .x = (_x),                          \
         .y = (_y),                          \
         .r = (_radius)                      \
     }
-
+//}}}
+//{{{
 #define NRF_GFX_RECT(_x, _y, _width, _height)   \
     {                                           \
         .x = (_x),                              \
@@ -138,13 +64,15 @@ typedef struct
         .width = (_width),                      \
         .height = (_height)                     \
     }
-/* @} */
-
+//}}}
+//{{{
 /**
  * @brief Font descriptor type.
  */
 typedef FONT_INFO nrf_gfx_font_desc_t;
+//}}}
 
+//{{{
 /**
  * @brief Function for initializing the GFX library.
  *
@@ -153,7 +81,8 @@ typedef FONT_INFO nrf_gfx_font_desc_t;
  * @return Values returned by @ref nrf_lcd_t::lcd_init.
  */
 ret_code_t nrf_gfx_init(nrf_lcd_t const * p_instance);
-
+//}}}
+//{{{
 /**
  * @brief Function for uninitializing the GFX library.
  *
@@ -162,7 +91,9 @@ ret_code_t nrf_gfx_init(nrf_lcd_t const * p_instance);
  * @return Values returned by @ref nrf_lcd_t::lcd_uninit.
  */
 void nrf_gfx_uninit(nrf_lcd_t const * p_instance);
+//}}}
 
+//{{{
 /**
  * @brief Function for drawing a point.
  *
@@ -171,7 +102,8 @@ void nrf_gfx_uninit(nrf_lcd_t const * p_instance);
  * @param[in] color                 Color of the object in the display accepted format.
  */
 void nrf_gfx_point_draw(nrf_lcd_t const * p_instance, nrf_gfx_point_t const * p_point, uint32_t color);
-
+//}}}
+//{{{
 /**
  * @brief Function for drawing a line.
  *
@@ -183,7 +115,8 @@ void nrf_gfx_point_draw(nrf_lcd_t const * p_instance, nrf_gfx_point_t const * p_
  * @retval NRF_SUCCESS              If object was successfully drawn.
  */
 ret_code_t nrf_gfx_line_draw(nrf_lcd_t const * p_instance, nrf_gfx_line_t const * p_line, uint32_t color);
-
+//}}}
+//{{{
 /**
  * @brief Function for drawing a circle.
  *
@@ -202,7 +135,8 @@ ret_code_t nrf_gfx_circle_draw(nrf_lcd_t const * p_instance,
                                nrf_gfx_circle_t const * p_circle,
                                uint32_t color,
                                bool fill);
-
+//}}}
+//{{{
 /**
  * @brief Function for drawing a rectangle.
  *
@@ -220,7 +154,9 @@ ret_code_t nrf_gfx_rect_draw(nrf_lcd_t const * p_instance,
                              uint16_t thickness,
                              uint32_t color,
                              bool fill);
+//}}}
 
+//{{{
 /**
  * @brief Function for filling the screen with selected color.
  *
@@ -228,7 +164,9 @@ ret_code_t nrf_gfx_rect_draw(nrf_lcd_t const * p_instance,
  * @param[in] color                 Color of the screen in the display accepted format.
  */
 void nrf_gfx_screen_fill(nrf_lcd_t const * p_instance, uint32_t color);
+//}}}
 
+//{{{
 /**
  * @brief Function for drawing an image from a .bmp file.
  *
@@ -244,7 +182,9 @@ void nrf_gfx_screen_fill(nrf_lcd_t const * p_instance, uint32_t color);
 ret_code_t nrf_gfx_bmp565_draw(nrf_lcd_t const * p_instance,
                                nrf_gfx_rect_t const * p_rect,
                                uint16_t const * img_buf);
+//}}}
 
+//{{{
 /**
  * @brief Function for drawing an image from a .bmp file.
  *
@@ -257,14 +197,17 @@ ret_code_t nrf_gfx_bmp565_draw(nrf_lcd_t const * p_instance,
  * @note Only compatible with displays that accept pixels in RGB565 format.
  */
 void nrf_gfx_background_set(nrf_lcd_t const * p_instance, uint16_t const * img_buf);
+//}}}
 
+//{{{
 /**
  * @brief Function for displaying data from an internal frame buffer.
  *
  * @param[in] p_instance            Pointer to the LCD instance.
  */
 void nrf_gfx_display(nrf_lcd_t const * p_instance);
-
+//}}}
+//{{{
 /**
  * @brief Function for setting screen rotation.
  *
@@ -272,7 +215,8 @@ void nrf_gfx_display(nrf_lcd_t const * p_instance);
  * @param[in] rotation              Rotation to be made.
  */
 void nrf_gfx_rotation_set(nrf_lcd_t const * p_instance, nrf_lcd_rotation_t rotation);
-
+//}}}
+//{{{
 /**
  * @brief Function for setting inversion of colors.
  *
@@ -280,7 +224,8 @@ void nrf_gfx_rotation_set(nrf_lcd_t const * p_instance, nrf_lcd_rotation_t rotat
  * @param[in] invert                If true, inversion will be set.
  */
 void nrf_gfx_invert(nrf_lcd_t const * p_instance, bool invert);
-
+//}}}
+//{{{
 /**
  * @brief Function for printing a string to the screen.
  *
@@ -297,7 +242,9 @@ ret_code_t nrf_gfx_print(nrf_lcd_t const * p_instance,
                          const char * p_string,
                          const nrf_gfx_font_desc_t * p_font,
                          bool wrap);
+//}}}
 
+//{{{
 /**
  * @brief Function for getting the height of the screen.
  *
@@ -305,7 +252,8 @@ ret_code_t nrf_gfx_print(nrf_lcd_t const * p_instance,
  *
  */
 uint16_t nrf_gfx_height_get(nrf_lcd_t const * p_instance);
-
+//}}}
+//{{{
 /**
  * @brief Function for getting the width of the screen.
  *
@@ -313,8 +261,4 @@ uint16_t nrf_gfx_height_get(nrf_lcd_t const * p_instance);
  *
  */
 uint16_t nrf_gfx_width_get(nrf_lcd_t const * p_instance);
-
-/* @} */
-
-#endif //NRF_GFX_H__
-
+//}}}

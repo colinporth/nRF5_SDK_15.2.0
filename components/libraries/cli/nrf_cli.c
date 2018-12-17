@@ -101,95 +101,112 @@
     //}}}
   #endif
 
-
-  static bool cli_log_entry_process(nrf_cli_t const * p_cli, bool skip);
-  static void cli_execute(nrf_cli_t const * p_cli);
-
-  static inline void transport_buffer_flush(nrf_cli_t const * p_cli)
+  static bool cli_log_entry_process (nrf_cli_t const * p_cli, bool skip);
+  static void cli_execute (nrf_cli_t const * p_cli);
+  //{{{
+  static inline void transport_buffer_flush (nrf_cli_t const * p_cli)
   {
       nrf_fprintf_buffer_flush(p_cli->p_fprintf_ctx);
   }
-
-  static inline void cli_flag_help_set(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline void cli_flag_help_set (nrf_cli_t const * p_cli)
   {
       p_cli->p_ctx->internal.flag.show_help = 1;
   }
-  static inline void cli_flag_help_clear(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline void cli_flag_help_clear (nrf_cli_t const * p_cli)
   {
       p_cli->p_ctx->internal.flag.show_help = 0;
   }
-
-  static inline void cli_flag_echo_set(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline void cli_flag_echo_set (nrf_cli_t const * p_cli)
   {
       p_cli->p_ctx->internal.flag.echo = 1;
   }
-
-  static inline void cli_flag_echo_clear(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline void cli_flag_echo_clear (nrf_cli_t const * p_cli)
   {
       p_cli->p_ctx->internal.flag.echo = 0;
   }
-
-  static inline bool cli_flag_echo_is_set(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline bool cli_flag_echo_is_set (nrf_cli_t const * p_cli)
   {
       return p_cli->p_ctx->internal.flag.echo == 1 ? true : false;
   }
-
-  static inline bool cli_flag_processing_is_set(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static inline bool cli_flag_processing_is_set (nrf_cli_t const * p_cli)
   {
       return p_cli->p_ctx->internal.flag.processing == 1 ? true : false;
   }
-
-  static inline void receive_state_change(nrf_cli_t const * p_cli, nrf_cli_receive_t state)
+  //}}}
+  //{{{
+  static inline void receive_state_change (nrf_cli_t const * p_cli, nrf_cli_receive_t state)
   {
       p_cli->p_ctx->receive_state = state;
   }
 
-  static inline size_t cli_strlen(char const * str)
+  //}}}
+  //{{{
+  static inline size_t cli_strlen (char const * str)
   {
       return str == NULL ? 0 : strlen(str);
   }
+  //}}}
+  //{{{
 
-  static void cli_cmd_buffer_clear(nrf_cli_t const * p_cli)
+  static void cli_cmd_buffer_clear (nrf_cli_t const * p_cli)
   {
       p_cli->p_ctx->cmd_buff[0] = '\0';  /* clear command buffer */
       p_cli->p_ctx->cmd_buff_pos = 0;
       p_cli->p_ctx->cmd_buff_len = 0;
   }
-
+  //}}}
+  //{{{
   /* Function returns true if cursor is at beginning of an empty line. */
-  static inline bool cursor_in_empty_line(nrf_cli_t const * p_cli)
+  static inline bool cursor_in_empty_line (nrf_cli_t const * p_cli)
   {
       return ( (p_cli->p_ctx->cmd_buff_pos + cli_strlen(p_cli->p_name)) %
                 p_cli->p_ctx->vt100_ctx.cons.terminal_wid == 0);
   }
-
+  //}}}
+  //{{{
   /* Function returns true if command length is equal to multiplicity of terminal width. */
-  static inline bool full_line_cmd(nrf_cli_t const * p_cli)
+  static inline bool full_line_cmd (nrf_cli_t const * p_cli)
   {
       return ((p_cli->p_ctx->cmd_buff_len + cli_strlen(p_cli->p_name)) %
               p_cli->p_ctx->vt100_ctx.cons.terminal_wid == 0);
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_WILDCARD)
-  /* Function returns true if string contains wildcard character: '?' or '*'. */
-  static bool wildcard_character_exist(char * p_str)
-  {
-      size_t str_len = cli_strlen(p_str);
-      for (size_t i = 0; i < str_len; i++)
-      {
-          if ((p_str[i] == '?') || (p_str[i] == '*'))
-          {
-              return true;
-          }
-      }
-      return false;
-  }
+    //{{{
+    /* Function returns true if string contains wildcard character: '?' or '*'. */
+    static bool wildcard_character_exist (char * p_str)
+    {
+        size_t str_len = cli_strlen(p_str);
+        for (size_t i = 0; i < str_len; i++)
+        {
+            if ((p_str[i] == '?') || (p_str[i] == '*'))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    //}}}
   #endif
 
+  //{{{
   /* Function sends data stream to the CLI instance. Each time before the cli_write function is called,
    * it must be ensured that IO buffer of fprintf is flushed to avoid synchronization issues.
    * For that purpose, use function transport_buffer_flush(p_cli) */
-  static void cli_write(nrf_cli_t const * p_cli,
+  static void cli_write (nrf_cli_t const * p_cli,
                         void const *      p_data,
                         size_t            length,
                         size_t *          p_cnt)
@@ -228,15 +245,17 @@
           *p_cnt = cnt;
       }
   }
-
+  //}}}
+  //{{{
   /* Function sends 1 character to the CLI instance. */
-  static inline void cli_putc(nrf_cli_t const * p_cli, char ch)
+  static inline void cli_putc (nrf_cli_t const * p_cli, char ch)
   {
       nrf_fprintf(p_cli->p_fprintf_ctx, "%c", ch);
   }
-
+  //}}}
+  //{{{
   /* Function reads data from the CLI instance. */
-  static void cli_read(nrf_cli_t const * p_cli,
+  static void cli_read (nrf_cli_t const * p_cli,
                        void *            p_data,
                        size_t            length,
                        size_t *          p_cnt)
@@ -247,7 +266,8 @@
       ret_code_t ret = p_cli->p_iface->p_api->read(p_cli->p_iface, p_data, length, p_cnt);
       UNUSED_VARIABLE(ret);
   }
-
+  //}}}
+  //{{{
   /* Function cmd_get shall be used to search commands. It moves the pointer pp_entry to command
    * of static command structure. If the command cannot be found, the function will set pp_entry to NULL.
    *   p_command   Pointer to command which will be processed (no matter the root command).
@@ -256,7 +276,7 @@
    *   pp_entry    Pointer which points to subcommand[idx] after function execution.
    *   p_st_entry  Pointer to the structure where dynamic entry data can be stored.
    */
-  static void cmd_get(nrf_cli_cmd_entry_t const *     p_command,
+  static void cmd_get (nrf_cli_cmd_entry_t const *     p_command,
                       size_t                          lvl,
                       size_t                          idx,
                       nrf_cli_static_entry_t const ** pp_entry,
@@ -315,7 +335,8 @@
           }
       }
   }
-
+  //}}}
+  //{{{
   /* Function multiline_console_data_check checks the current cursor position (x, y) on terminal screen
    * based on: command length, console name length, and terminal width.
    * Example 1:
@@ -341,7 +362,7 @@
    * => coordinates are:  cur_x = 10, cur_x_end = 11 (cursor can be one column after 's')
    * =>                   cur_y = 2, cur_y_end = 3
    */
-  static nrf_cli_multiline_cons_t const * multiline_console_data_check(nrf_cli_t const * p_cli)
+  static nrf_cli_multiline_cons_t const * multiline_console_data_check (nrf_cli_t const * p_cli)
   {
       nrf_cli_ctx_t * p_ctx = p_cli->p_ctx;
       nrf_cli_multiline_cons_t * p_cons = &p_cli->p_ctx->vt100_ctx.cons;
@@ -359,157 +380,177 @@
 
       return p_cons;
   }
-
-
-  #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* Calculates relative line number of given position in buffer */
-  static uint32_t cli_line_num_with_buffer_offset_get(nrf_cli_t const * p_cli,
-                                                      nrf_cli_cmd_len_t buffer_pos)
-  {
-      uint32_t name_len;
-      nrf_cli_multiline_cons_t *p_cons = &p_cli->p_ctx->vt100_ctx.cons;
-
-      name_len = cli_strlen(p_cli->p_name);
-
-      return ((buffer_pos + name_len) / p_cons->terminal_wid);
-  }
-  #endif
-
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* Calculates column number of given position in buffer */
-  static uint32_t cli_col_num_with_buffer_offset_get(nrf_cli_t const * p_cli,
-                                                     nrf_cli_cmd_len_t buffer_pos)
-  {
-      uint32_t name_len;
-      nrf_cli_multiline_cons_t *p_cons = &p_cli->p_ctx->vt100_ctx.cons;
+    //{{{
+    /* Calculates relative line number of given position in buffer */
+    static uint32_t cli_line_num_with_buffer_offset_get (nrf_cli_t const * p_cli,
+                                                        nrf_cli_cmd_len_t buffer_pos)
+    {
+        uint32_t name_len;
+        nrf_cli_multiline_cons_t *p_cons = &p_cli->p_ctx->vt100_ctx.cons;
 
-      name_len = cli_strlen(p_cli->p_name);
+        name_len = cli_strlen(p_cli->p_name);
 
-      /* columns are counted from 1 */
-      return (1 + ((buffer_pos + name_len) % p_cons->terminal_wid));
-  }
-  #endif
-
-
-  #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* For the given buffer, calculates row span between position2 and position1 */
-  static int32_t cli_row_span_with_buffer_offsets_get(nrf_cli_t const * p_cli,
-                                                      nrf_cli_cmd_len_t offset1,
-                                                      nrf_cli_cmd_len_t offset2)
-  {
-      return cli_line_num_with_buffer_offset_get(p_cli, offset2)
-              - cli_line_num_with_buffer_offset_get(p_cli, offset1);
-  }
+        return ((buffer_pos + name_len) / p_cons->terminal_wid);
+    }
+    //}}}
   #endif
 
   #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* For the given buffer, calculates column span between position2 and position 1 */
-  static int32_t cli_column_span_with_buffer_offsets_get(nrf_cli_t const * p_cli,
-                                                         nrf_cli_cmd_len_t offset1,
-                                                         nrf_cli_cmd_len_t offset2)
-  {
-      return cli_col_num_with_buffer_offset_get(p_cli, offset2)
-              - cli_col_num_with_buffer_offset_get(p_cli, offset1);
-  }
+    //{{{
+    /* Calculates column number of given position in buffer */
+    static uint32_t cli_col_num_with_buffer_offset_get (nrf_cli_t const * p_cli,
+                                                       nrf_cli_cmd_len_t buffer_pos)
+    {
+        uint32_t name_len;
+        nrf_cli_multiline_cons_t *p_cons = &p_cli->p_ctx->vt100_ctx.cons;
+
+        name_len = cli_strlen(p_cli->p_name);
+
+        /* columns are counted from 1 */
+        return (1 + ((buffer_pos + name_len) % p_cons->terminal_wid));
+    }
+    //}}}
   #endif
 
+  #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
+    //{{{
+    /* For the given buffer, calculates row span between position2 and position1 */
+    static int32_t cli_row_span_with_buffer_offsets_get (nrf_cli_t const * p_cli,
+                                                        nrf_cli_cmd_len_t offset1,
+                                                        nrf_cli_cmd_len_t offset2)
+    {
+        return cli_line_num_with_buffer_offset_get(p_cli, offset2)
+                - cli_line_num_with_buffer_offset_get(p_cli, offset1);
+    }
+    //}}}
+  #endif
 
+  #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
+    //{{{
+    /* For the given buffer, calculates column span between position2 and position 1 */
+    static int32_t cli_column_span_with_buffer_offsets_get (nrf_cli_t const * p_cli,
+                                                           nrf_cli_cmd_len_t offset1,
+                                                           nrf_cli_cmd_len_t offset2)
+    {
+        return cli_col_num_with_buffer_offset_get(p_cli, offset2)
+                - cli_col_num_with_buffer_offset_get(p_cli, offset1);
+    }
+    //}}}
+  #endif
+
+  //{{{
   /* Function sends VT100 command to clear the screen from cursor position to end of the screen. */
-  static inline void cli_clear_eos(nrf_cli_t const * p_cli)
+  static inline void cli_clear_eos (nrf_cli_t const * p_cli)
   {
       NRF_CLI_VT100_CMD(p_cli, NRF_CLI_VT100_CLEAREOS);
   }
-
+  //}}}
+  //{{{
   /* Function sends VT100 command to save cursor position. */
-  static inline void cli_cursor_save(nrf_cli_t const * p_cli)
+  static inline void cli_cursor_save (nrf_cli_t const * p_cli)
   {
       NRF_CLI_VT100_CMD(p_cli, NRF_CLI_VT100_SAVECURSOR);
   }
-
+  //}}}
+  //{{{
   /* Function sends VT100 command to restore saved cursor position. */
-  static inline void cli_cursor_restore(nrf_cli_t const * p_cli)
+  static inline void cli_cursor_restore (nrf_cli_t const * p_cli)
   {
       NRF_CLI_VT100_CMD(p_cli, NRF_CLI_VT100_RESTORECURSOR);
   }
-
+  //}}}
+  //{{{
   /* Function forcing new line - cannot be replaced with function cursor_down_move. */
-  static inline void cursor_next_line_move(nrf_cli_t const * p_cli)
+  static inline void cursor_next_line_move (nrf_cli_t const * p_cli)
   {
       NRF_CLI_VT100_CMD(p_cli, NRF_CLI_VT100_NEXTLINE);
   }
-
+  //}}}
+  //{{{
   /* Function moves cursor left by n positions. */
-  static inline void cursor_left_move(nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
+  static inline void cursor_left_move (nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
   {
       if (n > 0)
       {
           nrf_fprintf(p_cli->p_fprintf_ctx, "\033[%dD", n);
       }
   }
-
+  //}}}
+  //{{{
   /* Function moves cursor right by n positions. */
-  static inline void cursor_right_move(nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
+  static inline void cursor_right_move (nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
   {
       if (n > 0)
       {
           nrf_fprintf(p_cli->p_fprintf_ctx, "\033[%dC", n);
       }
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* Moves cursor horizontally by a number. Positive is right */
-  static void cursor_horiz_move(nrf_cli_t const * p_cli, int32_t delta)
-  {
-      if (delta > 0)
-      {
-          cursor_right_move(p_cli, delta);
-      }
-      else if (delta < 0)
-      {
-          cursor_left_move(p_cli, -delta);
-      }
-      else { }
-  }
+    //{{{
+    /* Moves cursor horizontally by a number. Positive is right */
+    static void cursor_horiz_move (nrf_cli_t const * p_cli, int32_t delta)
+    {
+        if (delta > 0)
+        {
+            cursor_right_move(p_cli, delta);
+        }
+        else if (delta < 0)
+        {
+            cursor_left_move(p_cli, -delta);
+        }
+        else { }
+    }
+    //}}}
   #endif
 
+  //{{{
   /* Function moves cursor up by n positions. */
-  static inline void cursor_up_move(nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
+  static inline void cursor_up_move (nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
   {
       if (n > 0)
       {
           nrf_fprintf(p_cli->p_fprintf_ctx, "\033[%dA", n);
       }
   }
-
+  //}}}
+  //{{{
   /* Function moves cursor down by n positions but it will bring no effect if cursor is in the last
    * line of terminal screen. In such case, the cursor_next_line_move function shall be invoked. */
-  static inline void cursor_down_move(nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
+  static inline void cursor_down_move (nrf_cli_t const * p_cli, nrf_cli_cmd_len_t n)
   {
       if (n > 0)
       {
            nrf_fprintf(p_cli->p_fprintf_ctx, "\033[%dB", n);
       }
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* Moves cursor vertically by a number. Positive is down */
-  static void cursor_vert_move(nrf_cli_t const * p_cli, int32_t delta)
-  {
-      if (delta > 0)
-      {
-          cursor_down_move(p_cli, delta);
-      }
-      else if (delta < 0)
-      {
-          cursor_up_move(p_cli, -delta);
-      }
-      else { }
-  }
+    //{{{
+    /* Moves cursor vertically by a number. Positive is down */
+    static void cursor_vert_move (nrf_cli_t const * p_cli, int32_t delta)
+    {
+        if (delta > 0)
+        {
+            cursor_down_move(p_cli, delta);
+        }
+        else if (delta < 0)
+        {
+            cursor_up_move(p_cli, -delta);
+        }
+        else { }
+    }
+    //}}}
   #endif
 
+  //{{{
   /* Function increments cursor position (if possible) and moves cursor to new line if necessary. */
-  static void cursor_position_increment(nrf_cli_t const * p_cli)
+  static void cursor_position_increment (nrf_cli_t const * p_cli)
   {
       if (p_cli->p_ctx->cmd_buff_pos >= p_cli->p_ctx->cmd_buff_len)
       {
@@ -530,11 +571,12 @@
           cursor_next_line_move(p_cli);
       }
   }
-
+  //}}}
+  //{{{
   /* Function will move cursor back to position == cmd_buff_pos. Example usage is when cursor needs
    * to be moved back after printing some text. This function cannot be used to move cursor to new
    * location by manual change of cmd_buff_pos.*/
-  static void cursor_position_synchronize(nrf_cli_t const * p_cli)
+  static void cursor_position_synchronize (nrf_cli_t const * p_cli)
   {
       nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
       bool last_line = p_cons->cur_y == p_cons->cur_y_end ? true : false;
@@ -562,100 +604,106 @@
           }
       }
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /**
-   *  Removes the "word" to the left of the cursor:
-   *  - if there are spaces at the cursor position, remove all spaces to the left
-   *  - remove the non-spaces (word) until a space is found or a beginning of buffer
-   */
-  static void cli_cmd_word_remove(nrf_cli_t const * p_cli)
-  {
-      nrf_cli_cmd_len_t new_pos;
-      nrf_cli_cmd_len_t chars_to_delete;
-      int32_t row_span;
-      int32_t col_span;
+    //{{{
+    /**
+     *  Removes the "word" to the left of the cursor:
+     *  - if there are spaces at the cursor position, remove all spaces to the left
+     *  - remove the non-spaces (word) until a space is found or a beginning of buffer
+     */
+    static void cli_cmd_word_remove (nrf_cli_t const * p_cli)
+    {
+        nrf_cli_cmd_len_t new_pos;
+        nrf_cli_cmd_len_t chars_to_delete;
+        int32_t row_span;
+        int32_t col_span;
 
-      /* Line must not be empty and cursor must not be at 0 to continue */
-      if ((p_cli->p_ctx->cmd_buff_len == 0) || (p_cli->p_ctx->cmd_buff_pos == 0))
-      {
-          return;
-      }
+        /* Line must not be empty and cursor must not be at 0 to continue */
+        if ((p_cli->p_ctx->cmd_buff_len == 0) || (p_cli->p_ctx->cmd_buff_pos == 0))
+        {
+            return;
+        }
 
-      /* start at the current position */
-      new_pos = p_cli->p_ctx->cmd_buff_pos;
-      chars_to_delete = 0;
+        /* start at the current position */
+        new_pos = p_cli->p_ctx->cmd_buff_pos;
+        chars_to_delete = 0;
 
-      /* look back for all spaces then for non-spaces */
-      while ((new_pos >= 1) && (p_cli->p_ctx->cmd_buff[new_pos - 1] == ' '))
-      {
-          ++chars_to_delete;
-          --new_pos;
-      }
+        /* look back for all spaces then for non-spaces */
+        while ((new_pos >= 1) && (p_cli->p_ctx->cmd_buff[new_pos - 1] == ' '))
+        {
+            ++chars_to_delete;
+            --new_pos;
+        }
 
-      while ((new_pos >= 1) && (p_cli->p_ctx->cmd_buff[new_pos - 1] != ' '))
-      {
-          --new_pos;
-          ++chars_to_delete;
-      }
+        while ((new_pos >= 1) && (p_cli->p_ctx->cmd_buff[new_pos - 1] != ' '))
+        {
+            --new_pos;
+            ++chars_to_delete;
+        }
 
-      /* calculate the new cursor */
-      row_span = cli_row_span_with_buffer_offsets_get(p_cli, p_cli->p_ctx->cmd_buff_pos, new_pos);
-      col_span = cli_column_span_with_buffer_offsets_get(p_cli, p_cli->p_ctx->cmd_buff_pos, new_pos);
+        /* calculate the new cursor */
+        row_span = cli_row_span_with_buffer_offsets_get(p_cli, p_cli->p_ctx->cmd_buff_pos, new_pos);
+        col_span = cli_column_span_with_buffer_offsets_get(p_cli, p_cli->p_ctx->cmd_buff_pos, new_pos);
 
-      /* manage the buffer */
-      memmove(&p_cli->p_ctx->cmd_buff[new_pos],
-              &p_cli->p_ctx->cmd_buff[new_pos + chars_to_delete],
-              p_cli->p_ctx->cmd_buff_len - chars_to_delete);
-      p_cli->p_ctx->cmd_buff_len -= chars_to_delete;
-      p_cli->p_ctx->cmd_buff_pos = new_pos;
-      p_cli->p_ctx->cmd_buff[p_cli->p_ctx->cmd_buff_len] = '\0';
+        /* manage the buffer */
+        memmove(&p_cli->p_ctx->cmd_buff[new_pos],
+                &p_cli->p_ctx->cmd_buff[new_pos + chars_to_delete],
+                p_cli->p_ctx->cmd_buff_len - chars_to_delete);
+        p_cli->p_ctx->cmd_buff_len -= chars_to_delete;
+        p_cli->p_ctx->cmd_buff_pos = new_pos;
+        p_cli->p_ctx->cmd_buff[p_cli->p_ctx->cmd_buff_len] = '\0';
 
-      /* update display */
-      cursor_horiz_move(p_cli, col_span);
-      cursor_vert_move(p_cli, row_span);
-      cli_cursor_save(p_cli);
-      nrf_cli_fprintf(p_cli,
-              NRF_CLI_NORMAL,
-              "%s",
-              &p_cli->p_ctx->cmd_buff[p_cli->p_ctx->cmd_buff_pos]);
-      cli_clear_eos(p_cli);
-      cli_cursor_restore(p_cli);
-  }
+        /* update display */
+        cursor_horiz_move(p_cli, col_span);
+        cursor_vert_move(p_cli, row_span);
+        cli_cursor_save(p_cli);
+        nrf_cli_fprintf(p_cli,
+                NRF_CLI_NORMAL,
+                "%s",
+                &p_cli->p_ctx->cmd_buff[p_cli->p_ctx->cmd_buff_pos]);
+        cli_clear_eos(p_cli);
+        cli_cursor_restore(p_cli);
+    }
+    //}}}
   #endif
 
   #if NRF_MODULE_ENABLED(NRF_CLI_HISTORY) || NRF_MODULE_ENABLED(NRF_CLI_METAKEYS)
-  /* Function moves cursor to begin of command position, just after console name. */
-  static void cursor_home_position_move(nrf_cli_t const * p_cli)
-  {
-      nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
+    //{{{
+    /* Function moves cursor to begin of command position, just after console name. */
+    static void cursor_home_position_move (nrf_cli_t const * p_cli)
+    {
+        nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
 
-      if ((p_cons->cur_x == p_cons->name_len + NRF_CLI_INITIAL_CURS_POS) &&
-          (p_cons->cur_y == NRF_CLI_INITIAL_CURS_POS))
-      {
-          return; /* nothing to handle because cursor is in start position */
-      }
+        if ((p_cons->cur_x == p_cons->name_len + NRF_CLI_INITIAL_CURS_POS) &&
+            (p_cons->cur_y == NRF_CLI_INITIAL_CURS_POS))
+        {
+            return; /* nothing to handle because cursor is in start position */
+        }
 
-      if (p_cons->cur_y > NRF_CLI_INITIAL_CURS_POS)
-      {
-          cursor_up_move(p_cli, p_cons->cur_y - NRF_CLI_INITIAL_CURS_POS);
-      }
+        if (p_cons->cur_y > NRF_CLI_INITIAL_CURS_POS)
+        {
+            cursor_up_move(p_cli, p_cons->cur_y - NRF_CLI_INITIAL_CURS_POS);
+        }
 
-      if (p_cons->cur_x > p_cons->name_len)
-      {
-          cursor_left_move(p_cli, p_cons->cur_x - NRF_CLI_INITIAL_CURS_POS - p_cons->name_len);
-      }
-      else
-      {
-          cursor_right_move(p_cli, p_cons->name_len + NRF_CLI_INITIAL_CURS_POS - p_cons->cur_x);
-      }
-      /* align data buffer pointer with cursor position */
-      p_cli->p_ctx->cmd_buff_pos = 0;
-  }
+        if (p_cons->cur_x > p_cons->name_len)
+        {
+            cursor_left_move(p_cli, p_cons->cur_x - NRF_CLI_INITIAL_CURS_POS - p_cons->name_len);
+        }
+        else
+        {
+            cursor_right_move(p_cli, p_cons->name_len + NRF_CLI_INITIAL_CURS_POS - p_cons->cur_x);
+        }
+        /* align data buffer pointer with cursor position */
+        p_cli->p_ctx->cmd_buff_pos = 0;
+    }
+    //}}}
   #endif
 
+  //{{{
   /* Function moves cursor to end of command. */
-  static void cursor_end_position_move(nrf_cli_t const * p_cli)
+  static void cursor_end_position_move (nrf_cli_t const * p_cli)
   {
       nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
 
@@ -680,204 +728,213 @@
       /* align data buffer pointer with cursor position */
       p_cli->p_ctx->cmd_buff_pos = p_cli->p_ctx->cmd_buff_len;
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_BUILD_IN_CMDS)
-  /* Function reads cursor position from terminal. */
-  static ret_code_t cursor_position_get(nrf_cli_t const * p_cli)
-  {
-      size_t   cnt;
-      uint16_t x = 0; /* horizontal position */
-      uint16_t y = 0; /* vertical position */
-      char     c = 0;
+    //{{{
+    /* Function reads cursor position from terminal. */
+    static ret_code_t cursor_position_get (nrf_cli_t const * p_cli)
+    {
+        size_t   cnt;
+        uint16_t x = 0; /* horizontal position */
+        uint16_t y = 0; /* vertical position */
+        char     c = 0;
 
-      nrf_cli_cmd_len_t buff_idx = 0;
+        nrf_cli_cmd_len_t buff_idx = 0;
 
-      /* clear temp buffer */
-      memset(p_cli->p_ctx->temp_buff, 0, sizeof(p_cli->p_ctx->temp_buff));
+        /* clear temp buffer */
+        memset(p_cli->p_ctx->temp_buff, 0, sizeof(p_cli->p_ctx->temp_buff));
 
-      /* escape code asking terminal about its size */
-      static char const cmd_get_terminal_size[] = "\033[6n";
+        /* escape code asking terminal about its size */
+        static char const cmd_get_terminal_size[] = "\033[6n";
 
-      nrf_fprintf(p_cli->p_fprintf_ctx, cmd_get_terminal_size);
-      /* fprintf buffer needs to be flushed to start sending prepared escape code to the terminal */
-      transport_buffer_flush(p_cli);
+        nrf_fprintf(p_cli->p_fprintf_ctx, cmd_get_terminal_size);
+        /* fprintf buffer needs to be flushed to start sending prepared escape code to the terminal */
+        transport_buffer_flush(p_cli);
 
-      /* timeout for terminal response = ~1s */
-      for (uint16_t i = 0; i < 1000; i++)
-      {
-          do
-          {
-              cli_read(p_cli, &c, sizeof(c), &cnt);
-              if (cnt == 0)
-              {
-                  nrf_delay_us(999);
-                  continue;
-              }
-              if ((c != NRF_CLI_VT100_ASCII_ESC) &&
-                  (p_cli->p_ctx->temp_buff[0] != NRF_CLI_VT100_ASCII_ESC))
-              {
-                  continue;
-              }
+        /* timeout for terminal response = ~1s */
+        for (uint16_t i = 0; i < 1000; i++)
+        {
+            do
+            {
+                cli_read(p_cli, &c, sizeof(c), &cnt);
+                if (cnt == 0)
+                {
+                    nrf_delay_us(999);
+                    continue;
+                }
+                if ((c != NRF_CLI_VT100_ASCII_ESC) &&
+                    (p_cli->p_ctx->temp_buff[0] != NRF_CLI_VT100_ASCII_ESC))
+                {
+                    continue;
+                }
 
-              if (c == 'R') /* end of response from the terminal */
-              {
-                  p_cli->p_ctx->temp_buff[buff_idx] = '\0';
-                  if (p_cli->p_ctx->temp_buff[1] != '[')
-                  {
-                      p_cli->p_ctx->temp_buff[0] = 0;
-                      return NRF_ERROR_INVALID_DATA;
-                  }
-                  buff_idx = 2;  /* index start position in the buffer where 'y' is stored */
-                  while (p_cli->p_ctx->temp_buff[buff_idx] != ';')
-                  {
-                      y = y * 10 + (p_cli->p_ctx->temp_buff[buff_idx++] - '0');
-                      if (buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
-                      {
-                          return NRF_ERROR_DATA_SIZE;
-                      }
-                  }
-                  if (++buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
-                  {
-                      return NRF_ERROR_DATA_SIZE;
-                  }
-                  while (p_cli->p_ctx->temp_buff[buff_idx] != '\0')
-                  {
-                      x = x * 10 + (p_cli->p_ctx->temp_buff[buff_idx++] - '0');
-                      if (buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
-                      {
-                          return NRF_ERROR_DATA_SIZE;
-                      }
-                  }
-                  /* horizontal cursor position */
-                  if (x > NRF_CLI_MAX_TERMINAL_SIZE)
-                  {
-                      p_cli->p_ctx->vt100_ctx.cons.cur_x = NRF_CLI_MAX_TERMINAL_SIZE;
-                  }
-                  else
-                  {
-                      p_cli->p_ctx->vt100_ctx.cons.cur_x = (nrf_cli_cmd_len_t)x;
-                  }
-                  /* vertical cursor position */
-                  if (y > NRF_CLI_MAX_TERMINAL_SIZE)
-                  {
-                      p_cli->p_ctx->vt100_ctx.cons.cur_y = NRF_CLI_MAX_TERMINAL_SIZE;
-                  }
-                  else
-                  {
-                      p_cli->p_ctx->vt100_ctx.cons.cur_y = (nrf_cli_cmd_len_t)y;
-                  }
-                  p_cli->p_ctx->temp_buff[0] = 0;
-                  return NRF_SUCCESS;
-              }
-              else
-              {
-                  p_cli->p_ctx->temp_buff[buff_idx] = c;
-              }
+                if (c == 'R') /* end of response from the terminal */
+                {
+                    p_cli->p_ctx->temp_buff[buff_idx] = '\0';
+                    if (p_cli->p_ctx->temp_buff[1] != '[')
+                    {
+                        p_cli->p_ctx->temp_buff[0] = 0;
+                        return NRF_ERROR_INVALID_DATA;
+                    }
+                    buff_idx = 2;  /* index start position in the buffer where 'y' is stored */
+                    while (p_cli->p_ctx->temp_buff[buff_idx] != ';')
+                    {
+                        y = y * 10 + (p_cli->p_ctx->temp_buff[buff_idx++] - '0');
+                        if (buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
+                        {
+                            return NRF_ERROR_DATA_SIZE;
+                        }
+                    }
+                    if (++buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
+                    {
+                        return NRF_ERROR_DATA_SIZE;
+                    }
+                    while (p_cli->p_ctx->temp_buff[buff_idx] != '\0')
+                    {
+                        x = x * 10 + (p_cli->p_ctx->temp_buff[buff_idx++] - '0');
+                        if (buff_idx >= NRF_CLI_CMD_BUFF_SIZE)
+                        {
+                            return NRF_ERROR_DATA_SIZE;
+                        }
+                    }
+                    /* horizontal cursor position */
+                    if (x > NRF_CLI_MAX_TERMINAL_SIZE)
+                    {
+                        p_cli->p_ctx->vt100_ctx.cons.cur_x = NRF_CLI_MAX_TERMINAL_SIZE;
+                    }
+                    else
+                    {
+                        p_cli->p_ctx->vt100_ctx.cons.cur_x = (nrf_cli_cmd_len_t)x;
+                    }
+                    /* vertical cursor position */
+                    if (y > NRF_CLI_MAX_TERMINAL_SIZE)
+                    {
+                        p_cli->p_ctx->vt100_ctx.cons.cur_y = NRF_CLI_MAX_TERMINAL_SIZE;
+                    }
+                    else
+                    {
+                        p_cli->p_ctx->vt100_ctx.cons.cur_y = (nrf_cli_cmd_len_t)y;
+                    }
+                    p_cli->p_ctx->temp_buff[0] = 0;
+                    return NRF_SUCCESS;
+                }
+                else
+                {
+                    p_cli->p_ctx->temp_buff[buff_idx] = c;
+                }
 
-              if (++buff_idx > NRF_CLI_CURSOR_POSITION_BUFFER - 1)
-              {
-                  p_cli->p_ctx->temp_buff[0] = 0;
-                  /* data_buf[NRF_CLI_CURSOR_POSITION_BUFFER - 1] is reserved for '\0' */
-                  return NRF_ERROR_NO_MEM;
-              }
+                if (++buff_idx > NRF_CLI_CURSOR_POSITION_BUFFER - 1)
+                {
+                    p_cli->p_ctx->temp_buff[0] = 0;
+                    /* data_buf[NRF_CLI_CURSOR_POSITION_BUFFER - 1] is reserved for '\0' */
+                    return NRF_ERROR_NO_MEM;
+                }
 
-          } while (cnt > 0);
-      }
-      return NRF_ERROR_TIMEOUT;
-  }
+            } while (cnt > 0);
+        }
+        return NRF_ERROR_TIMEOUT;
+    }
+    //}}}
+    //{{{
+    static ret_code_t terminal_size_get (nrf_cli_t const *   p_cli,
+                                        nrf_cli_cmd_len_t * p_length,
+                                        nrf_cli_cmd_len_t * p_height)
+    {
+        ASSERT(p_length);
+        ASSERT(p_height);
 
-  /* Function gets terminal width and height. */
-  static ret_code_t terminal_size_get(nrf_cli_t const *   p_cli,
-                                      nrf_cli_cmd_len_t * p_length,
-                                      nrf_cli_cmd_len_t * p_height)
-  {
-      ASSERT(p_length);
-      ASSERT(p_height);
+        uint16_t x;
+        uint16_t y;
 
-      uint16_t x;
-      uint16_t y;
+        if (cursor_position_get(p_cli) == NRF_SUCCESS)
+        {
+            x = p_cli->p_ctx->vt100_ctx.cons.cur_x;
+            y = p_cli->p_ctx->vt100_ctx.cons.cur_y;
+            /* assumption: terminal widht and height < 999 */
+            cursor_right_move(p_cli, NRF_CLI_MAX_TERMINAL_SIZE); /* move to last column */
+            cursor_down_move(p_cli,  NRF_CLI_MAX_TERMINAL_SIZE); /* move to last row */
+        }
+        else
+        {
+            return NRF_ERROR_NOT_SUPPORTED;
+        }
 
-      if (cursor_position_get(p_cli) == NRF_SUCCESS)
-      {
-          x = p_cli->p_ctx->vt100_ctx.cons.cur_x;
-          y = p_cli->p_ctx->vt100_ctx.cons.cur_y;
-          /* assumption: terminal widht and height < 999 */
-          cursor_right_move(p_cli, NRF_CLI_MAX_TERMINAL_SIZE); /* move to last column */
-          cursor_down_move(p_cli,  NRF_CLI_MAX_TERMINAL_SIZE); /* move to last row */
-      }
-      else
-      {
-          return NRF_ERROR_NOT_SUPPORTED;
-      }
+        if (cursor_position_get(p_cli) == NRF_SUCCESS)
+        {
+            *p_length = p_cli->p_ctx->vt100_ctx.cons.cur_x;
+            *p_height = p_cli->p_ctx->vt100_ctx.cons.cur_y;
+            cursor_left_move(p_cli, *p_length - x);
+            cursor_up_move(p_cli, *p_height - y);
 
-      if (cursor_position_get(p_cli) == NRF_SUCCESS)
-      {
-          *p_length = p_cli->p_ctx->vt100_ctx.cons.cur_x;
-          *p_height = p_cli->p_ctx->vt100_ctx.cons.cur_y;
-          cursor_left_move(p_cli, *p_length - x);
-          cursor_up_move(p_cli, *p_height - y);
-
-          return NRF_SUCCESS;
-      }
-      return NRF_ERROR_NOT_SUPPORTED;
-  }
+            return NRF_SUCCESS;
+        }
+        return NRF_ERROR_NOT_SUPPORTED;
+    }
+    //}}}
   #endif // NRF_MODULE_ENABLED(NRF_CLI_BUILD_IN_CMDS)
 
   #if NRF_MODULE_ENABLED(NRF_CLI_VT100_COLORS)
-  static void vt100_color_set(nrf_cli_t const * p_cli, nrf_cli_vt100_color_t color)
-  {
-      if (color != NRF_CLI_DEFAULT)
-      {
-          if (p_cli->p_ctx->vt100_ctx.col.col == color)
-          {
-              return;
-          }
+    //{{{
+    static void vt100_color_set (nrf_cli_t const * p_cli, nrf_cli_vt100_color_t color)
+    {
+        if (color != NRF_CLI_DEFAULT)
+        {
+            if (p_cli->p_ctx->vt100_ctx.col.col == color)
+            {
+                return;
+            }
 
-          uint8_t cmd[] = NRF_CLI_VT100_COLOR(color - 1);
+            uint8_t cmd[] = NRF_CLI_VT100_COLOR(color - 1);
 
-          p_cli->p_ctx->vt100_ctx.col.col = color;
-          nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
-      }
-      else
-      {
-          static uint8_t const cmd[] = NRF_CLI_VT100_MODESOFF;
+            p_cli->p_ctx->vt100_ctx.col.col = color;
+            nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
+        }
+        else
+        {
+            static uint8_t const cmd[] = NRF_CLI_VT100_MODESOFF;
 
-          p_cli->p_ctx->vt100_ctx.col.col = color;
-          nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
-      }
-  }
+            p_cli->p_ctx->vt100_ctx.col.col = color;
+            nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
+        }
+    }
+    //}}}
+    //{{{
+    static void vt100_bgcolor_set (nrf_cli_t const * p_cli, nrf_cli_vt100_color_t bgcolor)
+    {
+        if (bgcolor != NRF_CLI_DEFAULT)
+        {
+            if (p_cli->p_ctx->vt100_ctx.col.bgcol == bgcolor)
+            {
+                return;
+            }
+             /* -1 because default value is first in enum */
+            uint8_t cmd[] = NRF_CLI_VT100_BGCOLOR(bgcolor - 1);
 
-  static void vt100_bgcolor_set(nrf_cli_t const * p_cli, nrf_cli_vt100_color_t bgcolor)
-  {
-      if (bgcolor != NRF_CLI_DEFAULT)
-      {
-          if (p_cli->p_ctx->vt100_ctx.col.bgcol == bgcolor)
-          {
-              return;
-          }
-           /* -1 because default value is first in enum */
-          uint8_t cmd[] = NRF_CLI_VT100_BGCOLOR(bgcolor - 1);
-
-          p_cli->p_ctx->vt100_ctx.col.bgcol = bgcolor;
-          nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
-      }
-  }
-
-  static inline void vt100_colors_store(nrf_cli_t const *        p_cli,
-                                        nrf_cli_vt100_colors_t * p_color)
-  {
-      memcpy(p_color, &p_cli->p_ctx->vt100_ctx.col, sizeof(nrf_cli_vt100_colors_t));
-  }
-
-  static void vt100_colors_restore(nrf_cli_t const *              p_cli,
-                                   nrf_cli_vt100_colors_t const * p_color)
-  {
-      vt100_color_set(p_cli, p_color->col);
-      vt100_bgcolor_set(p_cli, p_color->bgcol);
-  }
+            p_cli->p_ctx->vt100_ctx.col.bgcol = bgcolor;
+            nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd);
+        }
+    }
+    //}}}
+    //{{{
+    static inline void vt100_colors_store (nrf_cli_t const *        p_cli,
+                                          nrf_cli_vt100_colors_t * p_color)
+    {
+        memcpy(p_color, &p_cli->p_ctx->vt100_ctx.col, sizeof(nrf_cli_vt100_colors_t));
+    }
+    //}}}
+    //{{{
+    static void vt100_colors_restore (nrf_cli_t const *              p_cli,
+                                     nrf_cli_vt100_colors_t const * p_color)
+    {
+        vt100_color_set(p_cli, p_color->col);
+        vt100_bgcolor_set(p_cli, p_color->bgcol);
+    }
+    //}}}
   #endif // NRF_MODULE_ENABLED(NRF_CLI_VT100_COLORS)
 
-  static void left_arrow_handle(nrf_cli_t const * p_cli)
+  //{{{
+  static void left_arrow_handle (nrf_cli_t const * p_cli)
   {
       nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
 
@@ -899,8 +956,9 @@
           --p_cli->p_ctx->cmd_buff_pos;
       }
   }
-
-  static void right_arrow_handle(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static void right_arrow_handle (nrf_cli_t const * p_cli)
   {
       nrf_cli_multiline_cons_t const * p_cons = multiline_console_data_check(p_cli);
 
@@ -922,8 +980,9 @@
           ++p_cli->p_ctx->cmd_buff_pos;
       }
   }
-
-  static inline void  char_insert_echo_off(nrf_cli_t const * p_cli, char data)
+  //}}}
+  //{{{
+  static inline void char_insert_echo_off (nrf_cli_t const * p_cli, char data)
   {
       if (p_cli->p_ctx->cmd_buff_len >= (NRF_CLI_CMD_BUFF_SIZE - 1))
       {
@@ -934,8 +993,9 @@
       p_cli->p_ctx->cmd_buff[p_cli->p_ctx->cmd_buff_pos] = '\0';
       ++p_cli->p_ctx->cmd_buff_len;
   }
-
-  static void char_insert(nrf_cli_t const * p_cli, char data)
+  //}}}
+  //{{{
+  static void char_insert (nrf_cli_t const * p_cli, char data)
   {
       nrf_cli_cmd_len_t diff;
       bool ins_mode = (bool)p_cli->p_ctx->internal.flag.insert_mode;
@@ -1034,8 +1094,9 @@
           return;
       }
   }
-
-  static void char_backspace(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static void char_backspace (nrf_cli_t const * p_cli)
   {
       nrf_cli_cmd_len_t diff;
 
@@ -1089,8 +1150,9 @@
           nrf_fprintf(p_cli->p_fprintf_ctx, "%s", cmd_bspace);
       }
   }
-
-  static void char_delete(nrf_cli_t const * p_cli)
+  //}}}
+  //{{{
+  static void char_delete (nrf_cli_t const * p_cli)
   {
       nrf_cli_cmd_len_t diff;
 
@@ -1131,8 +1193,9 @@
           cli_cursor_restore(p_cli);
       }
   }
-
-  static char make_argv(size_t * p_argc, char ** pp_argv, char * p_cmd, uint8_t max_argc)
+  //}}}
+  //{{{
+  static char make_argv (size_t * p_argc, char ** pp_argv, char * p_cmd, uint8_t max_argc)
   {
       char c;
       char quote = 0;
@@ -1277,8 +1340,9 @@
 
       return quote;
   }
-
-  static void cli_state_set(nrf_cli_t const * p_cli, nrf_cli_state_t state)
+  //}}}
+  //{{{
+  static void cli_state_set (nrf_cli_t const * p_cli, nrf_cli_state_t state)
   {
       p_cli->p_ctx->state = state;
 
@@ -1288,263 +1352,272 @@
               nrf_cli_fprintf(p_cli, NRF_CLI_INFO, "%s", p_cli->p_name);
       }
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_HISTORY)
-  static inline void history_mode_exit(nrf_cli_t const * p_cli)
-  {
-      p_cli->p_ctx->p_cmd_list_element = NULL;
-  }
+    //{{{
+    static inline void history_mode_exit (nrf_cli_t const * p_cli)
+    {
+        p_cli->p_ctx->p_cmd_list_element = NULL;
+    }
+    //}}}
+    //{{{
+    static void history_handle (nrf_cli_t const * p_cli, bool up)
+    {
+        nrf_cli_memobj_header_t header = {
+            .p_prev = NULL,
+            .p_next = NULL,
+            .cmd_len = 0
+        };
+        nrf_cli_cmd_len_t current_cmd_len;
+        bool skip = false;
 
-  static void history_handle(nrf_cli_t const * p_cli, bool up)
-  {
-      nrf_cli_memobj_header_t header = {
-          .p_prev = NULL,
-          .p_next = NULL,
-          .cmd_len = 0
-      };
-      nrf_cli_cmd_len_t current_cmd_len;
-      bool skip = false;
+        if (!up) /* button down */
+        {
+            if (p_cli->p_ctx->p_cmd_list_element == NULL)
+            {
+                return;
+            }
+            cursor_home_position_move(p_cli);
 
-      if (!up) /* button down */
-      {
-          if (p_cli->p_ctx->p_cmd_list_element == NULL)
-          {
-              return;
-          }
-          cursor_home_position_move(p_cli);
+            nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
+                            &header,
+                            NRF_CLI_HISTORY_HEADER_SIZE,
+                            0);
 
-          nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
-                          &header,
-                          NRF_CLI_HISTORY_HEADER_SIZE,
-                          0);
+            p_cli->p_ctx->p_cmd_list_element = header.p_next;
+            current_cmd_len = p_cli->p_ctx->cmd_buff_len;
 
-          p_cli->p_ctx->p_cmd_list_element = header.p_next;
-          current_cmd_len = p_cli->p_ctx->cmd_buff_len;
+            if (p_cli->p_ctx->p_cmd_list_element == NULL)
+            {
+                if (cli_strlen(p_cli->p_ctx->temp_buff) > 0)
+                {
+                    strcpy(p_cli->p_ctx->cmd_buff, p_cli->p_ctx->temp_buff);
+                }
+                else
+                {
+                    p_cli->p_ctx->cmd_buff[0] = '\0';
+                }
+                header.cmd_len = cli_strlen(p_cli->p_ctx->cmd_buff);
+                skip = true;
+            }
+        }
+        else /* button up */
+        {
+            if ((p_cli->p_ctx->p_cmd_list_element == p_cli->p_ctx->p_cmd_list_tail) ||
+                (p_cli->p_ctx->p_cmd_list_head == NULL))
+            {
+                /* Nothing to display. */
+                return;
+            }
+            cursor_home_position_move(p_cli);
 
-          if (p_cli->p_ctx->p_cmd_list_element == NULL)
-          {
-              if (cli_strlen(p_cli->p_ctx->temp_buff) > 0)
-              {
-                  strcpy(p_cli->p_ctx->cmd_buff, p_cli->p_ctx->temp_buff);
-              }
-              else
-              {
-                  p_cli->p_ctx->cmd_buff[0] = '\0';
-              }
-              header.cmd_len = cli_strlen(p_cli->p_ctx->cmd_buff);
-              skip = true;
-          }
-      }
-      else /* button up */
-      {
-          if ((p_cli->p_ctx->p_cmd_list_element == p_cli->p_ctx->p_cmd_list_tail) ||
-              (p_cli->p_ctx->p_cmd_list_head == NULL))
-          {
-              /* Nothing to display. */
-              return;
-          }
-          cursor_home_position_move(p_cli);
+            if (p_cli->p_ctx->p_cmd_list_element == NULL)
+            {
+                current_cmd_len = cli_strlen(p_cli->p_ctx->cmd_buff);
 
-          if (p_cli->p_ctx->p_cmd_list_element == NULL)
-          {
-              current_cmd_len = cli_strlen(p_cli->p_ctx->cmd_buff);
+                p_cli->p_ctx->p_cmd_list_element = p_cli->p_ctx->p_cmd_list_head;
+                /* Save the currently entered and not executed command. */
+                if (current_cmd_len > 0)
+                {
+                    strcpy(p_cli->p_ctx->temp_buff, p_cli->p_ctx->cmd_buff);
+                }
+                else
+                {
+                    p_cli->p_ctx->temp_buff[0] = '\0';
+                }
+            }
+            else
+            {
+                nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
+                                &header,
+                                NRF_CLI_HISTORY_HEADER_SIZE,
+                                0);
+                current_cmd_len = header.cmd_len;
+                p_cli->p_ctx->p_cmd_list_element = header.p_prev;
+            }
+        }
+        if (!skip)
+        {
+            nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
+                            &header,
+                            NRF_CLI_HISTORY_HEADER_SIZE,
+                            0);
 
-              p_cli->p_ctx->p_cmd_list_element = p_cli->p_ctx->p_cmd_list_head;
-              /* Save the currently entered and not executed command. */
-              if (current_cmd_len > 0)
-              {
-                  strcpy(p_cli->p_ctx->temp_buff, p_cli->p_ctx->cmd_buff);
-              }
-              else
-              {
-                  p_cli->p_ctx->temp_buff[0] = '\0';
-              }
-          }
-          else
-          {
-              nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
-                              &header,
-                              NRF_CLI_HISTORY_HEADER_SIZE,
-                              0);
-              current_cmd_len = header.cmd_len;
-              p_cli->p_ctx->p_cmd_list_element = header.p_prev;
-          }
-      }
-      if (!skip)
-      {
-          nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
-                          &header,
-                          NRF_CLI_HISTORY_HEADER_SIZE,
-                          0);
+            nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
+                            p_cli->p_ctx->cmd_buff,
+                            header.cmd_len + 1, /* +1 for '\0' */
+                            NRF_CLI_HISTORY_HEADER_SIZE);
+        }
 
-          nrf_memobj_read(p_cli->p_ctx->p_cmd_list_element,
-                          p_cli->p_ctx->cmd_buff,
-                          header.cmd_len + 1, /* +1 for '\0' */
-                          NRF_CLI_HISTORY_HEADER_SIZE);
-      }
+        p_cli->p_ctx->cmd_buff_pos = header.cmd_len;
+        p_cli->p_ctx->cmd_buff_len = header.cmd_len;
 
-      p_cli->p_ctx->cmd_buff_pos = header.cmd_len;
-      p_cli->p_ctx->cmd_buff_len = header.cmd_len;
+        if (current_cmd_len > header.cmd_len)
+        {
+            cli_clear_eos(p_cli);
+        }
 
-      if (current_cmd_len > header.cmd_len)
-      {
-          cli_clear_eos(p_cli);
-      }
+        nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s", p_cli->p_ctx->cmd_buff);
+        if (cursor_in_empty_line(p_cli) || full_line_cmd(p_cli))
+        {
+            cursor_next_line_move(p_cli);
+        }
+    }
+    //}}}
+    //{{{
+    static void history_list_element_add (nrf_cli_t const * p_cli, nrf_memobj_t * p_memobj)
+    {
+        ASSERT(p_memobj != NULL);
 
-      nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s", p_cli->p_ctx->cmd_buff);
-      if (cursor_in_empty_line(p_cli) || full_line_cmd(p_cli))
-      {
-          cursor_next_line_move(p_cli);
-      }
-  }
+        nrf_cli_memobj_header_t header;
 
-  static void history_list_element_add(nrf_cli_t const * p_cli, nrf_memobj_t * p_memobj)
-  {
-      ASSERT(p_memobj != NULL);
+        if (p_cli->p_ctx->p_cmd_list_head == NULL)
+        {
+            p_cli->p_ctx->p_cmd_list_head = p_memobj;
+            p_cli->p_ctx->p_cmd_list_tail = p_memobj;
+            header.p_prev = NULL;
+            header.p_next = NULL;
+            header.cmd_len = p_cli->p_ctx->cmd_buff_len;
+        }
+        else
+        {
+            nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
+                            &header,
+                            NRF_CLI_HISTORY_HEADER_SIZE,
+                            0);
 
-      nrf_cli_memobj_header_t header;
+            header.p_next = p_memobj;
 
-      if (p_cli->p_ctx->p_cmd_list_head == NULL)
-      {
-          p_cli->p_ctx->p_cmd_list_head = p_memobj;
-          p_cli->p_ctx->p_cmd_list_tail = p_memobj;
-          header.p_prev = NULL;
-          header.p_next = NULL;
-          header.cmd_len = p_cli->p_ctx->cmd_buff_len;
-      }
-      else
-      {
-          nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
-                          &header,
-                          NRF_CLI_HISTORY_HEADER_SIZE,
-                          0);
+            nrf_memobj_write(p_cli->p_ctx->p_cmd_list_head,
+                             &header,
+                             NRF_CLI_HISTORY_HEADER_SIZE,
+                             0);
 
-          header.p_next = p_memobj;
+            header.p_next = NULL;
+            header.p_prev = p_cli->p_ctx->p_cmd_list_head;
+            header.cmd_len = p_cli->p_ctx->cmd_buff_len;
 
-          nrf_memobj_write(p_cli->p_ctx->p_cmd_list_head,
-                           &header,
-                           NRF_CLI_HISTORY_HEADER_SIZE,
-                           0);
+            p_cli->p_ctx->p_cmd_list_head = p_memobj;
+        }
 
-          header.p_next = NULL;
-          header.p_prev = p_cli->p_ctx->p_cmd_list_head;
-          header.cmd_len = p_cli->p_ctx->cmd_buff_len;
+        nrf_memobj_write(p_memobj,
+                         &header,
+                         NRF_CLI_HISTORY_HEADER_SIZE,
+                         0);
 
-          p_cli->p_ctx->p_cmd_list_head = p_memobj;
-      }
+        nrf_memobj_write(p_memobj,
+                         p_cli->p_ctx->cmd_buff,
+                         p_cli->p_ctx->cmd_buff_len + 1, /* +1 for '\0' */
+                         NRF_CLI_HISTORY_HEADER_SIZE);
+    }
+    //}}}
+    //{{{
+    static void history_list_element_oldest_remove (nrf_cli_t const * p_cli)
+    {
+        if (p_cli->p_ctx->p_cmd_list_tail == NULL)
+        {
+            return; // nothing to do
+        }
 
-      nrf_memobj_write(p_memobj,
-                       &header,
-                       NRF_CLI_HISTORY_HEADER_SIZE,
-                       0);
+        nrf_cli_memobj_header_t header;
+        nrf_memobj_t * p_memobj = p_cli->p_ctx->p_cmd_list_tail;
 
-      nrf_memobj_write(p_memobj,
-                       p_cli->p_ctx->cmd_buff,
-                       p_cli->p_ctx->cmd_buff_len + 1, /* +1 for '\0' */
-                       NRF_CLI_HISTORY_HEADER_SIZE);
-  }
+        nrf_memobj_read(p_memobj,
+                        &header,
+                        NRF_CLI_HISTORY_HEADER_SIZE,
+                        0);
 
-  static void history_list_element_oldest_remove(nrf_cli_t const * p_cli)
-  {
-      if (p_cli->p_ctx->p_cmd_list_tail == NULL)
-      {
-          return; // nothing to do
-      }
+        p_cli->p_ctx->p_cmd_list_tail = header.p_next;
+        memset(&header, 0, sizeof(nrf_cli_memobj_header_t));
+        nrf_memobj_write(p_memobj, &header, NRF_CLI_HISTORY_HEADER_SIZE, 0);
+        nrf_memobj_free(p_memobj);
 
-      nrf_cli_memobj_header_t header;
-      nrf_memobj_t * p_memobj = p_cli->p_ctx->p_cmd_list_tail;
+        /* Checking if memory objects list is empty. */
+        if (p_cli->p_ctx->p_cmd_list_tail == NULL)
+        {
+            p_cli->p_ctx->p_cmd_list_head = NULL;
+            return;
+        }
 
-      nrf_memobj_read(p_memobj,
-                      &header,
-                      NRF_CLI_HISTORY_HEADER_SIZE,
-                      0);
+        nrf_memobj_read(p_cli->p_ctx->p_cmd_list_tail,
+                        &header,
+                        NRF_CLI_HISTORY_HEADER_SIZE,
+                        0);
 
-      p_cli->p_ctx->p_cmd_list_tail = header.p_next;
-      memset(&header, 0, sizeof(nrf_cli_memobj_header_t));
-      nrf_memobj_write(p_memobj, &header, NRF_CLI_HISTORY_HEADER_SIZE, 0);
-      nrf_memobj_free(p_memobj);
+        header.p_prev = NULL;
+        nrf_memobj_write(p_cli->p_ctx->p_cmd_list_tail, &header, NRF_CLI_HISTORY_HEADER_SIZE, 0);
+    }
+    //}}}
+    //{{{
+    static void history_list_free_memory (nrf_cli_t const * p_cli)
+    {
+        while (p_cli->p_ctx->p_cmd_list_tail != NULL)
+        {
+            history_list_element_oldest_remove(p_cli);
+        }
+    }
+    //}}}
+    //{{{
+    static void history_save (nrf_cli_t const * p_cli)
+    {
+        nrf_cli_cmd_len_t cmd_new_len = cli_strlen(p_cli->p_ctx->cmd_buff);
 
-      /* Checking if memory objects list is empty. */
-      if (p_cli->p_ctx->p_cmd_list_tail == NULL)
-      {
-          p_cli->p_ctx->p_cmd_list_head = NULL;
-          return;
-      }
+        history_mode_exit(p_cli);
 
-      nrf_memobj_read(p_cli->p_ctx->p_cmd_list_tail,
-                      &header,
-                      NRF_CLI_HISTORY_HEADER_SIZE,
-                      0);
+        if (cmd_new_len == 0)
+        {
+            return;
+        }
 
-      header.p_prev = NULL;
-      nrf_memobj_write(p_cli->p_ctx->p_cmd_list_tail, &header, NRF_CLI_HISTORY_HEADER_SIZE, 0);
-  }
+        /* Checking if newly entered command is not duplicated with previous one. */
+        if (p_cli->p_ctx->p_cmd_list_head != NULL)
+        {
+            nrf_cli_memobj_header_t header;
 
-  static void history_list_free_memory(nrf_cli_t const * p_cli)
-  {
-      while (p_cli->p_ctx->p_cmd_list_tail != NULL)
-      {
-          history_list_element_oldest_remove(p_cli);
-      }
-  }
+            nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
+                            &header,
+                            NRF_CLI_HISTORY_HEADER_SIZE,
+                            0);
+            if (cmd_new_len == header.cmd_len)
+            {
+                nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
+                                p_cli->p_ctx->temp_buff,
+                                header.cmd_len + 1, /* +1 for '\0' */
+                                NRF_CLI_HISTORY_HEADER_SIZE);
 
-  static void history_save(nrf_cli_t const * p_cli)
-  {
-      nrf_cli_cmd_len_t cmd_new_len = cli_strlen(p_cli->p_ctx->cmd_buff);
+                if (strcmp(p_cli->p_ctx->cmd_buff, p_cli->p_ctx->temp_buff) == 0)
+                {
+                    /* Duplicated command, nothing to save. */
+                    p_cli->p_ctx->temp_buff[0] = '\0';
+                    return;
+                }
+                p_cli->p_ctx->temp_buff[0] = '\0';
+            }
+        }
 
-      history_mode_exit(p_cli);
+        for (size_t idx = 0; idx < NRF_CLI_HISTORY_ELEMENT_COUNT; idx++)
+        {
+            nrf_memobj_t * p_memobj;
 
-      if (cmd_new_len == 0)
-      {
-          return;
-      }
-
-      /* Checking if newly entered command is not duplicated with previous one. */
-      if (p_cli->p_ctx->p_cmd_list_head != NULL)
-      {
-          nrf_cli_memobj_header_t header;
-
-          nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
-                          &header,
-                          NRF_CLI_HISTORY_HEADER_SIZE,
-                          0);
-          if (cmd_new_len == header.cmd_len)
-          {
-              nrf_memobj_read(p_cli->p_ctx->p_cmd_list_head,
-                              p_cli->p_ctx->temp_buff,
-                              header.cmd_len + 1, /* +1 for '\0' */
-                              NRF_CLI_HISTORY_HEADER_SIZE);
-
-              if (strcmp(p_cli->p_ctx->cmd_buff, p_cli->p_ctx->temp_buff) == 0)
-              {
-                  /* Duplicated command, nothing to save. */
-                  p_cli->p_ctx->temp_buff[0] = '\0';
-                  return;
-              }
-              p_cli->p_ctx->temp_buff[0] = '\0';
-          }
-      }
-
-      for (size_t idx = 0; idx < NRF_CLI_HISTORY_ELEMENT_COUNT; idx++)
-      {
-          nrf_memobj_t * p_memobj;
-
-          p_memobj = nrf_memobj_alloc(p_cli->p_cmd_hist_mempool,
-                                      ((size_t)NRF_CLI_HISTORY_HEADER_SIZE + cmd_new_len + 1));
-          if (p_memobj != NULL)
-          {
-              history_list_element_add(p_cli, p_memobj);
-              return;
-          }
-          else
-          {
-              history_list_element_oldest_remove(p_cli);
-          }
-      }
-      return;
-  }
+            p_memobj = nrf_memobj_alloc(p_cli->p_cmd_hist_mempool,
+                                        ((size_t)NRF_CLI_HISTORY_HEADER_SIZE + cmd_new_len + 1));
+            if (p_memobj != NULL)
+            {
+                history_list_element_add(p_cli, p_memobj);
+                return;
+            }
+            else
+            {
+                history_list_element_oldest_remove(p_cli);
+            }
+        }
+        return;
+    }
+    //}}}
   #endif // NRF_MODULE_ENABLED(NRF_CLI_HISTORY)
 
+  //{{{
   /* Function checks how many identical characters have two strings starting from the first character. */
   static nrf_cli_cmd_len_t str_similarity_check(char const * str_a, char const * str_b)
   {
@@ -1564,7 +1637,8 @@
       }
       return cnt;
   }
-
+  //}}}
+  //{{{
   static void completion_insert(nrf_cli_t const * p_cli,
                                 char const *      p_compl,
                                 nrf_cli_cmd_len_t compl_len)
@@ -1606,7 +1680,8 @@
           cursor_position_synchronize(p_cli);
       }
   }
-
+  //}}}
+  //{{{
   static void option_print(nrf_cli_t const * p_cli,
                            char const *      p_option,
                            nrf_cli_cmd_len_t longest_option)
@@ -1635,7 +1710,8 @@
       }
       cursor_right_move(p_cli, diff);
   }
-
+  //}}}
+  //{{{
   static void cli_tab_handle(nrf_cli_t const * p_cli)
   {
       size_t cmd_idx;
@@ -1872,13 +1948,16 @@
       cursor_position_synchronize(p_cli);
       completion_insert(p_cli, p_st_cmd_last->p_syntax + arg_len, compl_len);
   }
+  //}}}
 
   #define NRF_CLI_ASCII_MAX_CHAR (127u)
+  //{{{
   static inline ret_code_t ascii_filter(char const data)
   {
       return (uint8_t)data > NRF_CLI_ASCII_MAX_CHAR ? NRF_ERROR_INVALID_DATA : NRF_SUCCESS;
   }
-
+  //}}}
+  //{{{
   static void cli_state_collect(nrf_cli_t const * p_cli)
   {
       size_t count = 0;
@@ -2065,7 +2144,8 @@
           }
       }
   }
-
+  //}}}
+  //{{{
   /* Function remove white chars from beginning and end of command buffer. */
   static void cmd_trim(nrf_cli_t const * p_cli)
   {
@@ -2113,6 +2193,7 @@
           p_cli->p_ctx->cmd_buff_pos = p_cli->p_ctx->cmd_buff_len;
       }
   }
+  //}}}
 
   #if NRF_MODULE_ENABLED(NRF_CLI_WILDCARD)
     //{{{
@@ -2294,7 +2375,7 @@
         return ret_val;
     }
     //}}}
-  #endif 
+  #endif
 
   //{{{
   /* Function is analyzing the command buffer to find matching commands. Next, it invokes the  last recognized

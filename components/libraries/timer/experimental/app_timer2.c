@@ -1,58 +1,21 @@
-/**
- * Copyright (c) 2018, Nordic Semiconductor ASA
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
- *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
 #include "app_timer.h"
 #include "nrf_atfifo.h"
 #include "nrf_sortlist.h"
 #include "nrf_delay.h"
 #if APP_TIMER_CONFIG_USE_SCHEDULER
-#include "app_scheduler.h"
+  #include "app_scheduler.h"
 #endif
 #include <stddef.h>
 #define NRF_LOG_MODULE_NAME APP_TIMER_LOG_NAME
+
 #if APP_TIMER_CONFIG_LOG_ENABLED
-#define NRF_LOG_LEVEL       APP_TIMER_CONFIG_LOG_LEVEL
-#define NRF_LOG_INFO_COLOR  APP_TIMER_CONFIG_INFO_COLOR
-#define NRF_LOG_DEBUG_COLOR APP_TIMER_CONFIG_DEBUG_COLOR
+  #define NRF_LOG_LEVEL       APP_TIMER_CONFIG_LOG_LEVEL
+  #define NRF_LOG_INFO_COLOR  APP_TIMER_CONFIG_INFO_COLOR
+  #define NRF_LOG_DEBUG_COLOR APP_TIMER_CONFIG_DEBUG_COLOR
 #else //APP_TIMER_CONFIG_LOG_ENABLED
-#define NRF_LOG_LEVEL       0
+  #define NRF_LOG_LEVEL       0
 #endif //APP_TIMER_CONFIG_LOG_ENABLED
+
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -63,11 +26,11 @@ NRF_LOG_MODULE_REGISTER();
  * compare event has already occured.
  */
 #define APP_TIMER_SAFE_WINDOW APP_TIMER_TICKS(APP_TIMER_SAFE_WINDOW_MS)
-
 #define APP_TIMER_RTC_MAX_VALUE   (DRV_RTC_MAX_CNT - APP_TIMER_SAFE_WINDOW)
 
 static drv_rtc_t m_rtc_inst = DRV_RTC_INSTANCE(1);
 
+//{{{
 /**
  * @brief Timer requests types.
  */
@@ -77,7 +40,8 @@ typedef enum
     TIMER_REQ_STOP,
     TIMER_REQ_STOP_ALL
 } app_timer_req_type_t;
-
+//}}}
+//{{{
 /**
  * @brief Operation request structure.
  */
@@ -86,6 +50,7 @@ typedef struct
     app_timer_req_type_t type;    /**< Request type. */
     app_timer_t *        p_timer; /**< Timer instance. */
 } timer_req_t;
+//}}}
 
 static app_timer_t * volatile mp_active_timer; /**< Timer currently handled by RTC driver. */
 static bool                   m_global_active; /**< Flag used to globally disable all timers. */
@@ -93,14 +58,10 @@ static bool                   m_global_active; /**< Flag used to globally disabl
 /* Request FIFO instance. */
 NRF_ATFIFO_DEF(m_req_fifo, timer_req_t, APP_TIMER_CONFIG_OP_QUEUE_SIZE);
 
-/* Sortlist instance. */
 static bool compare_func(nrf_sortlist_item_t * p_item0, nrf_sortlist_item_t *p_item1);
 NRF_SORTLIST_DEF(m_app_timer_sortlist, compare_func); /**< Sortlist used for storing queued timers. */
-
-/**
- * @brief Function used for comparing items in sorted list.
- */
-static inline bool compare_func(nrf_sortlist_item_t * p_item0, nrf_sortlist_item_t *p_item1)
+//{{{
+static inline bool compare_func (nrf_sortlist_item_t * p_item0, nrf_sortlist_item_t *p_item1)
 {
     app_timer_t * p0 = CONTAINER_OF(p_item0, app_timer_t, list_item);
     app_timer_t * p1 = CONTAINER_OF(p_item1, app_timer_t, list_item);
@@ -109,17 +70,21 @@ static inline bool compare_func(nrf_sortlist_item_t * p_item0, nrf_sortlist_item
     uint32_t p1_end = p1->end_val;
     return (p0_end <= p1_end) ? true : false;
 }
+//}}}
 
 #if APP_TIMER_CONFIG_USE_SCHEDULER
-static void scheduled_timeout_handler(void * p_event_data, uint16_t event_size)
-{
-    ASSERT(event_size == sizeof(app_timer_event_t));
-    app_timer_event_t const * p_timer_event = (app_timer_event_t *)p_event_data;
+  //{{{
+  static void scheduled_timeout_handler(void * p_event_data, uint16_t event_size)
+  {
+      ASSERT(event_size == sizeof(app_timer_event_t));
+      app_timer_event_t const * p_timer_event = (app_timer_event_t *)p_event_data;
 
-    p_timer_event->timeout_handler(p_timer_event->p_context);
-}
+      p_timer_event->timeout_handler(p_timer_event->p_context);
+  }
+  //}}}
 #endif
 
+//{{{
 /**
  * @brief Function called on timer expiration
  *
@@ -161,7 +126,8 @@ static bool timer_expire(app_timer_t * p_timer)
     }
     return ret;
 }
-
+//}}}
+//{{{
 /**
  * @brief Function is configuring RTC driver to trigger timeout interrupt for given timer.
  *
@@ -195,24 +161,31 @@ static bool rtc_schedule(app_timer_t * p_timer, bool * p_rerun)
     }
     return false;
 }
+//}}}
 
+//{{{
 static inline app_timer_t * sortlist_pop(void)
 {
     nrf_sortlist_item_t * p_next_item = nrf_sortlist_pop(&m_app_timer_sortlist);
     return p_next_item ? CONTAINER_OF(p_next_item, app_timer_t, list_item) : NULL;
 }
-
+//}}}
+//{{{
 static inline app_timer_t * sortlist_peek(void)
 {
     nrf_sortlist_item_t const * p_next_item = nrf_sortlist_peek(&m_app_timer_sortlist);
     return p_next_item ? CONTAINER_OF(p_next_item, app_timer_t, list_item) : NULL;
 }
+//}}}
 
+//{{{
 static inline app_timer_t * sortlist_next(app_timer_t * p_item)
 {
     nrf_sortlist_item_t const * p_next_item = nrf_sortlist_next(&p_item->list_item);
     return p_next_item ? CONTAINER_OF(p_next_item, app_timer_t, list_item) : NULL;
 }
+//}}}
+//{{{
 /**
  * @brief Function for deactivating all timers which are in the sorted list (active timers).
  */
@@ -228,7 +201,9 @@ static void sorted_list_stop_all(void)
         }
     } while (p_next);
 }
+//}}}
 
+//{{{
 /**
  * @brief Function for handling RTC counter overflow.
  *
@@ -259,7 +234,8 @@ static void on_overflow_evt(void)
         p_next = sortlist_next(p_next);
     }
 }
-
+//}}}
+//{{{
 /**
  * #brief Function for handling RTC compare event - active timer expiration.
  */
@@ -268,7 +244,7 @@ static void on_compare_evt(drv_rtc_t const * const  p_instance)
     if (mp_active_timer)
     {
         //If assert fails it suggests that safe window should be increased.
-        ASSERT(app_timer_cnt_diff_compute(drv_rtc_counter_get(p_instance), 
+        ASSERT(app_timer_cnt_diff_compute(drv_rtc_counter_get(p_instance),
                                           mp_active_timer->end_val & RTC_COUNTER_COUNTER_Msk) < APP_TIMER_SAFE_WINDOW);
 
         NRF_LOG_INST_DEBUG(mp_active_timer->p_log, "Compare EVT");
@@ -280,7 +256,9 @@ static void on_compare_evt(drv_rtc_t const * const  p_instance)
         NRF_LOG_WARNING("Compare event but no active timer (already stopped?)");
     }
 }
+//}}}
 
+//{{{
 /**
  * @brief Function updates RTC.
  *
@@ -357,7 +335,8 @@ static void rtc_update(drv_rtc_t const * const  p_instance)
         }
     }
 }
-
+//}}}
+//{{{
 /**
  * @brief Function for processing user requests.
  *
@@ -406,7 +385,8 @@ static void timer_req_process(drv_rtc_t const * const  p_instance)
         p_req = nrf_atfifo_item_get(m_req_fifo, &fifo_ctx);
     }
 }
-
+//}}}
+//{{{
 static void rtc_irq(drv_rtc_t const * const  p_instance)
 {
     if (drv_rtc_overflow_pending(p_instance))
@@ -420,7 +400,9 @@ static void rtc_irq(drv_rtc_t const * const  p_instance)
     timer_req_process(p_instance);
     rtc_update(p_instance);
 }
+//}}}
 
+//{{{
 /**
  * @brief Function for triggering processing user requests.
  *
@@ -430,7 +412,8 @@ static inline void timer_request_proc_trigger(void)
 {
     drv_rtc_irq_trigger(&m_rtc_inst);
 }
-
+//}}}
+//{{{
 /**
  * @brief Function for putting user request into the request queue
  */
@@ -458,7 +441,9 @@ static ret_code_t timer_req_schedule(app_timer_req_type_t type, app_timer_t * p_
         return NRF_ERROR_NO_MEM;
     }
 }
+//}}}
 
+//{{{
 ret_code_t app_timer_init(void)
 {
     ret_code_t err_code;
@@ -487,7 +472,8 @@ ret_code_t app_timer_init(void)
     m_global_active = true;
     return err_code;
 }
-
+//}}}
+//{{{
 ret_code_t app_timer_create(app_timer_id_t const *      p_timer_id,
                             app_timer_mode_t            mode,
                             app_timer_timeout_handler_t timeout_handler)
@@ -505,7 +491,8 @@ ret_code_t app_timer_create(app_timer_id_t const *      p_timer_id,
     p_t->repeat_period = (mode == APP_TIMER_MODE_REPEATED) ? 1 : 0;
     return NRF_SUCCESS;
 }
-
+//}}}
+//{{{
 ret_code_t app_timer_start(app_timer_t * p_timer, uint32_t timeout_ticks, void * p_context)
 {
     ASSERT(p_timer);
@@ -531,8 +518,8 @@ ret_code_t app_timer_start(app_timer_t * p_timer, uint32_t timeout_ticks, void *
 
     return timer_req_schedule(TIMER_REQ_START, p_t);
 }
-
-
+//}}}
+//{{{
 ret_code_t app_timer_stop(app_timer_t * p_timer)
 {
     ASSERT(p_timer);
@@ -541,7 +528,8 @@ ret_code_t app_timer_stop(app_timer_t * p_timer)
 
     return timer_req_schedule(TIMER_REQ_STOP, p_t);
 }
-
+//}}}
+//{{{
 ret_code_t app_timer_stop_all(void)
 {
     //block timer globally
@@ -549,30 +537,37 @@ ret_code_t app_timer_stop_all(void)
 
     return timer_req_schedule(TIMER_REQ_STOP_ALL, NULL);
 }
-
+//}}}
+//{{{
 uint8_t app_timer_op_queue_utilization_get(void)
 {
     /* Currently not supported by ATFIFO */
     return 0;
 }
-
+//}}}
+//{{{
 uint32_t app_timer_cnt_diff_compute(uint32_t   ticks_to,
                                     uint32_t   ticks_from)
 {
     return ((ticks_to - ticks_from) & RTC_COUNTER_COUNTER_Msk);
 }
-
+//}}}
+//{{{
 uint32_t app_timer_cnt_get(void)
 {
     return drv_rtc_counter_get(&m_rtc_inst);
 }
+//}}}
 
+//{{{
 void app_timer_pause(void)
 {
     drv_rtc_stop(&m_rtc_inst);
 }
-
+//}}}
+//{{{
 void app_timer_resume(void)
 {
     drv_rtc_start(&m_rtc_inst);
 }
+//}}}

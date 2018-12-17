@@ -426,7 +426,7 @@ int main() {
   // libuarte cli init
   cli_libuarte_config_t config =  {
     TX_PIN_NUMBER, RX_PIN_NUMBER, NRF_UARTE_HWFC_DISABLED, NRF_UARTE_PARITY_EXCLUDED, NRF_UARTE_BAUDRATE_115200 };
-  APP_ERROR_CHECK (nrf_cli_init (&gCli, &config, true, true, NRF_LOG_SEVERITY_INFO));
+  APP_ERROR_CHECK (nrf_cli_init (&gCli, &config, true, true, NRF_LOG_SEVERITY_DEBUG));
   APP_ERROR_CHECK (nrf_cli_start (&gCli));
   //{{{  cli init
   //nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
