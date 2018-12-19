@@ -25,7 +25,6 @@
 #include "nrf_log_default_backends.h"
 
 #include "nrf_cli_libuarte.h"
-//#include "nrf_cli_uart.h"
 
 #include "nrf_drv_clock.h"
 //}}}
@@ -423,19 +422,11 @@ int main() {
   APP_ERROR_CHECK (led_softblink_init (&leds));
   APP_ERROR_CHECK (led_softblink_start (LEDS_MASK));
 
-  // libuarte cli init
+   // libuarte cli init
   cli_libuarte_config_t config =  {
     TX_PIN_NUMBER, RX_PIN_NUMBER, NRF_UARTE_HWFC_DISABLED, NRF_UARTE_PARITY_EXCLUDED, NRF_UARTE_BAUDRATE_115200 };
   APP_ERROR_CHECK (nrf_cli_init (&gCli, &config, true, true, NRF_LOG_SEVERITY_DEBUG));
   APP_ERROR_CHECK (nrf_cli_start (&gCli));
-  //{{{  cli init
-  //nrf_drv_uart_config_t uart_config = NRF_DRV_UART_DEFAULT_CONFIG;
-  //uart_config.pseltxd = TX_PIN_NUMBER;
-  //uart_config.pselrxd = RX_PIN_NUMBER;
-  //uart_config.hwfc = NRF_UART_HWFC_DISABLED;
-  //APP_ERROR_CHECK (nrf_cli_init (&m_cli_uart, &uart_config, true, true, NRF_LOG_SEVERITY_INFO));
-  //APP_ERROR_CHECK (nrf_cli_start (&m_cli_uart));
-  //}}}
   APP_ERROR_CHECK (nrf_mpu_init());
   APP_ERROR_CHECK (nrf_stack_guard_init());
 

@@ -67,7 +67,6 @@ static uint8_t gAdvHandle = BLE_GAP_ADV_SET_HANDLE_NOT_SET;         // Advertisi
 static uint8_t mEncHandle[BLE_GAP_ADV_SET_DATA_SIZE_MAX];           // Buffer for storing an encoded advertising set
 static uint8_t gEncScanResponseData[BLE_GAP_ADV_SET_DATA_SIZE_MAX]; // Buffer for storing an encoded scan data
 
-
 //{{{
 /**@brief Function for assert macro callback.
  * @details This function will be called in case of an assert in the SoftDevice.

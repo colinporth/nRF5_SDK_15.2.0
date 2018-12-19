@@ -82,6 +82,7 @@
         <file file_name="../../../../../../components/libraries/cli/nrf_cli_types.h" />
         <file file_name="../../../../../../components/libraries/cli/nrf_cli_vt100.h" />
         <file file_name="../../../../../../components/libraries/queue/nrf_queue.h" />
+        <file file_name="../../../../../../components/libraries/pwr_mgmt/nrf_pwr_mgmt.h" />
       </folder>
       <file file_name="../../../../../../components/libraries/cli/cli_utils_cmds.c" />
       <file file_name="../../../../../../components/libraries/cli/nrf_cli.c" />

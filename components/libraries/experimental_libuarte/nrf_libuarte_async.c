@@ -1,42 +1,4 @@
-/**
- * Copyright (c) 2018, Nordic Semiconductor ASA
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
- *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
+//{{{  includes
 #include "sdk_config.h"
 #include "nrf_libuarte_async.h"
 #include "nrf_libuarte.h"
@@ -46,15 +8,18 @@
 #include "nrfx_ppi.h"
 #include "nrf_uart.h"
 #include "nrf_queue.h"
+//}}}
 
 #define NRF_LOG_MODULE_NAME libUARTE_async
+
 #if NRF_LIBUARTE_CONFIG_LOG_ENABLED
-#define NRF_LOG_LEVEL       NRF_LIBUARTE_CONFIG_LOG_LEVEL
-#define NRF_LOG_INFO_COLOR  NRF_LIBUARTE_CONFIG_INFO_COLOR
-#define NRF_LOG_DEBUG_COLOR NRF_LIBUARTE_CONFIG_DEBUG_COLOR
+  #define NRF_LOG_LEVEL       NRF_LIBUARTE_CONFIG_LOG_LEVEL
+  #define NRF_LOG_INFO_COLOR  NRF_LIBUARTE_CONFIG_INFO_COLOR
+  #define NRF_LOG_DEBUG_COLOR NRF_LIBUARTE_CONFIG_DEBUG_COLOR
 #else // NRF_LIBUARTE_CONFIG_LOG_ENABLED
-#define NRF_LOG_LEVEL       0
+  #define NRF_LOG_LEVEL       0
 #endif // NRF_LIBUARTE_CONFIG_LOG_ENABLED
+
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
@@ -72,15 +37,14 @@ NRF_QUEUE_DEF(uint8_t *, m_rxdata_queue, 3, NRF_QUEUE_MODE_NO_OVERFLOW);
 static nrfx_timer_t m_timer = NRFX_TIMER_INSTANCE(NRF_LIBUARTE_ASYNC_CONFIG_TIMER_USED);
 
 #if CONCAT_3(NRFX_TIMER, NRF_LIBUARTE_ASYNC_CONFIG_TIMER_USED,_ENABLED) == 0
-#error "Timer instance not enabled"
+  #error "Timer instance not enabled"
 #endif
 
-typedef enum
-{
-    PPI_CH_RXRDY_CLEAR,
-    PPI_CH_COMPARE_SHUTDOWN,
-    PPI_CH_MAX
-} nrf_libuarte_async_ppi_channel_t;
+typedef enum {
+  PPI_CH_RXRDY_CLEAR,
+  PPI_CH_COMPARE_SHUTDOWN,
+  PPI_CH_MAX
+  } nrf_libuarte_async_ppi_channel_t;
 
 static nrf_ppi_channel_t m_ppi_channels[PPI_CH_MAX];
 static int32_t m_alloc_cnt;
@@ -90,6 +54,7 @@ static uint8_t * mp_curr_rx_buf;
 static uint32_t m_rx_free_cnt;
 static size_t m_rx_chunk_size;
 
+//{{{
 #define PPI_CH_SETUP(_ch, _evt, _tsk, _fork)                            \
     ret = nrfx_ppi_channel_assign(m_ppi_channels[_ch], _evt, _tsk);     \
     if (ret != NRF_SUCCESS)                                             \
@@ -104,8 +69,10 @@ static size_t m_rx_chunk_size;
             return NRF_ERROR_INTERNAL;                                  \
         }                                                               \
     }
+//}}}
 
-static void uart_evt_handler(nrf_libuarte_evt_t * p_evt)
+//{{{
+static void uart_evt_handler (nrf_libuarte_evt_t * p_evt)
 {
     ret_code_t ret;
     switch (p_evt->type)
@@ -189,8 +156,9 @@ static void uart_evt_handler(nrf_libuarte_evt_t * p_evt)
         break;
     }
 }
-
-static void tmr_evt_handler(nrf_timer_event_t event_type, void * p_context)
+//}}}
+//{{{
+static void tmr_evt_handler (nrf_timer_event_t event_type, void * p_context)
 {
     uint32_t capt_rx_count = UART_DRV_TIMER->CC[2];
 
@@ -212,8 +180,10 @@ static void tmr_evt_handler(nrf_timer_event_t event_type, void * p_context)
         m_evt_handler(&evt);
     }
 }
+//}}}
 
-ret_code_t nrf_libuarte_async_init(nrf_libuarte_async_config_t const * p_config, nrf_libuarte_async_evt_handler evt_handler)
+//{{{
+ret_code_t nrf_libuarte_async_init (nrf_libuarte_async_config_t const * p_config, nrf_libuarte_async_evt_handler evt_handler)
 {
     ret_code_t ret;
 
@@ -288,8 +258,9 @@ ret_code_t nrf_libuarte_async_init(nrf_libuarte_async_config_t const * p_config,
 
     return ret;
 }
-
-void nrf_libuarte_async_uninit(void)
+//}}}
+//{{{
+void nrf_libuarte_async_uninit()
 {
     nrfx_err_t err = nrfx_ppi_channel_disable(m_ppi_channels[PPI_CH_RXRDY_CLEAR]);
     APP_ERROR_CHECK_BOOL(err == NRFX_SUCCESS);
@@ -307,8 +278,9 @@ void nrf_libuarte_async_uninit(void)
         ASSERT(ret == NRF_SUCCESS)
     }
 }
-
-void nrf_libuarte_async_enable(size_t chunk_size)
+//}}}
+//{{{
+void nrf_libuarte_async_enable (size_t chunk_size)
 {
     ASSERT(chunk_size <= MAX_CHUNK_SZ);
     uint8_t * p_data;
@@ -329,13 +301,15 @@ void nrf_libuarte_async_enable(size_t chunk_size)
     ret_code_t ret =  nrf_libuarte_rx_start(p_data, chunk_size, false);
     APP_ERROR_CHECK_BOOL(ret == NRF_SUCCESS);
 }
-
-ret_code_t nrf_libuarte_async_tx(uint8_t * p_data, size_t length)
+//}}}
+//{{{
+ret_code_t nrf_libuarte_async_tx (uint8_t * p_data, size_t length)
 {
     return nrf_libuarte_tx(p_data, length);
 }
-
-void nrf_libuarte_async_rx_free(uint8_t * p_data, size_t length)
+//}}}
+//{{{
+void nrf_libuarte_async_rx_free (uint8_t * p_data, size_t length)
 {
     m_rx_free_cnt += length;
     if (m_rx_free_cnt == m_rx_chunk_size)
@@ -363,3 +337,4 @@ void nrf_libuarte_async_rx_free(uint8_t * p_data, size_t length)
     }
 
 }
+//}}}
