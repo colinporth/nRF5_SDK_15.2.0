@@ -6,37 +6,37 @@
 #include "nrf_uarte.h"
 
 typedef enum {
-  NRF_LIBUARTE_EVT_RX_DATA,    ///< Data received.
-  NRF_LIBUARTE_EVT_RX_BUF_REQ, ///< Requesting new buffer for receiving data.
-  NRF_LIBUARTE_EVT_TX_DONE,    ///< Requested TX transfer completed.
-  NRF_LIBUARTE_EVT_ERROR       ///< Error reported by the UARTE peripheral.
+  NRF_LIBUARTE_EVT_RX_DATA,    // Data received.
+  NRF_LIBUARTE_EVT_RX_BUF_REQ, // Requesting new buffer for receiving data.
+  NRF_LIBUARTE_EVT_TX_DONE,    // Requested TX transfer completed.
+  NRF_LIBUARTE_EVT_ERROR       // Error reported by the UARTE peripheral.
   } nrf_libuarte_evt_type_t;
 
 typedef struct {
-  uint8_t* p_data; ///< Pointer to the data to be sent or received.
-  size_t   length; ///< Length of the data.
+  uint8_t* p_data; // Pointer to the data to be sent or received.
+  size_t   length; // Length of the data.
   } nrf_libuarte_data_t;
 
 typedef struct {
-  nrf_libuarte_evt_type_t type; ///< Event type.
+  nrf_libuarte_evt_type_t type; // Event type.
   union {
-    nrf_libuarte_data_t rxtx; ///< Data provided for transfer completion events.
+    nrf_libuarte_data_t rxtx; // Data provided for transfer completion events.
     } data;
   } nrf_libuarte_evt_t;
 
 typedef struct {
-  uint32_t             tx_pin;        ///< TXD pin number.
-  uint32_t             rx_pin;        ///< RXD pin number.
-  uint32_t             cts_pin;       ///< CTS pin number.
-  uint32_t             rts_pin;       ///< RTS pin number.
-  uint32_t             startrx_evt;   ///< Event to trigger STARTRX task in UARTE.
-  uint32_t             endrx_evt;     ///< Event to trigger STOPRX task in UARTE.
-  uint32_t             rxstarted_tsk; ///< Task to be triggered when RXSTARTED UARTE event occurs.
-  uint32_t             rxdone_tsk;    ///< Task to be triggered when ENDRX UARTE event occurs.
-  nrf_uarte_hwfc_t     hwfc;          ///< Flow control configuration.
-  nrf_uarte_parity_t   parity;        ///< Parity configuration.
-  nrf_uarte_baudrate_t baudrate;      ///< Baud rate.
-  uint8_t              irq_priority;  ///< Interrupt priority.
+  uint32_t             tx_pin;        // TXD pin number.
+  uint32_t             rx_pin;        // RXD pin number.
+  uint32_t             cts_pin;       // CTS pin number.
+  uint32_t             rts_pin;       // RTS pin number.
+  uint32_t             startrx_evt;   // Event to trigger STARTRX task in UARTE.
+  uint32_t             endrx_evt;     // Event to trigger STOPRX task in UARTE.
+  uint32_t             rxstarted_tsk; // Task to be triggered when RXSTARTED UARTE event occurs.
+  uint32_t             rxdone_tsk;    // Task to be triggered when ENDRX UARTE event occurs.
+  nrf_uarte_hwfc_t     hwfc;          // Flow control configuration.
+  nrf_uarte_parity_t   parity;        // Parity configuration.
+  nrf_uarte_baudrate_t baudrate;      // Baud rate.
+  uint8_t              irq_priority;  // Interrupt priority.
   } nrf_libuarte_config_t;
 
 typedef void (*nrf_libuarte_evt_handler_t)(nrf_libuarte_evt_t * p_evt);
