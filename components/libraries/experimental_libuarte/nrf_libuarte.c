@@ -53,7 +53,7 @@ typedef enum {
   } nrf_libuarte_ppi_channel_t;
 
 typedef enum {
- PPI_GROUP_ENDRX_STARTRX,
+  PPI_GROUP_ENDRX_STARTRX,
   PPI_GROUP_ENDRX_EXT_RXDONE_TSK,
   PPI_GROUP_MAX
   } nrf_libuarte_ppi_group_t;
@@ -103,7 +103,6 @@ static uint32_t m_chunk_size;
 static ret_code_t ppi_configure (nrf_libuarte_config_t * p_config) {
 
   ret_code_t ret;
-  ///////////////////////////////////////////////////////////////////////////////
   uint32_t group1_en_tsk;
   uint32_t group1_dis_tsk;
 
@@ -115,7 +114,6 @@ static ret_code_t ppi_configure (nrf_libuarte_config_t * p_config) {
                nrfx_timer_capture_task_address_get(&m_timer, 0));
 
 
-  ///////////////////////////////////////////////////////////////////////////////
   uint32_t group2_en_tsk;
   uint32_t group2_dis_tsk;
 
@@ -123,46 +121,30 @@ static ret_code_t ppi_configure (nrf_libuarte_config_t * p_config) {
 
   PPI_CH_SETUP(PPI_CH_ENDRX_EXT_TSK,
                nrf_uarte_event_address_get(UART_DRV_UARTE, NRF_UARTE_EVENT_ENDRX),
-               nrfx_timer_capture_task_address_get(&m_timer, 0),
-               p_config->rxdone_tsk);
+               nrfx_timer_capture_task_address_get(&m_timer, 0), p_config->rxdone_tsk);
 
-  ///////////////////////////////////////////////////////////////////////////////
   PPI_CH_SETUP(PPI_CH_EXT_TRIGGER_STARTRX_EN_ENDRX_STARTX,
-               p_config->startrx_evt,
-               group1_en_tsk,
-               nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STARTRX));
+               p_config->startrx_evt, group1_en_tsk, nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STARTRX));
 
-  ///////////////////////////////////////////////////////////////////////////////
   PPI_CH_SETUP(PPI_CH_RXSTARTED_EXT_TSK,
-               nrf_uarte_event_address_get(UART_DRV_UARTE, NRF_UARTE_EVENT_RXSTARTED),
-               group2_dis_tsk,
+               nrf_uarte_event_address_get(UART_DRV_UARTE, NRF_UARTE_EVENT_RXSTARTED), group2_dis_tsk,
                p_config->rxstarted_tsk);
 
   if (p_config->endrx_evt) {
-      ///////////////////////////////////////////////////////////////////////////////
-      PPI_CH_SETUP(PPI_CH_EXT_STOP_STOPRX,
-                   p_config->endrx_evt,
-                   nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STOPRX),
-                   group2_en_tsk);
+    PPI_CH_SETUP (PPI_CH_EXT_STOP_STOPRX,
+                 p_config->endrx_evt, nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STOPRX),
+                 group2_en_tsk);
+    PPI_CH_SETUP (PPI_CH_EXT_STOP_GROUPS_EN,
+                 p_config->endrx_evt, group1_dis_tsk, nrfx_timer_capture_task_address_get(&m_timer, 1));
+    }
 
-      ///////////////////////////////////////////////////////////////////////////////
-      PPI_CH_SETUP(PPI_CH_EXT_STOP_GROUPS_EN,
-                   p_config->endrx_evt,
-                   group1_dis_tsk,
-                   nrfx_timer_capture_task_address_get(&m_timer, 1));
-  }
-
-  ////////////////////////////////TX///////////////////////////////////////////////
   PPI_CH_SETUP(PPI_CH_ENDTX_STARTTX,
                nrf_uarte_event_address_get(UART_DRV_UARTE, NRF_UARTE_EVENT_ENDTX),
-               nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STARTTX),
-               0);
+               nrf_uarte_task_address_get(UART_DRV_UARTE, NRF_UARTE_TASK_STARTTX), 0);
 
-  ////////////////////////////////TX///////////////////////////////////////////////
   PPI_CH_SETUP(PPI_CH_RXRDY_TIMER_COUNT,
                nrf_uarte_event_address_get(UART_DRV_UARTE, NRF_UARTE_EVENT_RXDRDY),
-               nrfx_timer_task_address_get(&m_timer, NRF_TIMER_TASK_COUNT),
-               0);
+               nrfx_timer_task_address_get(&m_timer, NRF_TIMER_TASK_COUNT), 0);
 
   if (ret != NRFX_SUCCESS)
     return NRF_ERROR_INTERNAL;
@@ -173,9 +155,8 @@ static ret_code_t ppi_configure (nrf_libuarte_config_t * p_config) {
 
 //{{{
 void tmr_evt_handler (nrf_timer_event_t event_type, void * p_context) {
-
-  UNUSED_PARAMETER(event_type);
-  UNUSED_PARAMETER(p_context);
+  UNUSED_PARAMETER (event_type);
+  UNUSED_PARAMETER (p_context);
   }
 //}}}
 
@@ -191,38 +172,38 @@ ret_code_t nrf_libuarte_init (nrf_libuarte_config_t * p_config, nrf_libuarte_evt
 
   //UART init
   nrf_gpio_pin_set(p_config->tx_pin);
-  nrf_gpio_cfg_output(p_config->tx_pin);
-  nrf_gpio_cfg_input(p_config->rx_pin, NRF_GPIO_PIN_NOPULL);
-  nrf_uarte_baudrate_set(UART_DRV_UARTE, p_config->baudrate);
-  nrf_uarte_configure(UART_DRV_UARTE, p_config->parity, p_config->hwfc);
-  nrf_uarte_txrx_pins_set(UART_DRV_UARTE, p_config->tx_pin, p_config->rx_pin);
+  nrf_gpio_cfg_output (p_config->tx_pin);
+  nrf_gpio_cfg_input (p_config->rx_pin, NRF_GPIO_PIN_NOPULL);
+  nrf_uarte_baudrate_set (UART_DRV_UARTE, p_config->baudrate);
+  nrf_uarte_configure (UART_DRV_UARTE, p_config->parity, p_config->hwfc);
+  nrf_uarte_txrx_pins_set (UART_DRV_UARTE, p_config->tx_pin, p_config->rx_pin);
 
   if (p_config->hwfc == NRF_UARTE_HWFC_ENABLED) {
     if (p_config->cts_pin != NRF_UARTE_PSEL_DISCONNECTED)
-      nrf_gpio_cfg_input(p_config->cts_pin, NRF_GPIO_PIN_NOPULL);
+      nrf_gpio_cfg_input (p_config->cts_pin, NRF_GPIO_PIN_NOPULL);
     if (p_config->rts_pin != NRF_UARTE_PSEL_DISCONNECTED) {
-      nrf_gpio_pin_set(p_config->rts_pin);
-      nrf_gpio_cfg_output(p_config->rts_pin);
+      nrf_gpio_pin_set (p_config->rts_pin);
+      nrf_gpio_cfg_output (p_config->rts_pin);
       }
-    nrf_uarte_hwfc_pins_set(UART_DRV_UARTE, p_config->rts_pin, p_config->cts_pin);
+    nrf_uarte_hwfc_pins_set (UART_DRV_UARTE, p_config->rts_pin, p_config->cts_pin);
     }
 
-  nrf_uarte_int_enable(UART_DRV_UARTE, INTERRUPTS_MASK);
+  nrf_uarte_int_enable (UART_DRV_UARTE, INTERRUPTS_MASK);
 
-  NVIC_SetPriority(UART_DRV_IRQn, p_config->irq_priority);
-  NVIC_ClearPendingIRQ(UART_DRV_IRQn);
-  NVIC_EnableIRQ(UART_DRV_IRQn);
+  NVIC_SetPriority (UART_DRV_IRQn, p_config->irq_priority);
+  NVIC_ClearPendingIRQ (UART_DRV_IRQn);
+  NVIC_EnableIRQ (UART_DRV_IRQn);
 
-  nrf_uarte_enable(UART_DRV_UARTE);
+  nrf_uarte_enable (UART_DRV_UARTE);
 
   nrfx_timer_config_t tmr_config = NRFX_TIMER_DEFAULT_CONFIG;
   tmr_config.mode = NRF_TIMER_MODE_COUNTER;
   tmr_config.bit_width = NRF_TIMER_BIT_WIDTH_32;
-  ret = nrfx_timer_init(&m_timer, &tmr_config, tmr_evt_handler);
+  ret = nrfx_timer_init (&m_timer, &tmr_config, tmr_evt_handler);
   if (ret != NRFX_SUCCESS)
     return NRF_ERROR_INTERNAL;
-  nrfx_timer_enable(&m_timer);
-  nrfx_timer_clear(&m_timer);
+  nrfx_timer_enable (&m_timer);
+  nrfx_timer_clear (&m_timer);
   m_last_rx_byte_cnt = 0;
   m_last_pin_rx_byte_cnt = 0;
 
@@ -241,7 +222,7 @@ ret_code_t nrf_libuarte_init (nrf_libuarte_config_t * p_config, nrf_libuarte_evt
       return NRF_ERROR_INTERNAL;
     }
 
-  return ppi_configure(p_config);
+  return ppi_configure (p_config);
   }
 //}}}
 //{{{
@@ -341,6 +322,7 @@ ret_code_t nrf_libuarte_rx_start (uint8_t * p_data, size_t len, bool ext_trigger
   return NRF_SUCCESS;
   }
 //}}}
+
 //{{{
 void nrf_libuarte_rx_buf_rsp (uint8_t * p_data, size_t len) {
 

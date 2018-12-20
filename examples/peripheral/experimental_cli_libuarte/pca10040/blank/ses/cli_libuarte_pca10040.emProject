@@ -77,8 +77,6 @@
       <file file_name="../../../../../../components/libraries/cli/libuarte/nrf_cli_libuarte.c" />
       <file file_name="../../../../../../external/fprintf/nrf_fprintf.c" />
       <file file_name="../../../../../../external/fprintf/nrf_fprintf_format.c" />
-      <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte.c" />
-      <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte_async.c" />
       <file file_name="../../../../../../components/libraries/memobj/nrf_memobj.c" />
       <file file_name="../../../../../../components/libraries/pwr_mgmt/nrf_pwr_mgmt.c" />
       <file file_name="../../../../../../components/libraries/queue/nrf_queue.c" />
@@ -96,10 +94,13 @@
         <file file_name="../../../../../../components/libraries/hardfault/hardfault.h" />
         <file file_name="../../../../../../components/libraries/hardfault/hardfault_genhf.h" />
         <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte.h" />
+        <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte_async.h" />
       </folder>
       <file file_name="../../../../../../components/libraries/low_power_pwm/low_power_pwm.c" />
       <file file_name="../../../../../../components/libraries/mpu/nrf_mpu.c" />
       <file file_name="../../../../../../components/libraries/stack_guard/nrf_stack_guard.c" />
+      <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte_async.c" />
+      <file file_name="../../../../../../components/libraries/experimental_libuarte/nrf_libuarte.c" />
     </folder>
     <folder Name="nRF_Drivers">
       <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" />

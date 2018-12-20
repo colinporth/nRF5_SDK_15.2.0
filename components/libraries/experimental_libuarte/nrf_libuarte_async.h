@@ -44,7 +44,7 @@ typedef struct {
  * @param[in] p_evt  Pointer to event structure. Event is allocated on the stack so it is available
  *                   only within the context of the event handler.
  */
-typedef void (*nrf_libuarte_async_evt_handler)(nrf_libuarte_async_evt_t * p_evt);
+typedef void (*nrf_libuarte_async_evt_handler)(nrf_libuarte_async_evt_t* p_evt);
 //}}}
 
 //{{{
@@ -56,7 +56,7 @@ typedef void (*nrf_libuarte_async_evt_handler)(nrf_libuarte_async_evt_t * p_evt)
  *
  * @return NRF_SUCCESS when properly initialized. NRF_ERROR_INTERNAL otherwise.
  */
-ret_code_t nrf_libuarte_async_init (nrf_libuarte_async_config_t const * p_config,
+ret_code_t nrf_libuarte_async_init (nrf_libuarte_async_config_t const* p_config,
                                    nrf_libuarte_async_evt_handler      evt_handler);
 //}}}
 //{{{
@@ -85,7 +85,7 @@ void nrf_libuarte_async_enable(size_t chunk_size);
  * @retval NRF_ERROR_INTERNAL  Error during configuration.
  * @retval NRF_SUCCESS         Buffer set for sending.
  */
-ret_code_t nrf_libuarte_async_tx (uint8_t * p_data, size_t length);
+ret_code_t nrf_libuarte_async_tx (uint8_t* p_data, size_t length);
 //}}}
 //{{{
 /**
@@ -94,5 +94,5 @@ ret_code_t nrf_libuarte_async_tx (uint8_t * p_data, size_t length);
  * @param[in] p_data  Pointer to data.
  * @param[in] length  Number of bytes to free.
  */
-void nrf_libuarte_async_rx_free (uint8_t * p_data, size_t length);
+void nrf_libuarte_async_rx_free (uint8_t* p_data, size_t length);
 //}}}

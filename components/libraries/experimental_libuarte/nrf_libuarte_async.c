@@ -279,6 +279,7 @@ void nrf_libuarte_async_uninit()
     }
 }
 //}}}
+
 //{{{
 void nrf_libuarte_async_enable (size_t chunk_size)
 {
@@ -302,6 +303,7 @@ void nrf_libuarte_async_enable (size_t chunk_size)
     APP_ERROR_CHECK_BOOL(ret == NRF_SUCCESS);
 }
 //}}}
+
 //{{{
 ret_code_t nrf_libuarte_async_tx (uint8_t * p_data, size_t length)
 {

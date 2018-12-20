@@ -1,9 +1,9 @@
 #pragma once
 
-#include "sdk_errors.h"
-#include "nrf_uarte.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "sdk_errors.h"
+#include "nrf_uarte.h"
 
 typedef enum {
   NRF_LIBUARTE_EVT_RX_DATA,    ///< Data received.
@@ -50,7 +50,7 @@ typedef void (*nrf_libuarte_evt_handler_t)(nrf_libuarte_evt_t * p_evt);
  *
  * @return NRF_SUCCESS when properly initialized. NRF_ERROR_INTERNAL otherwise.
  */
-ret_code_t nrf_libuarte_init (nrf_libuarte_config_t * p_config, nrf_libuarte_evt_handler_t evt_handler);
+ret_code_t nrf_libuarte_init (nrf_libuarte_config_t* p_config, nrf_libuarte_evt_handler_t evt_handler);
 //}}}
 //{{{
 /** @brief Function for uninitializing the libUARTE library. */
@@ -68,7 +68,7 @@ void nrf_libuarte_uninit();
  * @retval NRF_ERROR_INTERNAL  Error during PPI channel configuration.
  * @retval NRF_SUCCESS         Buffer set for sending.
  */
-ret_code_t nrf_libuarte_tx (uint8_t * p_data, size_t len);
+ret_code_t nrf_libuarte_tx (uint8_t* p_data, size_t len);
 //}}}
 //{{{
 /**
@@ -85,7 +85,7 @@ ret_code_t nrf_libuarte_tx (uint8_t * p_data, size_t len);
  * @retval NRF_ERROR_INTERNAL  Error during PPI channel configuration.
  * @retval NRF_SUCCESS         Buffer set for receiving.
  */
-ret_code_t nrf_libuarte_rx_start (uint8_t * p_data, size_t len, bool ext_trigger_en);
+ret_code_t nrf_libuarte_rx_start (uint8_t* p_data, size_t len, bool ext_trigger_en);
 //}}}
 
 //{{{
@@ -98,7 +98,7 @@ ret_code_t nrf_libuarte_rx_start (uint8_t * p_data, size_t len, bool ext_trigger
  *                description in the Product Specification). The library
  *                checks it with an assertion.
  */
-void nrf_libuarte_rx_buf_rsp (uint8_t * p_data, size_t len);
+void nrf_libuarte_rx_buf_rsp (uint8_t* p_data, size_t len);
 //}}}
 //{{{
 /** @brief Function for stopping receiving data over UARTE. */
