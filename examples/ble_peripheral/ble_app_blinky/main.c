@@ -25,7 +25,9 @@
 #include "nrf_ble_qwr.h"
 #include "nrf_pwr_mgmt.h"
 
-#include "sx1509b.h"
+#if defined(BOARD_PCA20020)
+  #include "sx1509b.h"
+#endif
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
@@ -56,7 +58,7 @@
 #define ADVERTISING_LED   BSP_BOARD_LED_0 // Is on when device is advertising
 #define CONNECTED_LED     BSP_BOARD_LED_1 // Is on when device has connected
 #define LEDBUTTON_LED     BSP_BOARD_LED_2 // LED to be toggled with the help of the LED Button Service
-#define LEDBUTTON_BUTTON  BUTTON          // Button that will trigger the notification event with the LED Button Service
+#define LEDBUTTON_BUTTON  BUTTON_1        // Button that will trigger the notification event with the LED Button Service
 
 BLE_LBS_DEF (gLbs);       // LED Button Service instance
 NRF_BLE_QWR_DEF (gQwr);   // Queued Write context

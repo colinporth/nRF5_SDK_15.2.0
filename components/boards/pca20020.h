@@ -17,7 +17,7 @@ extern "C" {
 #define TWI_SCL                  8
 #define NFC1                     9
 #define NFC2                     10
-#define BUTTON                   11
+#define BUTTON_1                 11
 #define LIS_INT1                 12
 #define USB_DETECT               13
 #define TWI_SDA_EXT              14
@@ -41,8 +41,8 @@ extern "C" {
 #define NRF_NUM_GPIO_PINS        32
 
 // Button config
-#define BUTTON_START             BUTTON
-#define BUTTON_STOP              BUTTON
+#define BUTTON_START             BUTTON_1
+#define BUTTON_STOP              BUTTON_1
 #define BUTTON_PULL              NRF_GPIO_PIN_PULLUP
 #define BUTTONS_ACTIVE_STATE     0
 #define BUTTONS_LIST             { BUTTON }

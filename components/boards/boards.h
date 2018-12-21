@@ -70,7 +70,7 @@ extern "C" {
  *
  * @return True if the LED is turned on.
  */
-bool bsp_board_led_state_get(uint32_t led_idx);
+bool bsp_board_led_state_get (uint32_t led_idx);
 //}}}
 //{{{
 /**
@@ -78,7 +78,7 @@ bool bsp_board_led_state_get(uint32_t led_idx);
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
-void bsp_board_led_on(uint32_t led_idx);
+void bsp_board_led_on (uint32_t led_idx);
 //}}}
 //{{{
 /**
@@ -86,7 +86,7 @@ void bsp_board_led_on(uint32_t led_idx);
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
-void bsp_board_led_off(uint32_t led_idx);
+void bsp_board_led_off (uint32_t led_idx);
 //}}}
 //{{{
 /**
@@ -94,19 +94,19 @@ void bsp_board_led_off(uint32_t led_idx);
  *
  * @param led_idx LED index (starting from 0), as defined in the board-specific header.
  */
-void bsp_board_led_invert(uint32_t led_idx);
+void bsp_board_led_invert (uint32_t led_idx);
 //}}}
 //{{{
 /**
  * Function for turning off all LEDs.
  */
-void bsp_board_leds_off(void);
+void bsp_board_leds_off();
 //}}}
 //{{{
 /**
  * Function for turning on all LEDs.
  */
-void bsp_board_leds_on(void);
+void bsp_board_leds_on();
 //}}}
 //{{{
 /**
@@ -117,7 +117,7 @@ void bsp_board_leds_on(void);
  * @param[in]  init_flags  Flags specifying what to initialize (LEDs/buttons).
  *                         See @ref BSP_BOARD_INIT_FLAGS.
  */
-void bsp_board_init(uint32_t init_flags);
+void bsp_board_init (uint32_t init_flags);
 //}}}
 //{{{
 /**
@@ -127,7 +127,7 @@ void bsp_board_init(uint32_t init_flags);
  *
  * @return LED index of the given pin or 0xFFFFFFFF if invalid pin provided.
  */
-uint32_t bsp_board_pin_to_led_idx(uint32_t pin_number);
+uint32_t bsp_board_pin_to_led_idx (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -137,7 +137,7 @@ uint32_t bsp_board_pin_to_led_idx(uint32_t pin_number);
  *
  * @return Pin number.
  */
-uint32_t bsp_board_led_idx_to_pin(uint32_t led_idx);
+uint32_t bsp_board_led_idx_to_pin (uint32_t led_idx);
 //}}}
 //{{{
 /**
@@ -147,7 +147,7 @@ uint32_t bsp_board_led_idx_to_pin(uint32_t led_idx);
  *
  * @return True if the button is pressed.
  */
-bool bsp_board_button_state_get(uint32_t button_idx);
+bool bsp_board_button_state_get (uint32_t button_idx);
 //}}}
 //{{{
 /**
@@ -157,7 +157,7 @@ bool bsp_board_button_state_get(uint32_t button_idx);
  *
  * @return Button index of the given pin or 0xFFFFFFFF if invalid pin provided.
  */
-uint32_t bsp_board_pin_to_button_idx(uint32_t pin_number);
+uint32_t bsp_board_pin_to_button_idx (uint32_t pin_number);
 //}}}
 //{{{
 /**
@@ -167,7 +167,7 @@ uint32_t bsp_board_pin_to_button_idx(uint32_t pin_number);
  *
  * @return Pin number.
  */
-uint32_t bsp_board_button_idx_to_pin(uint32_t button_idx);
+uint32_t bsp_board_button_idx_to_pin (uint32_t button_idx);
 //}}}
 
 #define BSP_BOARD_LED_0 0
