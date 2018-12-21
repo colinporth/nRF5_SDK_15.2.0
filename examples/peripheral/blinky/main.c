@@ -46,7 +46,9 @@
 #include "nrf_delay.h"
 #include "boards.h"
 
-#include "sx1509b.h"
+#if defined(BOARD_PCA20020)
+  #include "sx1509b.h"
+#endif
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
