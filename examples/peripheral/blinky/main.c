@@ -8,23 +8,17 @@
 #include "nrf_log_default_backends.h"
 
 #include "boards.h"
+
 #if defined (BOARD_PCA20020)
   #include "sx1509b.h"
 #endif
 
-
-//{{{
-static void log_init() {
-
-  ret_code_t err_code = NRF_LOG_INIT(NULL);
-  APP_ERROR_CHECK (err_code);
-  NRF_LOG_DEFAULT_BACKENDS_INIT();
-  }
-//}}}
-
 int main() {
 
-  log_init();
+  // log init
+  APP_ERROR_CHECK (NRF_LOG_INIT (NULL));
+  NRF_LOG_DEFAULT_BACKENDS_INIT();
+
   bsp_board_init (BSP_INIT_LEDS);
 
   while (true) {
