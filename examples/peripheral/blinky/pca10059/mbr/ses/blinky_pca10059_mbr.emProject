@@ -101,19 +101,15 @@
       macros="CMSIS_CONFIG_TOOL=../../../../../../external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar"
       project_directory=""
       project_type="Executable" />
-    <folder Name="Segger Startup Files">
+    <folder Name="startup">
       <file file_name="$(StudioDir)/source/thumb_crt0.s" />
-    </folder>
-    <folder Name="Application">
-      <file file_name="../../../main.c" />
-      <file file_name="../config/sdk_config.h" />
+      <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
+      <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
+      <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
     </folder>
     <folder Name="nRF_Log">
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_str_formatter.c" />
-    </folder>
-    <folder Name="Board Definition">
-      <file file_name="../../../../../../components/boards/boards.c" />
     </folder>
     <folder Name="nRF_Libraries">
       <file file_name="../../../../../../components/libraries/util/app_error.c" />
@@ -129,10 +125,9 @@
       <file file_name="../../../../../../components/libraries/ringbuf/nrf_ringbuf.c" />
       <file file_name="../../../../../../components/libraries/strerror/nrf_strerror.c" />
     </folder>
-    <folder Name="None">
-      <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52.s" />
-      <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
-      <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52.c" />
-    </folder>
+    <file file_name="../../../main.c" />
+    <file file_name="../config/sdk_config.h" />
+    <file file_name="../../../../../../components/boards/boards.c" />
+    <file file_name="../../../../../../components/boards/pca10040.h" />
   </project>
 </solution>
