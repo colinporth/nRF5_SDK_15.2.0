@@ -32,9 +32,6 @@
       macros="CMSIS_CONFIG_TOOL=../../../../../../external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar"
       project_directory=""
       project_type="Executable" />
-    <folder Name="Segger Startup Files">
-      <file file_name="$(StudioDir)/source/thumb_crt0.s" />
-    </folder>
     <folder Name="nRF_Log">
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_serial.c" />
       <file file_name="../../../../../../components/libraries/log/src/nrf_log_backend_uart.c" />
@@ -64,13 +61,11 @@
       <file file_name="../../../../../../components/libraries/experimental_section_vars/nrf_section_iter.c" />
       <file file_name="../../../../../../components/libraries/strerror/nrf_strerror.c" />
     </folder>
-    <folder Name="None">
+    <folder Name="startup">
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf52840.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/ses_startup_nrf_common.s" />
       <file file_name="../../../../../../modules/nrfx/mdk/system_nrf52840.c" />
-    </folder>
-    <folder Name="Board Definition">
-      <file file_name="../../../../../../components/boards/boards.c" />
+      <file file_name="C:/Program Files/SEGGER/SEGGER Embedded Studio for ARM 4.12/source/thumb_crt0.s" />
     </folder>
     <folder Name="nRF_Drivers">
       <file file_name="../../../../../../integration/nrfx/legacy/nrf_drv_clock.c" />
@@ -109,6 +104,7 @@
     <file file_name="../../../../../../components/boards/pca10059.h" />
     <file file_name="../../../main.c" />
     <file file_name="../config/sdk_config.h" />
+    <file file_name="../../../../../../components/boards/boards.c" />
   </project>
   <configuration
     Name="Release"

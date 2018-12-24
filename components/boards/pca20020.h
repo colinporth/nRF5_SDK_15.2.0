@@ -45,7 +45,7 @@ extern "C" {
 #define BUTTON_STOP              BUTTON_1
 #define BUTTON_PULL              NRF_GPIO_PIN_PULLUP
 #define BUTTONS_ACTIVE_STATE     0
-#define BUTTONS_LIST             { BUTTON }
+#define BUTTONS_LIST             { BUTTON_1 }
 #define BUTTONS_NUMBER           1
 
 // Leds config

@@ -13,7 +13,6 @@
  <Project>
   <ProjectSessionItem path="ble_app_blinky_pca10059_s140"/>
   <ProjectSessionItem path="ble_app_blinky_pca10059_s140;ble_app_blinky_pca10059_s140"/>
-  <ProjectSessionItem path="ble_app_blinky_pca10059_s140;ble_app_blinky_pca10059_s140;nRF_Log"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -38,7 +37,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="34" y="60" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="36" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="7" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/boards.c" selected="1" top="0" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_blinky_pca10059_s140" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

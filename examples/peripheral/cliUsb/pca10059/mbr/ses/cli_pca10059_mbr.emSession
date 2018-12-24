@@ -11,7 +11,11 @@
  <Memory3/>
  <Memory4/>
  <Project>
-  <ProjectSessionItem path="blinky_pca10040_mbr"/>
+  <ProjectSessionItem path="cli_pca10059_mbr"/>
+  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr"/>
+  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;Application"/>
+  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;nRF_Libraries"/>
+  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;nRF_Log"/>
  </Project>
  <Register1/>
  <Register2/>
@@ -36,7 +40,7 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="36" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="227" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="272" codecName="Default"/>
  </Files>
- <ARMCrossStudioWindow activeProject="blinky_pca10040_mbr" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
+ <ARMCrossStudioWindow activeProject="cli_pca10059_mbr" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>

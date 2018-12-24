@@ -16,7 +16,7 @@
  <Project>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132"/>
-  <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF\components\libraries\log"/>
+  <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF\components\board"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF_BLE"/>
   <ProjectSessionItem path="ble_app_blinky_pca10040_s132;ble_app_blinky_pca10040_s132;nRF_BLE_Services"/>
  </Project>
@@ -47,7 +47,8 @@
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log.h" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/common/ble_advdata.c" selected="0" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/ble_services/ble_lbs/ble_lbs.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/nrf_ble_gatt/nrf_ble_gatt.c" selected="1" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/ble/nrf_ble_gatt/nrf_ble_gatt.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="47" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/boards/pca20020.h" selected="1" top="23" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_blinky_pca10040_s132" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
