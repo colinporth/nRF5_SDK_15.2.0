@@ -16,6 +16,7 @@
     return (pin_set == (LEDS_ACTIVE_STATE ? true : false));
     }
   //}}}
+
   //{{{
   void bsp_board_led_on (uint32_t led_idx) {
 
@@ -51,17 +52,6 @@
     nrf_gpio_pin_toggle (m_board_led_list[led_idx]);
     }
   //}}}
-
-  //{{{
-  static void bsp_board_leds_init() {
-
-    for (uint32_t i = 0; i < LEDS_NUMBER; ++i)
-      nrf_gpio_cfg_output (m_board_led_list[i]);
-
-    bsp_board_leds_off();
-    }
-  //}}}
-
   //{{{
   uint32_t bsp_board_led_idx_to_pin (uint32_t led_idx) {
 
@@ -82,6 +72,16 @@
     return ret;
     }
   //}}}
+
+  //{{{
+  static void bsp_board_leds_init() {
+
+    for (uint32_t i = 0; i < LEDS_NUMBER; ++i)
+      nrf_gpio_cfg_output (m_board_led_list[i]);
+
+    bsp_board_leds_off();
+    }
+  //}}}
 #endif
 
 #if BUTTONS_NUMBER > 0
@@ -92,13 +92,6 @@
     ASSERT(button_idx < BUTTONS_NUMBER);
     bool pin_set = nrf_gpio_pin_read(m_board_btn_list[button_idx]) ? true : false;
     return (pin_set == (BUTTONS_ACTIVE_STATE ? true : false));
-    }
-  //}}}
-  //{{{
-  static void bsp_board_buttons_init() {
-
-    for (uint32_t i = 0; i < BUTTONS_NUMBER; ++i)
-      nrf_gpio_cfg_input(m_board_btn_list[i], BUTTON_PULL);
     }
   //}}}
 
@@ -121,6 +114,14 @@
 
     ASSERT(button_idx < BUTTONS_NUMBER);
     return m_board_btn_list[button_idx];
+    }
+  //}}}
+
+  //{{{
+  static void bsp_board_buttons_init() {
+
+    for (uint32_t i = 0; i < BUTTONS_NUMBER; ++i)
+      nrf_gpio_cfg_input(m_board_btn_list[i], BUTTON_PULL);
     }
   //}}}
 #endif
