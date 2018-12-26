@@ -38,21 +38,18 @@
 #include "app_usbd.h"
 #include "app_usbd_string_desc.h"
 #include "app_usbd_cdc_acm.h"
+
+#include "boards.h"
 //}}}
 
 #define USBD_POWER_DETECTION true
 #define USE_CYCCNT_TIMESTAMP_FOR_LOG 0
 
-#define CLI_EXAMPLE_MAX_CMD_CNT  20
-#define CLI_EXAMPLE_MAX_CMD_LEN  33
-static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
-static uint8_t m_dynamic_cmd_cnt;
-
 static uint32_t gCounter;
 static bool gCounter_active = false;
 APP_TIMER_DEF (m_timer_0);
 //{{{
-static void timerHandle (void* p_context) {
+static void timerHandle (void* context) {
 
   if (gCounter_active) {
     gCounter++;
@@ -60,6 +57,11 @@ static void timerHandle (void* p_context) {
     }
   }
 //}}}
+
+#define CLI_EXAMPLE_MAX_CMD_CNT  20
+#define CLI_EXAMPLE_MAX_CMD_LEN  33
+static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LEN];
+static uint8_t m_dynamic_cmd_cnt;
 
 NRF_CLI_CDC_ACM_DEF (mCliCdcAcmTransport);
 NRF_CLI_DEF (mCliCdcAcm, "cliUsb:~$ ", &mCliCdcAcmTransport.transport, '\r', 4);
@@ -70,11 +72,37 @@ NRF_LOG_BACKEND_FLASHLOG_DEF (mFlashLogBackend);
 NRF_LOG_BACKEND_CRASHLOG_DEF (mCrashLogBackend);
 
 //{{{
-uint32_t cyccnt_get() {
-  return DWT->CYCCNT;
+void cycleLeds() {
+  for (int i = 0; i < LEDS_NUMBER; i++) {
+    bsp_board_led_invert (i);
+    nrf_delay_ms (200);
+    }
   }
 //}}}
 
+//{{{  led commands
+static void cmd_led (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+  int i = strtol (argv[1], NULL, 10);
+  nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,  "Control leds %d\r\n", i);
+  bsp_board_led_invert (i);
+  }
+
+static void cmd_cycle (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+  nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,  "cycle leds\r\n");
+  cycleLeds();
+  }
+
+NRF_CLI_CMD_REGISTER (led, NULL, "control leds", cmd_led);
+NRF_CLI_CMD_REGISTER (cycle, NULL, "cycle leds", cmd_cycle);
+//}}}
 //{{{  nordic command
 static void cmd_nordic (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
@@ -117,7 +145,7 @@ NRF_CLI_CMD_REGISTER (nordic, NULL, "Print Nordic Semiconductor logo.", cmd_nord
 //{{{  counter commands
 static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
   gCounter_active = true;
@@ -126,7 +154,7 @@ static void cmd_counter_start (nrf_cli_t const* p_cli, size_t argc, char** argv)
 
 static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
   gCounter_active = false;
@@ -135,7 +163,7 @@ static void cmd_counter_stop (nrf_cli_t const* p_cli, size_t argc, char** argv) 
 
 static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   if (argc != 1) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
   gCounter = 0;
@@ -143,30 +171,31 @@ static void cmd_counter_reset (nrf_cli_t const* p_cli, size_t argc, char** argv)
 
 
 static void cmd_counter (nrf_cli_t const* p_cli, size_t argc, char** argv) {
-  ASSERT(p_cli);
-  ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
-  static const nrf_cli_getopt_option_t opt[] = { NRF_CLI_OPT( "--test", "-t", "dummy option help string" ) };
-  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-    nrf_cli_help_print(p_cli, opt, ARRAY_SIZE(opt));
+  ASSERT (p_cli);
+  ASSERT (p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
+  static const nrf_cli_getopt_option_t opt[] = { NRF_CLI_OPT ("--test", "-t", "dummy option help string" ) };
+  if ((argc == 1) || nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, opt, ARRAY_SIZE (opt));
     return;
     }
   if (argc != 2) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
-  if (!strcmp(argv[1], "-t") || !strcmp(argv[1], "--test")) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Dummy test option.\r\n");
+  if (!strcmp (argv[1], "-t") || !strcmp (argv[1], "--test")) {
+    nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "Dummy test option.\r\n");
     return;
     }
-  /* subcommands have their own handlers and they are not processed here */
-  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+
+  // subcommands have their own handlers and they are not processed here
+  nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
   }
 
 
 NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_counter) {
-  NRF_CLI_CMD(reset,  NULL, "Reset seconds counter.",  cmd_counter_reset),
-  NRF_CLI_CMD(start,  NULL, "Start seconds counter.",  cmd_counter_start),
-  NRF_CLI_CMD(stop,   NULL, "Stop seconds counter.",   cmd_counter_stop),
+  NRF_CLI_CMD (reset,  NULL, "Reset seconds counter.",  cmd_counter_reset),
+  NRF_CLI_CMD (start,  NULL, "Start seconds counter.",  cmd_counter_start),
+  NRF_CLI_CMD (stop,   NULL, "Stop seconds counter.",   cmd_counter_stop),
   NRF_CLI_SUBCMD_SET_END
   };
 
@@ -207,14 +236,14 @@ NRF_CLI_CMD_REGISTER (stack_overflow, NULL,
 //{{{  print commands
 static void cmd_print_param (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   for (size_t i = 1; i < argc; i++)
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "argv[%d] = %s\r\n", i, argv[i]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "argv[%d] = %s\r\n", i, argv[i]);
   }
 
 
 static void cmd_print_all (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   for (size_t i = 1; i < argc; i++)
-    nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%s ", argv[i]);
-  nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "\r\n");
+    nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "%s ", argv[i]);
+  nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "\r\n");
   }
 
 
@@ -222,17 +251,17 @@ static void cmd_print (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   ASSERT(p_cli);
   ASSERT(p_cli->p_ctx && p_cli->p_iface && p_cli->p_name);
 
-  if ((argc == 1) || nrf_cli_help_requested(p_cli)) {
-    nrf_cli_help_print(p_cli, NULL, 0);
+  if ((argc == 1) || nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
     return;
     }
 
   if (argc != 2) {
-    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
+    nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: bad parameter count\r\n", argv[0]);
     return;
     }
 
-  nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
+  nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s: unknown parameter: %s\r\n", argv[0], argv[1]);
   }
 
 
@@ -373,7 +402,7 @@ static void cmd_dynamic_remove (nrf_cli_t const* p_cli, size_t argc, char** argv
     }
 
   for (uint8_t idx = 0; idx <  m_dynamic_cmd_cnt; idx++) {
-    if (!strcmp(m_dynamic_cmd_buffer[idx], argv[1])) {
+    if (!strcmp (m_dynamic_cmd_buffer[idx], argv[1])) {
       if (idx == CLI_EXAMPLE_MAX_CMD_CNT - 1)
         m_dynamic_cmd_buffer[idx][0] = '\0';
       else
@@ -389,7 +418,6 @@ static void cmd_dynamic_remove (nrf_cli_t const* p_cli, size_t argc, char** argv
   }
 //}}}
 //{{{
-/* dynamic command creation */
 static void dynamic_cmd_get (size_t idx, nrf_cli_static_entry_t* p_static) {
 
   ASSERT(p_static);
@@ -427,6 +455,11 @@ NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_dynamic) {
 NRF_CLI_CMD_REGISTER (dynamic, &m_sub_dynamic, "Demonstrate dynamic command usage.", cmd_dynamic);
 //}}}
 
+//{{{
+uint32_t getCycCnt() {
+  return DWT->CYCCNT;
+  }
+//}}}
 //{{{
 static void usbdUserEvHandler (app_usbd_event_type_t event) {
 
@@ -480,26 +513,29 @@ static void usbdInit() {
 
 int main() {
 
+  // init clocks
   if (USE_CYCCNT_TIMESTAMP_FOR_LOG) {
     //{{{  ccycnt log timestamp
     CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
     DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
     DWT->CYCCNT = 0;
-    APP_ERROR_CHECK (NRF_LOG_INIT (cyccnt_get, 64000000));
+    APP_ERROR_CHECK (NRF_LOG_INIT (getCycCnt, 64000000));
     }
     //}}}
   else
     APP_ERROR_CHECK (NRF_LOG_INIT (app_timer_cnt_get));
-
   APP_ERROR_CHECK (nrf_drv_clock_init());
   nrf_drv_clock_lfclk_request (NULL);
 
+  bsp_board_init (BSP_INIT_LEDS);
+  bsp_board_led_on (BSP_BOARD_LED_3);
   //{{{  init appTimer
   APP_ERROR_CHECK (app_timer_init());
   APP_ERROR_CHECK (app_timer_create (&m_timer_0, APP_TIMER_MODE_REPEATED, timerHandle));
   APP_ERROR_CHECK (app_timer_start (m_timer_0, APP_TIMER_TICKS(1000), NULL));
   //}}}
 
+  // init cli
   APP_ERROR_CHECK (nrf_cli_init (&mCliCdcAcm, NULL, true, true, NRF_LOG_SEVERITY_INFO));
   APP_ERROR_CHECK (nrf_cli_init (&mCliRtt, NULL, true, true, NRF_LOG_SEVERITY_INFO));
   usbdInit();
@@ -507,9 +543,11 @@ int main() {
   APP_ERROR_CHECK (fds_init());
   nrf_log_config_load();
 
+  // start cli
   APP_ERROR_CHECK (nrf_cli_start (&mCliCdcAcm));
   APP_ERROR_CHECK (nrf_cli_start (&mCliRtt));
 
+  // start log flash
   APP_ERROR_CHECK (nrf_log_backend_flash_init (&nrf_fstorage_nvmc));
   APP_ERROR_CHECK_BOOL (nrf_log_backend_add (&mFlashLogBackend, NRF_LOG_SEVERITY_WARNING) >= 0);
   nrf_log_backend_enable (&mFlashLogBackend);
