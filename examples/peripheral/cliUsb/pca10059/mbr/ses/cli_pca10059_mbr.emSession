@@ -13,8 +13,7 @@
  <Project>
   <ProjectSessionItem path="cli_pca10059_mbr"/>
   <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr"/>
-  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;Application"/>
-  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;nRF_Libraries"/>
+  <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;nRF_Core"/>
   <ProjectSessionItem path="cli_pca10059_mbr;cli_pca10059_mbr;nRF_Log"/>
  </Project>
  <Register1/>
@@ -40,7 +39,8 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="227" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="272" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="13" y="341" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../external/utf_converter/utf.c" selected="0" top="189" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="44" y="523" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="510" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="cli_pca10059_mbr" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3199"/>
 </session>
