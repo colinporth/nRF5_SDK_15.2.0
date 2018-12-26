@@ -145,13 +145,13 @@
   //}}}
 
   //{{{
-  uint32_t nrf_log_module_cnt_get(void)
+  uint32_t nrf_log_module_cnt_get()
   {
       return NRF_LOG_CONST_SECTION_VARS_COUNT;
   }
   //}}}
   //{{{
-  static ret_code_t module_idx_get(uint32_t * p_idx, bool ordered_idx)
+  static ret_code_t module_idx_get (uint32_t* p_idx, bool ordered_idx)
   {
       if (ordered_idx)
       {
@@ -175,7 +175,7 @@
   }
   //}}}
   //{{{
-  const char * nrf_log_module_name_get(uint32_t module_id, bool ordered_idx)
+  const char * nrf_log_module_name_get (uint32_t module_id, bool ordered_idx)
   {
       if (module_idx_get(&module_id, ordered_idx) == NRF_SUCCESS)
       {
@@ -190,7 +190,7 @@
   //}}}
 
   //{{{
-  uint8_t nrf_log_color_id_get(uint32_t module_id, nrf_log_severity_t severity)
+  uint8_t nrf_log_color_id_get (uint32_t module_id, nrf_log_severity_t severity)
   {
       nrf_log_module_const_data_t * p_module_data = NRF_LOG_CONST_SECTION_VARS_GET(module_id);
       uint8_t color_id;
@@ -216,7 +216,7 @@
   }
   //}}}
   //{{{
-  static uint16_t higher_lvl_get(uint32_t lvls)
+  static uint16_t higher_lvl_get (uint32_t lvls)
   {
       uint16_t top_lvl = 0;
       uint16_t tmp_lvl;
@@ -235,7 +235,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_module_filter_set(uint32_t backend_id, uint32_t module_id, nrf_log_severity_t severity)
+  void nrf_log_module_filter_set (uint32_t backend_id, uint32_t module_id, nrf_log_severity_t severity)
   {
       if (NRF_LOG_FILTERS_ENABLED)
       {
@@ -250,7 +250,7 @@
   }
   //}}}
   //{{{
-  static nrf_log_severity_t nrf_log_module_init_filter_get(uint32_t module_id)
+  static nrf_log_severity_t nrf_log_module_init_filter_get (uint32_t module_id)
   {
       nrf_log_module_const_data_t * p_module_data =
                                           NRF_LOG_CONST_SECTION_VARS_GET(module_id);
@@ -258,7 +258,7 @@
   }
   //}}}
   //{{{
-  nrf_log_severity_t nrf_log_module_filter_get(uint32_t backend_id,
+  nrf_log_severity_t nrf_log_module_filter_get (uint32_t backend_id,
                                                uint32_t module_id,
                                                bool ordered_idx,
                                                bool dynamic)
@@ -290,7 +290,7 @@
   /**
    * Function examines current header and omits packets which are in progress.
    */
-  static bool invalid_packets_omit(nrf_log_header_t const * p_header, uint32_t * p_rd_idx)
+  static bool invalid_packets_omit (nrf_log_header_t const* p_header, uint32_t* p_rd_idx)
   {
       bool ret = false;
       if (p_header->base.generic.in_progress == 1)
@@ -317,7 +317,7 @@
    * @details This function moves forward read index to prepare space for new logs.
    */
 
-  static uint32_t log_skip(void)
+  static uint32_t log_skip()
   {
       uint16_t dropped = 0;
 
@@ -379,14 +379,14 @@
    *
    * @return Number of dropped logs saturated to 16 bits.
    */
-  static inline uint32_t dropped_sat16_get(void)
+  static inline uint32_t dropped_sat16_get()
   {
       uint32_t dropped = nrf_atomic_u32_fetch_store(&m_log_data.log_dropped_cnt, 0);
       return __USAT(dropped, 16); //Saturate to 16 bits
   }
   //}}}
   //{{{
-  static inline void std_header_set(uint32_t severity_mid,
+  static inline void std_header_set (uint32_t severity_mid,
                                         char const * const p_str,
                                         uint32_t nargs,
                                         uint32_t wr_idx,
@@ -425,7 +425,7 @@
    * @return True if successful allocation, false otherwise.
    *
    */
-  static inline bool buf_prealloc(uint32_t content_len, uint32_t * p_wr_idx, bool std)
+  static inline bool buf_prealloc (uint32_t content_len, uint32_t* p_wr_idx, bool std)
   {
       uint32_t req_len = content_len + HEADER_SIZE;
       bool     ret            = true;
@@ -479,7 +479,7 @@
   }
   //}}}
   //{{{
-  char const * nrf_log_push(char * const p_str)
+  char const* nrf_log_push (char* const p_str)
   {
       if ((m_log_data.autoflush) || (p_str == NULL))
       {
@@ -518,7 +518,7 @@
   //}}}
 
   //{{{
-  static inline void std_n(uint32_t           severity_mid,
+  static inline void std_n (uint32_t severity_mid,
                            char const * const p_str,
                            uint32_t const *   args,
                            uint32_t           nargs)
@@ -546,13 +546,13 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_0(uint32_t severity_mid, char const * const p_str)
+  void nrf_log_frontend_std_0 (uint32_t severity_mid, char const* const p_str)
   {
       std_n(severity_mid, p_str, NULL, 0);
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_1(uint32_t           severity_mid,
+  void nrf_log_frontend_std_1 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0)
   {
@@ -562,7 +562,7 @@
 
   //}}}
   //{{{
-  void nrf_log_frontend_std_2(uint32_t           severity_mid,
+  void nrf_log_frontend_std_2 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0,
                               uint32_t           val1)
@@ -572,7 +572,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_3(uint32_t           severity_mid,
+  void nrf_log_frontend_std_3 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0,
                               uint32_t           val1,
@@ -583,7 +583,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_4(uint32_t           severity_mid,
+  void nrf_log_frontend_std_4 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0,
                               uint32_t           val1,
@@ -595,7 +595,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_5(uint32_t           severity_mid,
+  void nrf_log_frontend_std_5 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0,
                               uint32_t           val1,
@@ -608,7 +608,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_std_6(uint32_t           severity_mid,
+  void nrf_log_frontend_std_6 (uint32_t severity_mid,
                               char const * const p_str,
                               uint32_t           val0,
                               uint32_t           val1,
@@ -622,7 +622,7 @@
   }
   //}}}
   //{{{
-  void nrf_log_frontend_hexdump(uint32_t           severity_mid,
+  void nrf_log_frontend_hexdump (uint32_t severity_mid,
                                 const void * const p_data,
                                 uint16_t           length)
   {
@@ -674,890 +674,709 @@
   //}}}
 
   //{{{
-  bool buffer_is_empty(void)
-  {
-      return (m_log_data.rd_idx == m_log_data.wr_idx);
-  }
+  bool buffer_is_empty() {
+    return (m_log_data.rd_idx == m_log_data.wr_idx);
+    }
   //}}}
   //{{{
-  bool nrf_log_frontend_dequeue(void)
-  {
+  bool nrf_log_frontend_dequeue() {
 
-      if (buffer_is_empty())
-      {
+    if (buffer_is_empty())
+      return false;
+    m_log_data.log_skipped = 0;
+
+    //It has to be ensured that reading rd_idx occurs after skipped flag is cleared.
+    __DSB();
+    uint32_t           rd_idx   = m_log_data.rd_idx;
+    uint32_t           mask     = m_log_data.mask;
+    nrf_log_header_t * p_header = (nrf_log_header_t *)&m_log_data.buffer[rd_idx & mask];
+    nrf_log_header_t   header;
+    nrf_memobj_t *     p_msg_buf = NULL;
+    size_t             memobj_offset = 0;
+    uint32_t           severity = 0;
+
+    // Skip any in progress packets.
+    do {
+      if (invalid_packets_omit(p_header, &rd_idx) && (m_log_data.log_skipped == 0)) {
+        //Check if end of data is not reached.
+        if (rd_idx >= m_log_data.wr_idx) {
+          m_log_data.rd_idx     = m_log_data.wr_idx;
           return false;
-      }
-      m_log_data.log_skipped      = 0;
-      //It has to be ensured that reading rd_idx occurs after skipped flag is cleared.
-      __DSB();
-      uint32_t           rd_idx   = m_log_data.rd_idx;
-      uint32_t           mask     = m_log_data.mask;
-      nrf_log_header_t * p_header = (nrf_log_header_t *)&m_log_data.buffer[rd_idx & mask];
-      nrf_log_header_t   header;
-      nrf_memobj_t *     p_msg_buf = NULL;
-      size_t             memobj_offset = 0;
-      uint32_t           severity = 0;
-
-      // Skip any in progress packets.
-      do {
-          if (invalid_packets_omit(p_header, &rd_idx) && (m_log_data.log_skipped == 0))
-          {
-              //Check if end of data is not reached.
-              if (rd_idx >= m_log_data.wr_idx)
-              {
-                  m_log_data.rd_idx     = m_log_data.wr_idx;
-                  return false;
-              }
-              //something was omitted. Point to new header and try again.
-              p_header = (nrf_log_header_t *)&m_log_data.buffer[rd_idx & mask];
           }
-          else
-          {
-              break;
-          }
+        //something was omitted. Point to new header and try again.
+        p_header = (nrf_log_header_t *)&m_log_data.buffer[rd_idx & mask];
+        }
+      else
+        break;
       } while (true);
 
-      uint32_t i;
-      for (i = 0; i < HEADER_SIZE; i++)
-      {
-          ((uint32_t*)&header)[i] = m_log_data.buffer[rd_idx++ & mask];
-      }
+    uint32_t i;
+    for (i = 0; i < HEADER_SIZE; i++)
+      ((uint32_t*)&header)[i] = m_log_data.buffer[rd_idx++ & mask];
 
-      if (header.base.generic.type == HEADER_TYPE_HEXDUMP)
-      {
-          uint32_t orig_data_len  = header.base.hexdump.len;
-          uint32_t data_len       = MIN(header.base.hexdump.len, NRF_LOG_MAX_HEXDUMP); //limit the data
-          header.base.hexdump.len = data_len;
-          uint32_t msg_buf_size8  = sizeof(uint32_t)*HEADER_SIZE + data_len;
-          severity = header.base.hexdump.severity;
-          p_msg_buf = nrf_memobj_alloc(&log_mempool, msg_buf_size8);
+    if (header.base.generic.type == HEADER_TYPE_HEXDUMP) {
+      uint32_t orig_data_len  = header.base.hexdump.len;
+      uint32_t data_len       = MIN(header.base.hexdump.len, NRF_LOG_MAX_HEXDUMP); //limit the data
+      header.base.hexdump.len = data_len;
+      uint32_t msg_buf_size8  = sizeof(uint32_t)*HEADER_SIZE + data_len;
+      severity = header.base.hexdump.severity;
+      p_msg_buf = nrf_memobj_alloc(&log_mempool, msg_buf_size8);
 
-          if (p_msg_buf)
-          {
-              nrf_memobj_get(p_msg_buf);
-              nrf_memobj_write(p_msg_buf, &header, HEADER_SIZE*sizeof(uint32_t), memobj_offset);
-              memobj_offset += HEADER_SIZE*sizeof(uint32_t);
+      if (p_msg_buf) {
+        nrf_memobj_get (p_msg_buf);
+        nrf_memobj_write (p_msg_buf, &header, HEADER_SIZE*sizeof(uint32_t), memobj_offset);
+        memobj_offset += HEADER_SIZE*sizeof(uint32_t);
 
-              uint32_t space0 = sizeof(uint32_t) * (mask + 1 - (rd_idx & mask));
-              if (data_len > space0)
-                      {
-                  uint8_t * ptr0 = space0 ?
-                                   (uint8_t *)&m_log_data.buffer[rd_idx & mask] :
-                                   (uint8_t *)&m_log_data.buffer[0];
-                  uint8_t   len0 = space0 ? space0 : data_len;
-                  uint8_t * ptr1 = space0 ?
-                                   (uint8_t *)&m_log_data.buffer[0] : NULL;
-                  uint8_t len1 = space0 ? data_len - space0 : 0;
+        uint32_t space0 = sizeof(uint32_t) * (mask + 1 - (rd_idx & mask));
+        if (data_len > space0) {
+          uint8_t* ptr0 = space0 ? (uint8_t *)&m_log_data.buffer[rd_idx & mask] : (uint8_t *)&m_log_data.buffer[0];
+          uint8_t len0 = space0 ? space0 : data_len;
+          uint8_t* ptr1 = space0 ? (uint8_t *)&m_log_data.buffer[0] : NULL;
+          uint8_t len1 = space0 ? data_len - space0 : 0;
 
-                  nrf_memobj_write(p_msg_buf, ptr0, len0, memobj_offset);
-                  memobj_offset += len0;
-                  if (ptr1)
-                  {
-                      nrf_memobj_write(p_msg_buf, ptr1, len1, memobj_offset);
-                  }
-              }
-              else
-              {
-                  uint8_t * p_data = (uint8_t *)&m_log_data.buffer[rd_idx & mask];
-                  nrf_memobj_write(p_msg_buf, p_data, data_len, memobj_offset);
-              }
-              rd_idx += CEIL_DIV(orig_data_len, 4);
+          nrf_memobj_write(p_msg_buf, ptr0, len0, memobj_offset);
+          memobj_offset += len0;
+          if (ptr1)
+            nrf_memobj_write (p_msg_buf, ptr1, len1, memobj_offset);
           }
-      }
-      else if (header.base.generic.type == HEADER_TYPE_STD) // standard entry
-      {
-          header.base.std.nargs = MIN(header.base.std.nargs, NRF_LOG_MAX_NUM_OF_ARGS);
-          uint32_t msg_buf_size32 = HEADER_SIZE + header.base.std.nargs;
-          severity = header.base.std.severity;
-
-          p_msg_buf = nrf_memobj_alloc(&log_mempool, msg_buf_size32*sizeof(uint32_t));
-
-          if (p_msg_buf)
-          {
-              nrf_memobj_get(p_msg_buf);
-              nrf_memobj_write(p_msg_buf, &header, HEADER_SIZE*sizeof(uint32_t), memobj_offset);
-              memobj_offset += HEADER_SIZE*sizeof(uint32_t);
-
-              for (i = 0; i < header.base.std.nargs; i++)
-              {
-                  nrf_memobj_write(p_msg_buf, &m_log_data.buffer[rd_idx++ & mask],
-                                   sizeof(uint32_t), memobj_offset);
-                  memobj_offset += sizeof(uint32_t);
-              }
+        else {
+          uint8_t* p_data = (uint8_t *)&m_log_data.buffer[rd_idx & mask];
+          nrf_memobj_write (p_msg_buf, p_data, data_len, memobj_offset);
           }
+        rd_idx += CEIL_DIV (orig_data_len, 4);
+        }
       }
-      else
-      {
-          //Do nothing. In case of log overflow buffer can contain corrupted data.
-      }
+    else if (header.base.generic.type == HEADER_TYPE_STD) { 
+      // standard entry
+      header.base.std.nargs = MIN(header.base.std.nargs, NRF_LOG_MAX_NUM_OF_ARGS);
+      uint32_t msg_buf_size32 = HEADER_SIZE + header.base.std.nargs;
+      severity = header.base.std.severity;
 
-      if (p_msg_buf)
-      {
-          nrf_log_backend_t const * p_backend = m_log_data.p_backend_head;
-          if (NRF_LOG_ALLOW_OVERFLOW && m_log_data.log_skipped)
-          {
-              // Check if any log was skipped during log processing. Do not forward log if skipping
-              // occured because data may be invalid.
-              nrf_memobj_put(p_msg_buf);
+      p_msg_buf = nrf_memobj_alloc(&log_mempool, msg_buf_size32*sizeof(uint32_t));
+      if (p_msg_buf) {
+        nrf_memobj_get(p_msg_buf);
+        nrf_memobj_write(p_msg_buf, &header, HEADER_SIZE*sizeof(uint32_t), memobj_offset);
+        memobj_offset += HEADER_SIZE*sizeof(uint32_t);
+        for (i = 0; i < header.base.std.nargs; i++) {
+          nrf_memobj_write(p_msg_buf, &m_log_data.buffer[rd_idx++ & mask], sizeof(uint32_t), memobj_offset);
+          memobj_offset += sizeof(uint32_t);
           }
-          else
-          {
-              while (p_backend)
-              {
-                  bool entry_accepted = false;
-                  if (nrf_log_backend_is_enabled(p_backend) == true)
-                  {
-                      if (NRF_LOG_FILTERS_ENABLED)
-                      {
-                          uint8_t backend_id = nrf_log_backend_id_get(p_backend);
-                          nrf_log_module_filter_data_t * p_module_filter =
-                                                   NRF_LOG_FILTER_SECTION_VARS_GET(header.module_id);
-                          uint32_t backend_lvl = BF_GET(p_module_filter->filter_lvls,
-                                                        NRF_LOG_LEVEL_BITS,
-                                                        (backend_id*NRF_LOG_LEVEL_BITS));
-
-                          //Degrade INFO_RAW level to INFO.
-                          severity = (severity == NRF_LOG_SEVERITY_INFO_RAW) ?
-                                                                   NRF_LOG_SEVERITY_INFO : severity;
-                          if (backend_lvl >= severity)
-                          {
-                              entry_accepted = true;
-                          }
-                      }
-                      else
-                      {
-                          (void)severity;
-                          entry_accepted = true;
-                      }
-                  }
-                  if (entry_accepted)
-                  {
-                      nrf_log_backend_put(p_backend, p_msg_buf);
-                  }
-                  p_backend = p_backend->p_cb->p_next;
-              }
-
-              nrf_memobj_put(p_msg_buf);
-
-              if (NRF_LOG_ALLOW_OVERFLOW)
-              {
-                  // Read index can be moved forward only if dequeueing process was not interrupt by
-                  // skipping procedure. If NRF_LOG_ALLOW_OVERFLOW is set then in case of buffer gets full
-                  // and new logger entry occurs, oldest entry is removed. In that case read index is
-                  // changed and updating it here would corrupt the internal circular buffer.
-                  CRITICAL_REGION_ENTER();
-                  if (m_log_data.log_skipped == 0)
-                  {
-                      m_log_data.rd_idx = rd_idx;
-                  }
-                  CRITICAL_REGION_EXIT();
-              }
-              else
-              {
-                  m_log_data.rd_idx = rd_idx;
-              }
-          }
+        }
       }
-      else
-      {
-          //Could not allocate memobj - backends are not freeing them on time.
-          nrf_log_backend_t const * p_backend = m_log_data.p_backend_head;
-          //Flush all backends
-          while (p_backend)
-          {
-              nrf_log_backend_flush(p_backend);
-              p_backend = p_backend->p_cb->p_next;
-          }
-          NRF_LOG_WARNING("Backends flushed");
+    else {
+      //Do nothing. In case of log overflow buffer can contain corrupted data.
       }
 
-      return buffer_is_empty() ? false : true;
-  }
-  //}}}
-  //{{{
-  static int32_t backend_id_assign(void)
-  {
-      int32_t candidate_id;
-      nrf_log_backend_t const * p_backend;
-      bool id_available;
-      for (candidate_id = 0; candidate_id < NRF_LOG_MAX_BACKENDS; candidate_id++)
-      {
-          p_backend = m_log_data.p_backend_head;
-          id_available = true;
-          while (p_backend)
-          {
-              if (nrf_log_backend_id_get(p_backend) == candidate_id)
-              {
-                  id_available = false;
-                  break;
-              }
-              p_backend = p_backend->p_cb->p_next;
-          }
-          if (id_available)
-          {
-              return candidate_id;
-          }
-      }
-      return -1;
-  }
-  //}}}
-  //{{{
-  int32_t nrf_log_backend_add(nrf_log_backend_t const * p_backend, nrf_log_severity_t severity)
-  {
-      int32_t id = backend_id_assign();
-      if (id == -1)
-      {
-          return id;
-      }
-
-      nrf_log_backend_id_set(p_backend, id);
-      //add to list
-      if (m_log_data.p_backend_head == NULL)
-      {
-         m_log_data.p_backend_head   = p_backend;
-         p_backend->p_cb->p_next = NULL;
-      }
-      else
-      {
-          p_backend->p_cb->p_next = m_log_data.p_backend_head->p_cb->p_next;
-          m_log_data.p_backend_head->p_cb->p_next = p_backend;
-      }
-
-      if (NRF_LOG_FILTERS_ENABLED)
-      {
-          uint32_t i;
-          for (i = 0; i < nrf_log_module_cnt_get(); i++)
-          {
-              nrf_log_severity_t buildin_lvl = nrf_log_module_init_filter_get(i);
-              nrf_log_severity_t actual_severity = MIN(buildin_lvl, severity);
-              nrf_log_module_filter_set(nrf_log_backend_id_get(p_backend), i, actual_severity);
-          }
-      }
-
-      return id;
-  }
-  //}}}
-  //{{{
-  void nrf_log_backend_remove(nrf_log_backend_t const * p_backend)
-  {
-      nrf_log_backend_t const * p_curr = m_log_data.p_backend_head;
-      nrf_log_backend_t const * p_prev = NULL;
-      while (p_curr != p_backend)
-      {
-          p_prev = p_curr;
-          p_curr = p_curr->p_cb->p_next;
-      }
-
-      if (p_prev)
-      {
-          p_prev->p_cb->p_next = p_backend->p_cb->p_next;
-      }
-      else
-      {
-          m_log_data.p_backend_head = NULL;
-      }
-
-      p_backend->p_cb->id = NRF_LOG_BACKEND_INVALID_ID;
-  }
-  //}}}
-  //{{{
-  void nrf_log_panic(void)
-  {
+    if (p_msg_buf) {
       nrf_log_backend_t const * p_backend = m_log_data.p_backend_head;
-      m_log_data.autoflush = true;
-      while (p_backend)
-      {
-          nrf_log_backend_enable(p_backend);
-          nrf_log_backend_panic_set(p_backend);
+      if (NRF_LOG_ALLOW_OVERFLOW && m_log_data.log_skipped) {
+        // Check if any log was skipped during log processing. Do not forward log if skipping
+        // occured because data may be invalid.
+        nrf_memobj_put(p_msg_buf);
+        }
+      else {
+        while (p_backend) {
+          bool entry_accepted = false;
+          if (nrf_log_backend_is_enabled(p_backend) == true) {
+            if (NRF_LOG_FILTERS_ENABLED) {
+              uint8_t backend_id = nrf_log_backend_id_get(p_backend);
+              nrf_log_module_filter_data_t * p_module_filter =
+                                             NRF_LOG_FILTER_SECTION_VARS_GET(header.module_id);
+              uint32_t backend_lvl = BF_GET(p_module_filter->filter_lvls,
+                                                  NRF_LOG_LEVEL_BITS,
+                                                  (backend_id*NRF_LOG_LEVEL_BITS));
+
+              //Degrade INFO_RAW level to INFO.
+              severity = (severity == NRF_LOG_SEVERITY_INFO_RAW) ?
+                                                             NRF_LOG_SEVERITY_INFO : severity;
+              if (backend_lvl >= severity)
+                entry_accepted = true;
+              }
+            else {
+              (void)severity;
+              entry_accepted = true;
+              }
+            }
+          if (entry_accepted)
+            nrf_log_backend_put(p_backend, p_msg_buf);
           p_backend = p_backend->p_cb->p_next;
+          }
+
+        nrf_memobj_put(p_msg_buf);
+
+        if (NRF_LOG_ALLOW_OVERFLOW) {
+          // Read index can be moved forward only if dequeueing process was not interrupt by
+          // skipping procedure. If NRF_LOG_ALLOW_OVERFLOW is set then in case of buffer gets full
+          // and new logger entry occurs, oldest entry is removed. In that case read index is
+          // changed and updating it here would corrupt the internal circular buffer.
+          CRITICAL_REGION_ENTER();
+          if (m_log_data.log_skipped == 0)
+            m_log_data.rd_idx = rd_idx;
+          CRITICAL_REGION_EXIT();
+          }
+        else
+          m_log_data.rd_idx = rd_idx;
+        }
       }
-  }
+    else {
+      //Could not allocate memobj - backends are not freeing them on time.
+      nrf_log_backend_t const * p_backend = m_log_data.p_backend_head;
+      //Flush all backends
+      while (p_backend) {
+        nrf_log_backend_flush(p_backend);
+        p_backend = p_backend->p_cb->p_next;
+        }
+      NRF_LOG_WARNING("Backends flushed");
+      }
+
+    return buffer_is_empty() ? false : true;
+    }
+  //}}}
+  //{{{
+  static int32_t backend_id_assign() {
+
+    int32_t candidate_id;
+    nrf_log_backend_t const * p_backend;
+    bool id_available;
+    for (candidate_id = 0; candidate_id < NRF_LOG_MAX_BACKENDS; candidate_id++) {
+      p_backend = m_log_data.p_backend_head;
+      id_available = true;
+      while (p_backend) {
+        if (nrf_log_backend_id_get(p_backend) == candidate_id) {
+          id_available = false;
+           break;
+           }
+        p_backend = p_backend->p_cb->p_next;
+        }
+      if (id_available)
+        return candidate_id;
+      }
+
+    return -1;
+    }
+  //}}}
+  //{{{
+  int32_t nrf_log_backend_add (nrf_log_backend_t const* p_backend, nrf_log_severity_t severity) {
+
+    int32_t id = backend_id_assign();
+    if (id == -1)
+      return id;
+
+    nrf_log_backend_id_set (p_backend, id);
+
+    //add to list
+    if (m_log_data.p_backend_head == NULL) {
+      m_log_data.p_backend_head = p_backend;
+      p_backend->p_cb->p_next = NULL;
+      }
+    else {
+      p_backend->p_cb->p_next = m_log_data.p_backend_head->p_cb->p_next;
+      m_log_data.p_backend_head->p_cb->p_next = p_backend;
+      }
+
+    if (NRF_LOG_FILTERS_ENABLED) {
+      uint32_t i;
+      for (i = 0; i < nrf_log_module_cnt_get(); i++) {
+        nrf_log_severity_t buildin_lvl = nrf_log_module_init_filter_get (i);
+        nrf_log_severity_t actual_severity = MIN(buildin_lvl, severity);
+        nrf_log_module_filter_set (nrf_log_backend_id_get(p_backend), i, actual_severity);
+        }
+      }
+
+    return id;
+    }
+  //}}}
+  //{{{
+  void nrf_log_backend_remove (nrf_log_backend_t const* p_backend) {
+
+    nrf_log_backend_t const * p_curr = m_log_data.p_backend_head;
+    nrf_log_backend_t const * p_prev = NULL;
+    while (p_curr != p_backend) {
+      p_prev = p_curr;
+      p_curr = p_curr->p_cb->p_next;
+      }
+
+    if (p_prev)
+      p_prev->p_cb->p_next = p_backend->p_cb->p_next;
+    else
+      m_log_data.p_backend_head = NULL;
+
+    p_backend->p_cb->id = NRF_LOG_BACKEND_INVALID_ID;
+    }
+  //}}}
+  //{{{
+  void nrf_log_panic() {
+
+    nrf_log_backend_t const* p_backend = m_log_data.p_backend_head;
+    m_log_data.autoflush = true;
+    while (p_backend) {
+      nrf_log_backend_enable(p_backend);
+      nrf_log_backend_panic_set(p_backend);
+      p_backend = p_backend->p_cb->p_next;
+      }
+    }
   //}}}
 
   #if NRF_MODULE_ENABLED(LOG_CONFIG_LOAD_STORE)
     #include "fds.h"
-    #define LOG_CONFIG_FILE_ID   0x106E
-    #define LOG_CONFIG_RECORD_ID 0x3427
+    #define LOG_CONFIG_FILE_ID    0x106E
+    #define LOG_CONFIG_RECORD_ID  0x3427
     //{{{
-    ret_code_t nrf_log_config_store(void)
-    {
-        fds_record_desc_t desc = {0};
-        fds_find_token_t  token = {0};
-        fds_record_t      record = {
-                .file_id = LOG_CONFIG_FILE_ID,
-                .key     = LOG_CONFIG_RECORD_ID,
-                .data = {
-                        .p_data       = NRF_LOG_FILTER_SECTION_VARS_GET(0),
-                        .length_words = NRF_SECTION_LENGTH(log_filter_data)/sizeof(uint32_t)
-                }
-        };
-        ret_code_t ret = fds_record_find(LOG_CONFIG_FILE_ID, LOG_CONFIG_RECORD_ID, &desc, &token);
-        if (ret == FDS_SUCCESS)
-        {
-            ret = fds_record_update(&desc, &record);
-            NRF_LOG_INFO("Logger configuration file updated with result:%d", ret);
+    ret_code_t nrf_log_config_load() {
+
+      fds_record_desc_t desc = {0};
+      fds_find_token_t token = {0};
+
+      ret_code_t ret = fds_record_find (LOG_CONFIG_FILE_ID, LOG_CONFIG_RECORD_ID, &desc, &token);
+      if (ret == FDS_SUCCESS) {
+        fds_flash_record_t record = {0};
+        ret = fds_record_open (&desc, &record);
+        if (ret == NRF_SUCCESS) {
+          void* p_dest = (void*)NRF_LOG_FILTER_SECTION_VARS_GET(0);
+          uint32_t length = NRF_SECTION_LENGTH (log_filter_data);
+          memcpy (p_dest, record.p_data, length);
+          ret = fds_record_close (&desc);
+          }
         }
-        else if (ret == FDS_ERR_NOT_FOUND)
-        {
-            ret = fds_record_write(&desc, &record);
-            NRF_LOG_INFO("Logger configuration file written with result:%d", ret);
+      else if (ret == FDS_ERR_NOT_FOUND) {
+        NRF_LOG_WARNING ("Logger configuration file not found.");
+        ret = NRF_ERROR_NOT_FOUND;
         }
-        else
-        {
-            ret = NRF_ERROR_INTERNAL;
-        }
-        return ret;
-    }
+      else
+        ret = NRF_ERROR_INTERNAL;
+
+      return ret;
+      }
     //}}}
     //{{{
-    ret_code_t nrf_log_config_load(void)
-    {
-        fds_record_desc_t desc = {0};
-        fds_find_token_t  token = {0};
+    ret_code_t nrf_log_config_store() {
 
-        ret_code_t ret = fds_record_find(LOG_CONFIG_FILE_ID, LOG_CONFIG_RECORD_ID, &desc, &token);
-        if (ret == FDS_SUCCESS)
-        {
-            fds_flash_record_t record = {0};
-            ret = fds_record_open(&desc, &record);
-            if (ret == NRF_SUCCESS)
-            {
-                void * p_dest = (void *)NRF_LOG_FILTER_SECTION_VARS_GET(0);
-                uint32_t length   = NRF_SECTION_LENGTH(log_filter_data);
-                memcpy(p_dest, record.p_data, length);
-                ret = fds_record_close(&desc);
-            }
-        }
-        else if (ret == FDS_ERR_NOT_FOUND)
-        {
-            NRF_LOG_WARNING("Logger configuration file not found.");
-            ret = NRF_ERROR_NOT_FOUND;
-        }
-        else
-        {
-            ret = NRF_ERROR_INTERNAL;
-        }
+      fds_record_desc_t desc = {0};
+      fds_find_token_t  token = {0};
 
-        return ret;
-    }
+      fds_record_t record = {
+        .file_id = LOG_CONFIG_FILE_ID,
+        .key = LOG_CONFIG_RECORD_ID,
+        .data = {
+          .p_data       = NRF_LOG_FILTER_SECTION_VARS_GET (0),
+          .length_words = NRF_SECTION_LENGTH (log_filter_data) / sizeof(uint32_t)
+          }
+        };
+
+      ret_code_t ret = fds_record_find (LOG_CONFIG_FILE_ID, LOG_CONFIG_RECORD_ID, &desc, &token);
+      if (ret == FDS_SUCCESS) {
+        ret = fds_record_update (&desc, &record);
+        NRF_LOG_INFO ("Logger configuration file updated with result:%d", ret);
+        }
+      else if (ret == FDS_ERR_NOT_FOUND) {
+        ret = fds_record_write (&desc, &record);
+        NRF_LOG_INFO ("Logger configuration file written with result:%d", ret);
+        }
+      else
+        ret = NRF_ERROR_INTERNAL;
+
+      return ret;
+      }
     //}}}
   #endif
 
   #if NRF_LOG_CLI_CMDS
     #include "nrf_cli.h"
     //{{{
-    typedef void (*nrf_log_cli_backend_cmd_t)(nrf_cli_t const *         p_cli,
+    typedef void (*nrf_log_cli_backend_cmd_t)(nrf_cli_t const* p_cli,
                                               nrf_log_backend_t const * p_backend,
                                               size_t                    argc,
                                               char * *                  argv);
     //}}}
     //{{{
-    static const char * m_severity_lvls[] = {
-            "none",
-            "error",
-            "warning",
-            "info",
-            "debug",
-    };
+    static const char* m_severity_lvls[] = {
+      "none",
+      "error",
+      "warning",
+      "info",
+      "debug",
+      };
     //}}}
     //{{{
-    static const char * m_severity_lvls_sorted[] = {
-            "debug",
-            "error",
-            "info",
-            "none",
-            "warning",
-    };
+    static const char* m_severity_lvls_sorted[] = {
+      "debug",
+      "error",
+      "info",
+      "none",
+      "warning",
+      };
     //}}}
     //{{{
     /**
      * @brief Function for finding backend instance with given name.
-     *
      * @param p_name Name of the backend instance.
-     *
      * @return Pointer to the instance or NULL.
-     *
      */
-    static nrf_log_backend_t const * backend_find(char const * p_name)
-    {
-        size_t num_of_backends;
-        nrf_log_backend_t const * p_backend;
+    static nrf_log_backend_t const* backend_find (char const* p_name) {
 
-        num_of_backends = NRF_SECTION_ITEM_COUNT(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t);
-        for (size_t i = 0; i < num_of_backends; i++)
-        {
-            p_backend = NRF_SECTION_ITEM_GET(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
-            if (strcmp(p_name, p_backend->p_name) == 0)
-            {
-                return p_backend;
-            }
+      size_t num_of_backends;
+      nrf_log_backend_t const* p_backend;
+
+      num_of_backends = NRF_SECTION_ITEM_COUNT(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t);
+      for (size_t i = 0; i < num_of_backends; i++) {
+        p_backend = NRF_SECTION_ITEM_GET(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
+        if (strcmp(p_name, p_backend->p_name) == 0)
+          return p_backend;
         }
-        return NULL;
-    }
+      return NULL;
+      }
     //}}}
     //{{{
     /**
      * @brief Function for executing command on given backend.
      */
-    static void nrf_cli_backend_cmd_execute(nrf_cli_t const *         p_cli,
-                                            size_t                    argc,
-                                            char * *                  argv,
-                                            nrf_log_cli_backend_cmd_t func)
-    {
-        //Based on the structure of backend commands, name of the backend can be found at -1 (log backend <name> command).
-        char const * p_backend_name = argv[-1];
+    static void nrf_cli_backend_cmd_execute (nrf_cli_t const* p_cli, size_t argc, char** argv, nrf_log_cli_backend_cmd_t func) {
 
-        nrf_log_backend_t const * p_backend = backend_find(p_backend_name);
+      // Based on the structure of backend commands, name of the backend can be found at -1 (log backend <name> command).
+      char const* p_backend_name = argv[-1];
 
-        if (p_backend)
-        {
-            func(p_cli, p_backend, argc, argv);
-        }
-        else
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Invalid backend: %s\r\n", p_backend_name);
-        }
-    }
+      nrf_log_backend_t const* p_backend = backend_find(p_backend_name);
+
+      if (p_backend)
+        func (p_cli, p_backend, argc, argv);
+      else
+        nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Invalid backend: %s\r\n", p_backend_name);
+      }
     //}}}
     //{{{
-    static void log_status(nrf_cli_t const *         p_cli,
-                           nrf_log_backend_t const * p_backend,
-                           size_t                    argc,
-                           char * *                  argv)
-    {
-        UNUSED_PARAMETER(argc);
-        UNUSED_PARAMETER(argv);
+    static void log_status (nrf_cli_t const* p_cli, nrf_log_backend_t const * p_backend, size_t argc, char** argv) {
 
-        uint32_t modules_cnt = nrf_log_module_cnt_get();
-        uint32_t i;
+      UNUSED_PARAMETER(argc);
+      UNUSED_PARAMETER(argv);
 
+      uint32_t modules_cnt = nrf_log_module_cnt_get();
+      uint32_t i;
 
-        if (!nrf_log_backend_is_enabled(p_backend))
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Logs are halted!\r\n");
-        }
-        nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%-40s | current | built-in \r\n", "module_name");
-        nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "----------------------------------------------------------\r\n");
-        for (i = 0; i < modules_cnt; i++)
-        {
-            uint32_t backend_id = p_backend->p_cb->id;
-            nrf_log_severity_t module_dynamic_lvl =
-                                  nrf_log_module_filter_get(backend_id, i, true, true);
-            nrf_log_severity_t module_compiled_lvl =
-                                  nrf_log_module_filter_get(backend_id, i, true, false);
-            nrf_log_severity_t actual_compiled_lvl =
-                                  MIN(module_compiled_lvl, (nrf_log_severity_t)NRF_LOG_DEFAULT_LEVEL);
+      if (!nrf_log_backend_is_enabled(p_backend))
+        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Logs are halted!\r\n");
 
-            nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%-40s | %-7s | %s%s\r\n",
-                                      nrf_log_module_name_get(i, true),
-                                      m_severity_lvls[module_dynamic_lvl],
-                                      m_severity_lvls[actual_compiled_lvl],
-                                      actual_compiled_lvl < module_compiled_lvl ? "*" : "");
-        }
-    }
-    //}}}
-    //{{{
-    static void log_self_status(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        log_status(p_cli, p_cli->p_log_backend, argc, argv);
-    }
-    //}}}
-    //{{{
-    static void log_backend_status(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        nrf_cli_backend_cmd_execute(p_cli, argc, argv, log_status);
-    }
-    //}}}
-    //{{{
-    static bool module_id_get(const char * p_name, uint32_t * p_id)
-    {
-        uint32_t modules_cnt = nrf_log_module_cnt_get();
-        const char * p_tmp_name;
-        uint32_t j;
-        for (j = 0; j < modules_cnt; j++)
-        {
-            p_tmp_name = nrf_log_module_name_get(j, false);
-            if (strncmp(p_tmp_name, p_name, 32) == 0)
-            {
-                *p_id = j;
-                break;
-            }
-        }
-        return (j != modules_cnt);
-    }
-    //}}}
-    //{{{
-    static bool module_id_filter_set(uint32_t backend_id,
-                                     uint32_t module_id,
-                                     nrf_log_severity_t lvl)
-    {
-        nrf_log_severity_t buildin_lvl = nrf_log_module_filter_get(backend_id, module_id, false, false);
-        if (lvl > buildin_lvl)
-        {
-            return false;
-        }
-        else
-        {
-            nrf_log_module_filter_set(backend_id, module_id, lvl);
-            return true;
-        }
-    }
-    //}}}
-    //{{{
-    static void log_ctrl(nrf_cli_t const *         p_cli,
-                         nrf_log_backend_t const * p_backend,
-                         size_t                    argc,
-                         char * *                  argv)
-    {
-        nrf_log_severity_t lvl;
-        uint32_t first_m_name_idx;
-        uint32_t i;
-        bool     all_modules = false;
+      nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "%-40s | current | built-in \r\n", "module_name");
+      nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "----------------------------------------------------------\r\n");
+      for (i = 0; i < modules_cnt; i++) {
         uint32_t backend_id = p_backend->p_cb->id;
+        nrf_log_severity_t module_dynamic_lvl = nrf_log_module_filter_get(backend_id, i, true, true);
+        nrf_log_severity_t module_compiled_lvl = nrf_log_module_filter_get(backend_id, i, true, false);
+        nrf_log_severity_t actual_compiled_lvl = MIN(module_compiled_lvl, (nrf_log_severity_t)NRF_LOG_DEFAULT_LEVEL);
 
-        if (argc >  0)
-        {
-            if (strncmp(argv[0], "enable", 7) == 0)
-            {
-                if (argc == 1)
-                {
-                    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Bad parameter count.\r\n");
-                    return;
-                }
-
-                if (argc == 2)
-                {
-                    all_modules = true;
-                }
-
-                for (i = 0; i < ARRAY_SIZE(m_severity_lvls); i++)
-                {
-                    if (strncmp(argv[1], m_severity_lvls[i], 10) == 0)
-                    {
-                        break;
-                    }
-                }
-
-                if (i == ARRAY_SIZE(m_severity_lvls))
-                {
-                    nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown severity level: %s\r\n", argv[1]);
-                    return;
-                }
-
-                lvl = (nrf_log_severity_t)i;
-                first_m_name_idx = 2;
-
-            }
-            else if (strncmp(argv[0], "disable", 8) == 0)
-            {
-                if (argc == 1)
-                {
-                    all_modules = true;
-                }
-                lvl = NRF_LOG_SEVERITY_NONE;
-                first_m_name_idx = 1;
-            }
-            else
-            {
-                nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown option: %s\r\n", argv[0]);
-                return;
-            }
-
-            if (all_modules)
-            {
-                for (i = 0; i < nrf_log_module_cnt_get(); i++)
-                {
-                    if (module_id_filter_set(backend_id, i, lvl) == false)
-                    {
-                        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                                        "Level unavailable for module: %s\r\n",
-                                        nrf_log_module_name_get(i, false));
-                    }
-                }
-            }
-            else
-            {
-                for (i = first_m_name_idx; i < argc; i++)
-                {
-                    uint32_t module_id = 0;
-                    if (module_id_get(argv[i], &module_id) == false)
-                    {
-                        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown module:%s\r\n", argv[i]);
-                    }
-                    else if (module_id_filter_set(backend_id, module_id, lvl) == false)
-                    {
-                        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
-                                        "Level unavailable for module: %s\r\n",
-                                        nrf_log_module_name_get(module_id, false));
-                    }
-                    else
-                    {
-                        /* empty */
-                    }
-                }
-            }
+        nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "%-40s | %-7s | %s%s\r\n",
+                         nrf_log_module_name_get(i, true),
+                         m_severity_lvls[module_dynamic_lvl],
+                         m_severity_lvls[actual_compiled_lvl],
+                         actual_compiled_lvl < module_compiled_lvl ? "*" : "");
         }
-    }
+      }
     //}}}
     //{{{
-    static void log_self_ctrl(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        log_ctrl(p_cli, p_cli->p_log_backend, argc, argv);
-    }
+    static void log_self_status (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      log_status (p_cli, p_cli->p_log_backend, argc, argv);
+      }
     //}}}
     //{{{
-    static void log_backend_ctrl(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        nrf_cli_backend_cmd_execute(p_cli, argc, argv, log_ctrl);
-    }
+    static void log_backend_status (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      nrf_cli_backend_cmd_execute (p_cli, argc, argv, log_status);
+      }
     //}}}
-    static void module_name_get(size_t idx, nrf_cli_static_entry_t * p_static);
+    //{{{
+    static bool module_id_get (const char* p_name, uint32_t* p_id) {
+
+      uint32_t modules_cnt = nrf_log_module_cnt_get();
+      const char* p_tmp_name;
+      uint32_t j;
+      for (j = 0; j < modules_cnt; j++) {
+        p_tmp_name = nrf_log_module_name_get (j, false);
+        if (strncmp (p_tmp_name, p_name, 32) == 0) {
+          *p_id = j;
+          break;
+          }
+        }
+
+      return (j != modules_cnt);
+      }
+    //}}}
+    //{{{
+    static bool module_id_filter_set (uint32_t backend_id, uint32_t module_id, nrf_log_severity_t lvl) {
+
+      nrf_log_severity_t buildin_lvl = nrf_log_module_filter_get(backend_id, module_id, false, false);
+      if (lvl > buildin_lvl)
+        return false;
+      else {
+        nrf_log_module_filter_set(backend_id, module_id, lvl);
+        return true;
+        }
+      }
+    //}}}
+    //{{{
+    static void log_ctrl (nrf_cli_t const* p_cli, nrf_log_backend_t const * p_backend, size_t argc, char** argv) {
+
+      nrf_log_severity_t lvl;
+      uint32_t first_m_name_idx;
+      uint32_t i;
+      bool all_modules = false;
+      uint32_t backend_id = p_backend->p_cb->id;
+
+      if (argc > 0) {
+        if (strncmp(argv[0], "enable", 7) == 0) {
+          if (argc == 1) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Bad parameter count.\r\n");
+            return;
+            }
+
+          if (argc == 2)
+            all_modules = true;
+
+          for (i = 0; i < ARRAY_SIZE(m_severity_lvls); i++) {
+            if (strncmp(argv[1], m_severity_lvls[i], 10) == 0)
+               break;
+            }
+
+          if (i == ARRAY_SIZE(m_severity_lvls)) {
+            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown severity level: %s\r\n", argv[1]);
+            return;
+            }
+
+          lvl = (nrf_log_severity_t)i;
+          first_m_name_idx = 2;
+          }
+        else if (strncmp(argv[0], "disable", 8) == 0) {
+          if (argc == 1)
+            all_modules = true;
+          lvl = NRF_LOG_SEVERITY_NONE;
+          first_m_name_idx = 1;
+          }
+        else {
+          nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown option: %s\r\n", argv[0]);
+          return;
+          }
+
+        if (all_modules) {
+          for (i = 0; i < nrf_log_module_cnt_get(); i++) {
+            if (module_id_filter_set(backend_id, i, lvl) == false)
+              nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Level unavailable for module: %s\r\n", nrf_log_module_name_get(i, false));
+            }
+          }
+        else {
+          for (i = first_m_name_idx; i < argc; i++) {
+            uint32_t module_id = 0;
+            if (module_id_get(argv[i], &module_id) == false)
+              nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Unknown module:%s\r\n", argv[i]);
+            else if (module_id_filter_set(backend_id, module_id, lvl) == false)
+              nrf_cli_fprintf(p_cli, NRF_CLI_ERROR,
+                                    "Level unavailable for module: %s\r\n", nrf_log_module_name_get(module_id, false));
+            else {
+              }
+            }
+          }
+        }
+      }
+    //}}}
+    //{{{
+    static void log_self_ctrl (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      log_ctrl (p_cli, p_cli->p_log_backend, argc, argv);
+      }
+    //}}}
+    //{{{
+    static void log_backend_ctrl (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      nrf_cli_backend_cmd_execute (p_cli, argc, argv, log_ctrl);
+      }
+    //}}}
+
+    static void module_name_get (size_t idx, nrf_cli_static_entry_t* p_static);
     NRF_CLI_CREATE_DYNAMIC_CMD(m_module_name, module_name_get);
     //{{{
-    static void module_name_get(size_t idx, nrf_cli_static_entry_t * p_static)
-    {
-        p_static->handler = NULL;
-        p_static->p_help  = NULL;
-        p_static->p_subcmd = &m_module_name;
-        p_static->p_syntax = nrf_log_module_name_get(idx, true);
-    }
-    //}}}
-    //{{{
-    static void severity_lvl_get(size_t idx, nrf_cli_static_entry_t * p_static)
-    {
-        p_static->handler = NULL;
-        p_static->p_help  = NULL;
-        p_static->p_subcmd = &m_module_name;
-        p_static->p_syntax = (idx < ARRAY_SIZE(m_severity_lvls_sorted)) ?
-                                                        m_severity_lvls_sorted[idx] : NULL;
-    }
-    //}}}
-    NRF_CLI_CREATE_DYNAMIC_CMD(m_severity_lvl, severity_lvl_get);
-    //{{{
-    static void log_halt(nrf_cli_t const *         p_cli,
-                         nrf_log_backend_t const * p_backend,
-                         size_t                    argc,
-                         char * *                  argv)
-    {
-        UNUSED_PARAMETER(argc);
-        UNUSED_PARAMETER(argv);
+    static void module_name_get (size_t idx, nrf_cli_static_entry_t* p_static) {
 
-        nrf_log_backend_disable(p_backend);
-    }
+      p_static->handler = NULL;
+      p_static->p_help  = NULL;
+      p_static->p_subcmd = &m_module_name;
+      p_static->p_syntax = nrf_log_module_name_get(idx, true);
+      }
     //}}}
-    //{{{
-    static void log_backend_halt(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        nrf_cli_backend_cmd_execute(p_cli, argc, argv, log_halt);
-    }
-    //}}}
-    //{{{
-    static void log_self_halt(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        log_halt(p_cli, p_cli->p_log_backend, argc, argv);
-    }
-    //}}}
-    //{{{
-    static void log_go(nrf_cli_t const *         p_cli,
-                       nrf_log_backend_t const * p_backend,
-                       size_t                    argc,
-                       char * *                  argv)
-    {
-        UNUSED_PARAMETER(argc);
-        UNUSED_PARAMETER(argv);
 
-        nrf_log_backend_enable(p_backend);
-    }
+    //{{{
+    static void severity_lvl_get (size_t idx, nrf_cli_static_entry_t* p_static) {
+
+      p_static->handler = NULL;
+      p_static->p_help  = NULL;
+      p_static->p_subcmd = &m_module_name;
+      p_static->p_syntax = (idx < ARRAY_SIZE(m_severity_lvls_sorted)) ? m_severity_lvls_sorted[idx] : NULL;
+      }
+    //}}}
+    NRF_CLI_CREATE_DYNAMIC_CMD (m_severity_lvl, severity_lvl_get);
+
+    //{{{
+    static void log_halt (nrf_cli_t const* p_cli, nrf_log_backend_t const* p_backend, size_t argc, char** argv) {
+
+      UNUSED_PARAMETER(argc);
+      UNUSED_PARAMETER(argv);
+
+      nrf_log_backend_disable(p_backend);
+      }
     //}}}
     //{{{
-    static void log_backend_go(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        nrf_cli_backend_cmd_execute(p_cli, argc, argv, log_go);
-    }
+    static void log_backend_halt (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      nrf_cli_backend_cmd_execute (p_cli, argc, argv, log_halt);
+      }
     //}}}
     //{{{
-    static void log_self_go(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        log_go(p_cli, p_cli->p_log_backend, argc, argv);
-    }
+    static void log_self_halt (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      log_halt(p_cli, p_cli->p_log_backend, argc, argv);
+      }
     //}}}
     //{{{
-    static void log_cmd_backends_list(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        if (nrf_cli_help_requested(p_cli))
-        {
-            nrf_cli_help_print(p_cli, NULL, 0);
-            return;
+    static void log_go (nrf_cli_t const* p_cli, nrf_log_backend_t const* p_backend, size_t argc, char** argv) {
+
+      UNUSED_PARAMETER(argc);
+      UNUSED_PARAMETER(argv);
+      nrf_log_backend_enable(p_backend);
+      }
+    //}}}
+    //{{{
+    static void log_backend_go (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      nrf_cli_backend_cmd_execute (p_cli, argc, argv, log_go);
+      }
+    //}}}
+    //{{{
+    static void log_self_go (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+      log_go (p_cli, p_cli->p_log_backend, argc, argv);
+      }
+    //}}}
+    //{{{
+    static void log_cmd_backends_list (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+      if (nrf_cli_help_requested (p_cli)) {
+        nrf_cli_help_print (p_cli, NULL, 0);
+        return;
         }
-        size_t num_of_backends;
 
-        num_of_backends = NRF_SECTION_ITEM_COUNT(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t);
-        for (size_t i = 0; i < num_of_backends; i++)
-        {
-            nrf_log_backend_t const * p_backend =
-                               NRF_SECTION_ITEM_GET(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
+      size_t num_of_backends = NRF_SECTION_ITEM_COUNT (NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t);
+      for (size_t i = 0; i < num_of_backends; i++) {
+        nrf_log_backend_t const* p_backend = NRF_SECTION_ITEM_GET (NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
 
-            if (p_backend->p_cb->id == NRF_LOG_BACKEND_INVALID_ID)
-            {
-                nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL,
-                                "%s\r\n"
-                                "\t- Status: deactivated\r\n\r\n",
-                                p_backend->p_name);
+        if (p_backend->p_cb->id == NRF_LOG_BACKEND_INVALID_ID)
+          nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "%s\r\n" "\t- Status: deactivated\r\n\r\n", p_backend->p_name);
+        else
+          nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "%s\r\n" "\t- Status: %s\r\n" "\t- ID: %d\r\n\r\n",
+                           p_backend->p_name, p_backend->p_cb->enabled ? "enabled" : "disabled", p_backend->p_cb->id);
+        }
+      }
+    //}}}
+    NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_log_backend) {
+      NRF_CLI_CMD (disable, &m_module_name, "'log disable <module_0> .. <module_n>' disables logs in specified "
+                   "modules (all if no modules specified).", log_backend_ctrl),
+      NRF_CLI_CMD (enable, &m_severity_lvl, 
+                   "'log enable <level> <module_0> ...  <module_n>' enables logs up to given level in "
+                   "specified modules (all if no modules specified).", log_backend_ctrl),
+      NRF_CLI_CMD (go, NULL, "Resume logging", log_backend_go),
+      NRF_CLI_CMD (halt, NULL, "Halt logging", log_backend_halt),
+      NRF_CLI_CMD (status, NULL, "Logger status", log_backend_status),
+      NRF_CLI_SUBCMD_SET_END
+      };
+
+    //{{{
+    static void backend_name_get (size_t idx, nrf_cli_static_entry_t* p_static) {
+
+      p_static->handler = NULL;
+      p_static->p_help  = NULL;
+      p_static->p_subcmd = &m_sub_log_backend;
+      p_static->p_syntax  = NULL;
+
+      nrf_log_backend_t const* p_backend;
+      size_t active_idx = 0;
+
+      uint32_t i;
+      for (i = 0; i < NRF_SECTION_ITEM_COUNT (NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t); i++) {
+        p_backend = NRF_SECTION_ITEM_GET (NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
+        if (p_backend->p_cb->id != NRF_LOG_BACKEND_INVALID_ID) {
+          if (idx == active_idx) {
+            p_static->p_syntax = p_backend->p_name;
+            break;
             }
-            else
-            {
-                nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL,
-                                "%s\r\n"
-                                "\t- Status: %s\r\n"
-                                "\t- ID: %d\r\n\r\n",
-                                p_backend->p_name,
-                                p_backend->p_cb->enabled ? "enabled" : "disabled",
-                                p_backend->p_cb->id);
-            }
+          else
+            active_idx++;
+          }
         }
-    }
+      }
     //}}}
-    //{{{
-    NRF_CLI_CREATE_STATIC_SUBCMD_SET(m_sub_log_backend)
-    {
-        NRF_CLI_CMD(disable, &m_module_name,
-            "'log disable <module_0> .. <module_n>' disables logs in specified "
-            "modules (all if no modules specified).",
-            log_backend_ctrl),
-        NRF_CLI_CMD(enable, &m_severity_lvl,
-            "'log enable <level> <module_0> ...  <module_n>' enables logs up to given level in "
-            "specified modules (all if no modules specified).",
-            log_backend_ctrl),
-        NRF_CLI_CMD(go, NULL, "Resume logging", log_backend_go),
-        NRF_CLI_CMD(halt, NULL, "Halt logging", log_backend_halt),
-        NRF_CLI_CMD(status, NULL, "Logger status", log_backend_status),
-        NRF_CLI_SUBCMD_SET_END
-    };
-    //}}}
-    //{{{
-    static void backend_name_get(size_t idx, nrf_cli_static_entry_t * p_static)
-    {
-        p_static->handler = NULL;
-        p_static->p_help  = NULL;
-        p_static->p_subcmd = &m_sub_log_backend;
-        p_static->p_syntax  = NULL;
+    NRF_CLI_CREATE_DYNAMIC_CMD (m_backend_name_dynamic, backend_name_get);
 
-        nrf_log_backend_t const * p_backend;
-        size_t                    active_idx = 0;
-        uint32_t                  i;
-
-        for (i = 0; i < NRF_SECTION_ITEM_COUNT(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t); i++)
-        {
-            p_backend = NRF_SECTION_ITEM_GET(NRF_LOG_BACKEND_SECTION_NAME, nrf_log_backend_t, i);
-            if (p_backend->p_cb->id != NRF_LOG_BACKEND_INVALID_ID)
-            {
-                if (idx == active_idx)
-                {
-                    p_static->p_syntax = p_backend->p_name;
-                    break;
-                }
-                else
-                {
-                    active_idx++;
-                }
-            }
-        }
-    }
-    //}}}
-    NRF_CLI_CREATE_DYNAMIC_CMD(m_backend_name_dynamic, backend_name_get);
     //{{{
-    static void log_config_load_cmd(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        UNUSED_PARAMETER(argc);
-        UNUSED_PARAMETER(argv);
+    static void log_config_load_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
-        if (nrf_cli_help_requested(p_cli))
-        {
-            nrf_cli_help_print(p_cli, NULL, 0);
-            return;
+      UNUSED_PARAMETER(argc);
+      UNUSED_PARAMETER(argv);
+
+      if (nrf_cli_help_requested (p_cli)) {
+        nrf_cli_help_print(p_cli, NULL, 0);
+        return;
         }
 
-    #if LOG_CONFIG_LOAD_STORE_ENABLED
+      #if LOG_CONFIG_LOAD_STORE_ENABLED
         if (nrf_log_config_load() == NRF_SUCCESS)
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Configuration loaded.\r\n");
-        }
+            nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "Configuration loaded.\r\n");
         else
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Failed to load the configuration.\r\n");
-        }
-    #else
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Not supported.\r\n");
-    #endif
-    }
+            nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Failed to load the configuration.\r\n");
+      #else
+        nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Not supported.\r\n");
+      #endif
+      }
     //}}}
     //{{{
-    static void log_config_store_cmd(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        UNUSED_PARAMETER(argc);
-        UNUSED_PARAMETER(argv);
+    static void log_config_store_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv) {
 
-        if (nrf_cli_help_requested(p_cli))
-        {
-            nrf_cli_help_print(p_cli, NULL, 0);
-            return;
+      UNUSED_PARAMETER(argc);
+      UNUSED_PARAMETER(argv);
+
+      if (nrf_cli_help_requested (p_cli)) {
+        nrf_cli_help_print (p_cli, NULL, 0);
+        return;
         }
 
-    #if LOG_CONFIG_LOAD_STORE_ENABLED
+      #if LOG_CONFIG_LOAD_STORE_ENABLED
         if (nrf_log_config_store() == NRF_SUCCESS)
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_NORMAL, "Configuration stored.\r\n");
-        }
+          nrf_cli_fprintf (p_cli, NRF_CLI_NORMAL, "Configuration stored.\r\n");
         else
-        {
-            nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Failed to store the configuration.\r\n");
-        }
-    #else
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "Not supported.\r\n");
-    #endif
-    }
+          nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Failed to store the configuration.\r\n");
+      #else
+        nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "Not supported.\r\n");
+      #endif
+      }
     //}}}
+    NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_log_config) {
+      NRF_CLI_CMD (load, NULL, "Load configuration stored in non-volatile memory", log_config_load_cmd),
+      NRF_CLI_CMD (store, NULL, "Store current configuration in non-volatile memory", log_config_store_cmd),
+      NRF_CLI_SUBCMD_SET_END
+      };
+
+    NRF_CLI_CREATE_STATIC_SUBCMD_SET (m_sub_log_stat) {
+      NRF_CLI_CMD (backend, &m_backend_name_dynamic, "Logger backends commands.", NULL),
+      NRF_CLI_CMD (config, &m_sub_log_config, "Manage logger configuration", NULL),
+      NRF_CLI_CMD (disable, &m_module_name, "'log disable <module_0> .. <module_n>' disables logs in specified "
+                   "modules (all if no modules specified).", log_self_ctrl),
+      NRF_CLI_CMD (enable, &m_severity_lvl, "'log enable <level> <module_0> ...  <module_n>' enables logs up to given level in "
+                   "specified modules (all if no modules specified).", log_self_ctrl),
+      NRF_CLI_CMD (go, NULL, "Resume logging", log_self_go),
+      NRF_CLI_CMD (halt, NULL, "Halt logging", log_self_halt),
+      NRF_CLI_CMD (list_backends, NULL, "Lists logger backends.", log_cmd_backends_list),
+      NRF_CLI_CMD (status, NULL, "Logger status", log_self_status),
+      NRF_CLI_SUBCMD_SET_END
+      };
     //{{{
-    NRF_CLI_CREATE_STATIC_SUBCMD_SET(m_sub_log_config)
-    {
-        NRF_CLI_CMD(load, NULL, "Load configuration stored in non-volatile memory.", log_config_load_cmd),
-        NRF_CLI_CMD(store, NULL, "Store current configuration in non-volatile memory.", log_config_store_cmd),
-        NRF_CLI_SUBCMD_SET_END
-    };
-    //}}}
-    //{{{
-    NRF_CLI_CREATE_STATIC_SUBCMD_SET(m_sub_log_stat)
-    {
-        NRF_CLI_CMD(backend, &m_backend_name_dynamic, "Logger backends commands.", NULL),
-        NRF_CLI_CMD(config, &m_sub_log_config, "Manage logger configuration", NULL),
-        NRF_CLI_CMD(disable, &m_module_name,
-            "'log disable <module_0> .. <module_n>' disables logs in specified "
-            "modules (all if no modules specified).",
-            log_self_ctrl),
-        NRF_CLI_CMD(enable, &m_severity_lvl,
-            "'log enable <level> <module_0> ...  <module_n>' enables logs up to given level in "
-            "specified modules (all if no modules specified).",
-            log_self_ctrl),
-        NRF_CLI_CMD(go, NULL, "Resume logging", log_self_go),
-        NRF_CLI_CMD(halt, NULL, "Halt logging", log_self_halt),
-        NRF_CLI_CMD(list_backends, NULL, "Lists logger backends.", log_cmd_backends_list),
-        NRF_CLI_CMD(status, NULL, "Logger status", log_self_status),
-        NRF_CLI_SUBCMD_SET_END
-    };
-    //}}}
-    //{{{
-    static void log_cmd(nrf_cli_t const * p_cli, size_t argc, char **argv)
-    {
-        if ((argc == 1) || nrf_cli_help_requested(p_cli))
-        {
-            nrf_cli_help_print(p_cli, NULL, 0);
-            return;
+    static void log_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+
+      if ((argc == 1) || nrf_cli_help_requested (p_cli)) {
+        nrf_cli_help_print (p_cli, NULL, 0);
+        return;
         }
 
-        nrf_cli_fprintf(p_cli, NRF_CLI_ERROR, "%s:%s%s\r\n", argv[0], " unknown parameter: ", argv[1]);
-    }
-
+      nrf_cli_fprintf (p_cli, NRF_CLI_ERROR, "%s:%s%s\r\n", argv[0], " unknown parameter: ", argv[1]);
+      }
     //}}}
-    NRF_CLI_CMD_REGISTER(log, &m_sub_log_stat, "Commands for controlling logger", log_cmd);
+    NRF_CLI_CMD_REGISTER (log, &m_sub_log_stat, "Commands for controlling logger", log_cmd);
   #endif
+
 #endif

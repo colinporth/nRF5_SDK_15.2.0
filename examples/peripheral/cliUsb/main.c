@@ -64,9 +64,9 @@ static char m_dynamic_cmd_buffer[CLI_EXAMPLE_MAX_CMD_CNT][CLI_EXAMPLE_MAX_CMD_LE
 static uint8_t m_dynamic_cmd_cnt;
 
 NRF_CLI_CDC_ACM_DEF (mCliCdcAcmTransport);
-NRF_CLI_DEF (mCliCdcAcm, "cliUsb:~$ ", &mCliCdcAcmTransport.transport, '\r', 4);
+NRF_CLI_DEF (mCliCdcAcm, "cliUsb:", &mCliCdcAcmTransport.transport, '\r', 4);
 NRF_CLI_RTT_DEF (mCliRttTransport);
-NRF_CLI_DEF (mCliRtt, "rtt_cli:~$ ", &mCliRttTransport.transport, '\n', 4);
+NRF_CLI_DEF (mCliRtt, "rtt_cli:", &mCliRttTransport.transport, '\n', 4);
 
 NRF_LOG_BACKEND_FLASHLOG_DEF (mFlashLogBackend);
 NRF_LOG_BACKEND_CRASHLOG_DEF (mCrashLogBackend);
