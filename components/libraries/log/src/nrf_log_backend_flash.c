@@ -54,14 +54,14 @@
    * If configuration indicates that flash log should be placed after application.
    * */
   #if defined ( __CC_ARM )
-  #define RUNTIME_START_ADDR                                                                           \
-                 _Pragma("diag_suppress 170")                                                          \
-                 ((NRF_LOG_BACKEND_FLASH_START_PAGE == 0) ?                                            \
-                 (CODE_PAGE_SIZE*CEIL_DIV((uint32_t)CODE_END, CODE_PAGE_SIZE)) : FLASH_LOG_START_ADDR) \
-                 _Pragma("diag_default 170")
+    #define RUNTIME_START_ADDR                                                                           \
+                   _Pragma("diag_suppress 170")                                                          \
+                   ((NRF_LOG_BACKEND_FLASH_START_PAGE == 0) ?                                            \
+                   (CODE_PAGE_SIZE*CEIL_DIV((uint32_t)CODE_END, CODE_PAGE_SIZE)) : FLASH_LOG_START_ADDR) \
+                   _Pragma("diag_default 170")
   #else
-  #define RUNTIME_START_ADDR ((NRF_LOG_BACKEND_FLASH_START_PAGE == 0) ? \
-                 (CODE_PAGE_SIZE*CEIL_DIV((uint32_t)CODE_END, CODE_PAGE_SIZE)) : FLASH_LOG_START_ADDR)
+    #define RUNTIME_START_ADDR ((NRF_LOG_BACKEND_FLASH_START_PAGE == 0) ? \
+                   (CODE_PAGE_SIZE*CEIL_DIV((uint32_t)CODE_END, CODE_PAGE_SIZE)) : FLASH_LOG_START_ADDR)
   #endif
   //}}}
   static void fstorage_evt_handler (nrf_fstorage_evt_t * p_evt);
@@ -573,8 +573,8 @@
     #include "nrf_cli.h"
 
     static uint8_t m_buffer[64];
-    static nrf_cli_t const * mp_cli;
-    static void cli_tx(void const * p_context, char const * p_buffer, size_t len);
+    static nrf_cli_t const* mp_cli;
+    static void cli_tx(void const* p_context, char const* p_buffer, size_t len);
 
     //{{{
     static nrf_fprintf_ctx_t m_fprintf_ctx =
@@ -588,7 +588,7 @@
     };
     //}}}
     //{{{
-    static void flashlog_clear_cmd (nrf_cli_t const * p_cli, size_t argc, char ** argv)
+    static void flashlog_clear_cmd (nrf_cli_t const* p_cli, size_t argc, char** argv)
     {
         if (nrf_cli_help_requested(p_cli))
         {

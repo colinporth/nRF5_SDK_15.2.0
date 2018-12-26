@@ -71,15 +71,6 @@ NRF_CLI_DEF (mCliRtt, "rtt_cli:~$ ", &mCliRttTransport.transport, '\n', 4);
 NRF_LOG_BACKEND_FLASHLOG_DEF (mFlashLogBackend);
 NRF_LOG_BACKEND_CRASHLOG_DEF (mCrashLogBackend);
 
-//{{{
-void cycleLeds() {
-  for (int i = 0; i < LEDS_NUMBER; i++) {
-    bsp_board_led_invert (i);
-    nrf_delay_ms (200);
-    }
-  }
-//}}}
-
 //{{{  led commands
 static void cmd_led (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   if (nrf_cli_help_requested (p_cli)) {
@@ -97,7 +88,11 @@ static void cmd_cycle (nrf_cli_t const* p_cli, size_t argc, char** argv) {
     return;
     }
   nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,  "cycle leds\r\n");
-  cycleLeds();
+  for (int j = 0; j < 8; j++)
+    for (int i = 0; i < LEDS_NUMBER; i++) {
+      bsp_board_led_invert (i);
+      nrf_delay_ms (200);
+      }
   }
 
 NRF_CLI_CMD_REGISTER (led, NULL, "control leds", cmd_led);
