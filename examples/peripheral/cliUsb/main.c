@@ -71,6 +71,17 @@ NRF_CLI_DEF (mCliRtt, "rtt_cli:", &mCliRttTransport.transport, '\n', 4);
 NRF_LOG_BACKEND_FLASHLOG_DEF (mFlashLogBackend);
 NRF_LOG_BACKEND_CRASHLOG_DEF (mCrashLogBackend);
 
+//{{{  version command
+static void cmd_version (nrf_cli_t const* p_cli, size_t argc, char** argv) {
+  if (nrf_cli_help_requested (p_cli)) {
+    nrf_cli_help_print (p_cli, NULL, 0);
+    return;
+    }
+  nrf_cli_fprintf (p_cli, NRF_CLI_OPTION,  "cliUsb "__TIME__" "__DATE__"\r\n");
+  }
+
+NRF_CLI_CMD_REGISTER (version, NULL, "version", cmd_version);
+//}}}
 //{{{  led commands
 static void cmd_led (nrf_cli_t const* p_cli, size_t argc, char** argv) {
   if (nrf_cli_help_requested (p_cli)) {

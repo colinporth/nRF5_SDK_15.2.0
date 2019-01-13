@@ -35,8 +35,8 @@
       uint32_t nargs = header.base.std.nargs;
       uint32_t args[NRF_LOG_MAX_NUM_OF_ARGS];
 
-      nrf_memobj_read (p_msg, args, nargs*sizeof(uint32_t), memobj_offset);
-      memobj_offset += (nargs*sizeof(uint32_t));
+      nrf_memobj_read (p_msg, args, nargs * sizeof(uint32_t), memobj_offset);
+      memobj_offset += (nargs * sizeof(uint32_t));
       nrf_log_std_entry_process (p_log_str, args, nargs, &params, &fprintf_ctx);
       }
 
@@ -56,4 +56,4 @@
 
     nrf_memobj_put (p_msg);
     }
-#endif 
+#endif

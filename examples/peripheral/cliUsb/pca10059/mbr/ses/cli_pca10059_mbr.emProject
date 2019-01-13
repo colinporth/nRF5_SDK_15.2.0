@@ -115,6 +115,7 @@
     <file file_name="../../../../../../components/boards/boards.c" />
     <file file_name="../../../../../../components/libraries/bsp/bsp.c" />
     <file file_name="../../../../../../external/utf_converter/utf.c" />
+    <configuration Name="Release" gcc_optimization_level="Level 3" />
   </project>
   <configuration
     Name="Release"

@@ -1,4 +1,5 @@
 #include "sdk_common.h"
+
 #if NRF_MODULE_ENABLED(NRF_LOG) && NRF_MODULE_ENABLED(NRF_LOG_BACKEND_FLASH)
   //{{{  includes
   #include "nrf_log_backend_flash.h"
@@ -64,7 +65,7 @@
                    (CODE_PAGE_SIZE*CEIL_DIV((uint32_t)CODE_END, CODE_PAGE_SIZE)) : FLASH_LOG_START_ADDR)
   #endif
   //}}}
-  static void fstorage_evt_handler (nrf_fstorage_evt_t * p_evt);
+  static void fstorage_evt_handler (nrf_fstorage_evt_t* p_evt);
 
   #if NRF_LOG_BACKEND_FLASHLOG_ENABLED
     NRF_QUEUE_DEF (nrf_log_entry_t*, m_flashlog_queue, NRF_LOG_BACKEND_FLASHLOG_QUEUE_SIZE, NRF_QUEUE_MODE_NO_OVERFLOW);
